@@ -34,7 +34,6 @@ class CampCrawler:
                 "info": "",
                 "etc": "",
                 "img_url": "",
-                "pay_link": "",
                 "price": ""
             }
             rows.append(new_row)
@@ -59,7 +58,6 @@ class CampCrawler:
             self.df["tags"][idx] = tags
             self.df["info"][idx] = info
             self.df["etc"][idx] = etc_info
-            self.df["pay_link"][idx] = pay_link
             self.df["img_url"][idx] = img_url
             try:
                 self.df["price"][idx] = self.__fetch_camp_price(pay_link)
