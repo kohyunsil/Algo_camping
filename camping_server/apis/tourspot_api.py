@@ -5,7 +5,7 @@ import json
 import pandas as pd
 from pandas.io.json import json_normalize
 
-class gocampingApi:
+class GocampingApi:
     def __init__(self):
         pass
 
