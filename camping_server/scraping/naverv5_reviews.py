@@ -20,7 +20,7 @@ def target_list():
     return search_target
 
 # xhr request url에 들어가는 id 파라미터 값 얻기
-def get_params(user_agent):
+def get_params(user_agent, target):
     query_url = f'https://m.map.naver.com/search2/searchMore.naver?query={target}&sm=clk&style=v5&page=1&displayCount=75&type=SITE_1'
     headers = {'User-Agent': user_agent}
     response = requests.get(query_url, headers=headers)
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     user_agent = ua.random
 
     for target in search_target[:]:
-        get_params(user_agent)
+        get_params(user_agent, target)
 
     for i, id in enumerate(ids):
         xhr_url = f'https://map.naver.com/v5/search/{search_target[i]}/place/{int(id)}'
