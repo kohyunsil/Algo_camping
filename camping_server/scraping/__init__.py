@@ -16,6 +16,7 @@ if __name__ == '__main__':
     # s.get_search(target_list())  # 캠핑장 업소명 리스트
 
     v4 = nv4.Scraping(target_list())
-    ids = v4.get_params()
+    ids, place_name = v4.get_params()
     print(f'ids: {ids}')
-    res_reviews = v4.get_reviews(ids)
+    res_reviews = v4.get_reviews(ids, place_name)
+    print(f'res_reviews len : {len(res_reviews)}')
