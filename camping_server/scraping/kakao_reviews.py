@@ -1,4 +1,3 @@
-import pyautogui
 import constant
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,7 +15,6 @@ class Scraping:
         # self.options.add_argument('headless')
 
         self.driver = webdriver.Chrome(options=self.options)
-        # self.driver.set_window_size(1000, 3000)
         self.url = 'https://map.kakao.com/'
         self.driver.get(self.url)
 

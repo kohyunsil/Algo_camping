@@ -1,10 +1,9 @@
 # !pip install urllib
 # !pip install xmltodict
+import constant
 from urllib.request import Request, urlopen
-from urllib.parse import urlencode, quote_plus
 import xmltodict
 import json
-import pandas as pd
 from pandas.io.json import json_normalize
 
 class GocampingApi:
@@ -34,4 +33,4 @@ class GocampingApi:
             rDD = json.loads(rDJ)
 
         camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        camp_api_df.to_csv("../../datas/camp_api_info.csv", encoding='utf-8-sig')
+        camp_api_df.to_csv(constant.PATH + "camp_api_info.csv", encoding='utf-8-sig')

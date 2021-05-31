@@ -1,9 +1,9 @@
 from urllib.request import Request, urlopen
-from urllib.parse import urlencode, quote_plus
 import xmltodict
 import json
 import pandas as pd
 from pandas.io.json import json_normalize
+import constant
 
 class GocampingApi:
     def __init__(self):
@@ -36,14 +36,14 @@ class GocampingApi:
             rDD = json.loads(rDJ)
             print(rDD)
             festival_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        festival_api_df.to_csv("../../datas/festival_api_info.csv", encoding='utf-8-sig')
+        festival_api_df.to_csv(constant.PATH + "festival_api_info.csv", encoding='utf-8-sig')
 
     # 내 위치 기반 관광지 검색
     def tourspotAPI(self):
         secretKey = self.get_secretKey()
         contentType_dict = {'festival': 15, 'tourspot': 12, 'shopping': 38, 'restaurant': 39, }
         contentTypeId = contentType_dict['festival']
-        camp_api_df = pd.read_csv("../../datas/camp_api_info.csv", encoding='utf-8-sig')
+        camp_api_df = pd.read_csv(constant.PATH + "camp_api_info.csv", encoding='utf-8-sig')
 
         i = 10
         mapX = camp_api_df['mapX'].iloc[i]
@@ -67,6 +67,6 @@ class GocampingApi:
             # rDD_list.append(rDD)
             print(rDD)
             tourspot_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        tourspot_api_df.to_csv("../../datas/tourspot_api_info.csv", encoding='utf-8-sig')
+        tourspot_api_df.to_csv(constant.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
 
 

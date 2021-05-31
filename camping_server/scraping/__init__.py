@@ -1,5 +1,6 @@
 import kakao_reviews as kr
 import naverv4_blog as nv4
+import gocamp_crawl as gc
 import constant
 import pandas as pd
 
@@ -13,10 +14,13 @@ def target_list():
 
 if __name__ == '__main__':
     # s = kr.Scraping()
-    # s.get_search(target_list())  # 캠핑장 업소명 리스트
+    # s.get_search(target_list())
 
-    v4 = nv4.Scraping(target_list())
-    ids, place_name = v4.get_params()
-    print(f'ids: {ids}')
-    res_reviews = v4.get_reviews(ids, place_name)
-    print(f'res_reviews len : {len(res_reviews)}')
+    # v4 = nv4.Scraping(target_list())
+    # ids, place_name = v4.get_params()
+    # res_reviews = v4.get_reviews(ids, place_name)
+
+    crawler = gc.CampCrawler()
+    crawler.fetch_camp_list()
+    crawler.fetch_camp_details()
+    result = crawler.df

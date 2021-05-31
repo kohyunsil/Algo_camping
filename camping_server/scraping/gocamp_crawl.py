@@ -2,10 +2,9 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-
+import constant
 
 class CampCrawler:
-
     base_url = "https://www.gocamping.or.kr"
     path = "/bsite/camp/info/list.do"
     query = "?pageUnit=3000&searchKrwd=&listOrdrTrget=last_updusr_pnttm"
@@ -37,6 +36,7 @@ class CampCrawler:
                 "price": ""
             }
             rows.append(new_row)
+
         self.df = pd.DataFrame(rows)
         # print("👉 Finish fetch camp list")
 
@@ -52,21 +52,27 @@ class CampCrawler:
             etc_info = etc_info.replace("\t", " ").replace("\n", " ")
             imgs = dom.select('#contents > div > div.layout > div > div > div > a > img')
             img_url = []
+
             for img in imgs:
                 img_url.append(img['src'])
             pay_link = "https://www.gocamping.or.kr" + dom.select_one('#c_guide > a').get("href")
+
             self.df["tags"][idx] = tags
             self.df["info"][idx] = info
             self.df["etc"][idx] = etc_info
             self.df["img_url"][idx] = img_url
+
             try:
                 self.df["price"][idx] = self.__fetch_camp_price(pay_link)
             except AttributeError as e:
                 self.df["price"][idx] = ""
+
+        self.df.to_csv(constant.PATH + "details.csv", index=False, encoding="utf-8-sig")
 
     def __fetch_camp_price(self, link):
         response = requests.get(link)
         dom = BeautifulSoup(response.text, "html.parser")
         price = dom.select_one(
             '#contents > div > div.layout > div.camp_intro > div > table > tbody > tr').text.strip().replace("\n", " ")
+
         return price
