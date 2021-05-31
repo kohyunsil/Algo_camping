@@ -1,5 +1,5 @@
 import gocamping_api as ga
-import tourspot_api as ta
+import festival_api as ta
 import pandas as pd
 pd.set_option('display.max_row', 500)
 pd.set_option('display.max_columns', 100)
