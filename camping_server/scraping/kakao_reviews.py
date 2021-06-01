@@ -1,4 +1,4 @@
-import constant
+import camping_server.constant as constant
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from fake_useragent import UserAgent
@@ -13,8 +13,8 @@ class Scraping:
         self.user_agent = UserAgent().random
         self.options = webdriver.ChromeOptions()
         # self.options.add_argument('headless')
-
         self.driver = webdriver.Chrome(options=self.options)
+        self.driver.set_window_size(200, 200)
         self.url = 'https://map.kakao.com/'
         self.driver.get(self.url)
 
@@ -91,7 +91,7 @@ class Scraping:
                     kakao_reviews = kakao_reviews.append(i, ignore_index=True)
 
         kakao_reviews = kakao_reviews.drop('commentid', axis=1)
-        kakao_reviews.to_csv(constant.PATH + 'real_test.csv', encoding='utf-8-sig', header=True)
+        kakao_reviews.to_csv(constant.PATH + 'tour_3000.csv', encoding='utf-8-sig', header=True)
 
     def get_search(self, search_target):
         driver = self.driver

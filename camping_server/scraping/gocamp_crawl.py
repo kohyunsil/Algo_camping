@@ -2,7 +2,7 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import constant
+import camping_server.constant as constant
 
 class CampCrawler:
     base_url = "https://www.gocamping.or.kr"

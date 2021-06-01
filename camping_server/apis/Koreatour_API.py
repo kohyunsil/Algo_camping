@@ -5,11 +5,10 @@ import requests
 import json
 import pandas as pd
 from pandas.io.json import json_normalize
-import constant
+import camping_server.constant as constant
 import xmltodict
 
-
-class KoreatourApi:
+class KoreaTourApi:
     def __init__(self):
         pass
 
@@ -72,7 +71,6 @@ class KoreatourApi:
             print(rDD)
             tourspot_api_df = json_normalize(rDD['response']['body']['items']['item'])
         tourspot_api_df.to_csv(constant.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
-
 
     # 지역 기반 관광지 검색
     def tourlistAPI(self, num):

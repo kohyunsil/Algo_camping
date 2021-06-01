@@ -1,6 +1,6 @@
 # !pip install urllib
 # !pip install xmltodict
-import constant
+import camping_server.constant as constant
 from urllib.request import Request, urlopen
 import xmltodict
 import json

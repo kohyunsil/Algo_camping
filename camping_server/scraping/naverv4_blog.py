@@ -1,4 +1,4 @@
-import constant
+import camping_server.constant as constant
 from fake_useragent import UserAgent
 import json
 import pandas as pd
