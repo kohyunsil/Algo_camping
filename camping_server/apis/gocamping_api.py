@@ -1,25 +1,19 @@
-# !pip install urllib
-# !pip install xmltodict
 import camping_server.constant as constant
 from urllib.request import Request, urlopen
 import xmltodict
 import json
 from pandas.io.json import json_normalize
+import configparser
 
 class GocampingApi:
     def __init__(self):
-        pass
-
-    def get_secretKey(self):
-        file = open("keys/api_secret_key.txt", "rt")
-        secretKey = file.readline()
-        file.close()
-        return secretKey
+        config = configparser.RawConfigParser()
+        config.read('keys/api_secret_key.ini')
+        self.secretKey = config['API_KEYS']['PublicApiKey']
 
     def gocampingAPI(self):
-        secretKey = self.get_secretKey()
         url = 'http://api.visitkorea.or.kr/openapi/service/rest/GoCamping/basedList?'
-        param = 'ServiceKey='+secretKey+'&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000'
+        param = 'ServiceKey='+self.secretKey+'&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000'
 
         request = Request(url+param)
         request.get_method = lambda: 'GET'
@@ -32,5 +26,5 @@ class GocampingApi:
             rDJ = json.dumps(rD)
             rDD = json.loads(rDJ)
 
-        camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        camp_api_df.to_csv(constant.PATH + "camp_api_info.csv", encoding='utf-8-sig')
+            camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
+            camp_api_df.to_csv(constant.PATH + "test.csv", encoding='utf-8-sig')
