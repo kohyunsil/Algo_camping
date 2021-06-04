@@ -50,3 +50,5 @@ camping_server/scraping/chromedriver.exe
 camping_server/keys/
 datas/
 /camping_server/.idea/
+
+.idea/
