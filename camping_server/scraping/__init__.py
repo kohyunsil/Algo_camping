@@ -13,8 +13,8 @@ def target_list():
     return search_target
 
 if __name__ == '__main__':
-    s = kr.Scraping()
-    s.get_search(target_list())
+    # s = kr.Scraping()
+    # s.get_search(target_list())
 
     # v4 = nv4.Scraping(target_list())
     # ids, place_name = v4.get_params()
