@@ -1,15 +1,13 @@
-import camping_server.constant as constant
+import camping_server.config as config
 from urllib.request import Request, urlopen
 import xmltodict
 import json
 from pandas.io.json import json_normalize
-import configparser
 
 class GocampingApi:
     def __init__(self):
-        config = configparser.RawConfigParser()
-        config.read('keys/api_secret_key.ini')
-        self.secretKey = config['API_KEYS']['PublicApiKey']
+        # self.secretKey = config['API_KEYS']['PUBLIC_API_KEY']
+        self.secretKey = config.Config.PUBLIC_API_KEY
 
     def gocampingAPI(self):
         url = 'http://api.visitkorea.or.kr/openapi/service/rest/GoCamping/basedList?'
@@ -27,4 +25,4 @@ class GocampingApi:
             rDD = json.loads(rDJ)
 
             camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
-            camp_api_df.to_csv(constant.PATH + "test.csv", encoding='utf-8-sig')
+            camp_api_df.to_csv(config.Config.PATH + "test.csv", encoding='utf-8-sig')

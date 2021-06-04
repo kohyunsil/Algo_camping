@@ -2,7 +2,7 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import camping_server.constant as constant
+import camping_server.config as config
 
 class CampCrawler:
     base_url = "https://www.gocamping.or.kr"
@@ -67,7 +67,7 @@ class CampCrawler:
             except AttributeError as e:
                 self.df["price"][idx] = ""
 
-        self.df.to_csv(constant.PATH + "details.csv", index=False, encoding="utf-8-sig")
+        self.df.to_csv(config.Config.PATH + "details.csv", index=False, encoding="utf-8-sig")
 
     def __fetch_camp_price(self, link):
         response = requests.get(link)

@@ -1,5 +1,5 @@
 import pyautogui
-import camping_server.constant as constant
+import camping_server.config as constant
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from fake_useragent import UserAgent

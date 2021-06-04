@@ -5,15 +5,12 @@ import requests
 import json
 import pandas as pd
 from pandas.io.json import json_normalize
-import camping_server.constant as constant
+import camping_server.config as config
 import xmltodict
-import configparser
 
 class KoreaTourApi:
     def __init__(self):
-        config = configparser.RawConfigParser()
-        config.read('keys/api_secret_key.ini')
-        self.secretKey = config['API_KEYS']['PublicApiKey']
+        self.secretKey = config.Config.PUBLIC_API_KEY
 
     def festivalAPI(self, eventStartDate):
         """
@@ -36,7 +33,7 @@ class KoreaTourApi:
             rDD = json.loads(rDJ)
             print(rDD)
             festival_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        festival_api_df.to_csv(constant.PATH + "festival_api_info.csv", encoding='utf-8-sig')
+        festival_api_df.to_csv(config.Config.PATH + "festival_api_info.csv", encoding='utf-8-sig')
 
 
     def tourspotAPI(self, i, contentTypeId, radius=1000):
@@ -47,7 +44,7 @@ class KoreaTourApi:
          - contentType_dict= {'festival': 15, 'tourspot': 12, 'shopping': 38, 'restaurant': 39, }
         radius: 경도 위도 지점의 반경 몇 m 이내 검색 (default = 1000m)
         """
-        camp_api_df = pd.read_csv(constant.PATH + "camp_api_info.csv", encoding='utf-8-sig')
+        camp_api_df = pd.read_csv(config.Config.PATH + "camp_api_info.csv", encoding='utf-8-sig')
 
         mapX = camp_api_df['mapX'].iloc[i]
         mapY = camp_api_df['mapY'].iloc[i]
@@ -70,7 +67,7 @@ class KoreaTourApi:
             # rDD_list.append(rDD)
             print(rDD)
             tourspot_api_df = json_normalize(rDD['response']['body']['items']['item'])
-            tourspot_api_df.to_csv(constant.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
+            tourspot_api_df.to_csv(config.Config.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
 
     # 지역 기반 관광지 검색
     def tourlistAPI(self, num):

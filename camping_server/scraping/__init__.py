@@ -1,7 +1,7 @@
 import kakao_reviews as kr
 import naverv4_blog as nv4
 import gocamp_crawl as gc
-import camping_server.constant as constant
+import camping_server.config as constant
 import pandas as pd
 
 def target_list():

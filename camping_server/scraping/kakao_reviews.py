@@ -1,4 +1,4 @@
-import camping_server.constant as constant
+import camping_server.config as config
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from fake_useragent import UserAgent
@@ -91,7 +91,7 @@ class Scraping:
                     kakao_reviews = kakao_reviews.append(i, ignore_index=True)
 
         kakao_reviews = kakao_reviews.drop('commentid', axis=1)
-        kakao_reviews.to_csv(constant.PATH + 'tour_3000.csv', encoding='utf-8-sig', header=True)
+        kakao_reviews.to_csv(config.Config.PATH + 'tour_3000.csv', encoding='utf-8-sig', header=True)
 
     def get_search(self, search_target):
         driver = self.driver

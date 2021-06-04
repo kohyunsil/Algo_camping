@@ -1,4 +1,4 @@
-import camping_server.constant as constant
+import camping_server.config as config
 from fake_useragent import UserAgent
 import json
 import pandas as pd
@@ -48,7 +48,7 @@ class Scraping:
                 for item in items:
                     item['place_name'] = place_name[i]
                     v4_blog = v4_blog.append(item, ignore_index=True)
-                v4_blog.to_csv(constant.PATH + 'v4_test.csv', encoding='utf-8-sig', header=True)
+                v4_blog.to_csv(config.Config.PATH + 'v4_test.csv', encoding='utf-8-sig', header=True)
 
     def get_reviews(self, ids, place_name):
         res_reviews = []
