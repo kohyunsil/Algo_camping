@@ -24,3 +24,6 @@ if __name__ == '__main__':
     # crawler.fetch_camp_list()
     # crawler.fetch_camp_details()
     # result = crawler.df
+
+    ogcamp = oc.OgcampScraping()
+    ogcamp.get_data()
