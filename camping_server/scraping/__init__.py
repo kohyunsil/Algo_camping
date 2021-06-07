@@ -13,6 +13,7 @@ def target_list():
     return search_target
 
 if __name__ == '__main__':
+    pass
     # s = kr.Scraping()
     # s.get_search(target_list())
 
