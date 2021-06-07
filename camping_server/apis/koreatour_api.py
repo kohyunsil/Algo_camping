@@ -104,3 +104,51 @@ class KoreaTourApi:
             data = pd.concat([data, globals()["{}_df".format(k)]], 1)
 
         data.to_csv('tour_list.csv', index=False, encoding='utf-8-sig')
+
+    def tour_estiDecoAPI(self, startYmd, endYmd):
+        """
+        관광지별 혼잡도 예측 집계 데이터 정보 조회
+        startYmd/endYmd: YYYYMMDD 양식으로 기입 (ex: 20210601)
+        startYmd = endYmd 의 경우, 1일 간의 결과값 조회
+        """
+        url = 'http://api.visitkorea.or.kr/openapi/service/rest/DataLabService/tarDecoList?'
+        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=10000'
+        detail_param = f'&startYmd={startYmd}&endYmd={endYmd}'
+
+        request = Request(url + param + detail_param)
+        request.get_method = lambda: 'GET'
+        response = urlopen(request)
+        rescode = response.getcode()
+
+        if rescode == 200:
+            responseData = response.read()
+            rD = xmltodict.parse(responseData)
+            rDJ = json.dumps(rD)
+            rDD = json.loads(rDJ)
+            print(rDD)
+            tour_estiDeco_api_df = json_normalize(rDD['response']['body']['items']['item'])
+            tour_estiDeco_api_df.to_csv(config.Config.PATH + "tour_estiDeco_api_info.csv", encoding='utf-8-sig')
+
+    def visitors_API(self, region_type, startYmd, endYmd):
+        """
+        region_type: metco(광역시), locgo(지자체)
+        일자 YYMMDD 형태로 기입
+        기간 내 일별 데이터 조회
+        """
+        url = f'http://api.visitkorea.or.kr/openapi/service/rest/DataLabService/{region_type}RegnVisitrDDList?'
+        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=10000'
+        detail_param = f'&startYmd={startYmd}&endYmd={endYmd}'
+
+        request = Request(url + param + detail_param)
+        request.get_method = lambda: 'GET'
+        response = urlopen(request)
+        rescode = response.getcode()
+
+        if rescode == 200:
+            responseData = response.read()
+            rD = xmltodict.parse(responseData)
+            rDJ = json.dumps(rD)
+            rDD = json.loads(rDJ)
+            print(rDD)
+            tour_estiDeco_api_df = json_normalize(rDD['response']['body']['items']['item'])
+            tour_estiDeco_api_df.to_csv(config.Config.PATH + f"{region_type}_visitor_api_info.csv", encoding='utf-8-sig')
