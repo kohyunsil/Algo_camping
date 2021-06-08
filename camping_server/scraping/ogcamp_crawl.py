@@ -3,8 +3,7 @@ from selenium.common.exceptions import NoSuchElementException
 from tqdm import tqdm
 import time
 import pandas as pd
-import constant
-import camping_server.constant as constant
+import camping_server.config as config
 import configparser
 
 class OgcampScraping:
@@ -78,5 +77,5 @@ class OgcampScraping:
             datas.append(data)
 
         self.df = pd.DataFrame(datas)
-        self.df.to_csv(constant.PATH + 'ogcamp.csv', encoding="utf-8-sig")
+        self.df.to_csv(config.PATH + '/ogcamp.csv', encoding="utf-8-sig")
         self.driver.quit()

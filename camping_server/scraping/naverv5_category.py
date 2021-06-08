@@ -1,8 +1,6 @@
-# 카테고리 태그별 리뷰
-from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+import camping_server.config as config
 import time
-from selenium.webdriver.common.action_chains import ActionChains
 import pandas as pd
 import re
 
@@ -22,15 +20,19 @@ class CategoryScraping:
         iframe = self.driver.find_element_by_xpath('//*[@id="searchIframe"]')
         self.driver.switch_to.frame(iframe)
         time.sleep(1)
-        items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
 
-        items[0].find_element_by_xpath('div[1]/a').click()
-        self.driver.switch_to.default_content()
-        time.sleep(1)
-        iframe = self.driver.find_element_by_css_selector('#entryIframe')
-        time.sleep(1)
-        self.driver.switch_to.frame(iframe)
-        time.sleep(1)
+        try:
+            items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
+            items[0].find_element_by_xpath('div[1]/a').click()
+        except:
+            pass # 메인에서 바로 iframe으로 진입되는 경우
+        finally:
+            self.driver.switch_to.default_content()
+            time.sleep(1)
+            iframe = self.driver.find_element_by_css_selector('#entryIframe')
+            time.sleep(1)
+            self.driver.switch_to.frame(iframe)
+            time.sleep(1)
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
@@ -51,13 +53,16 @@ class CategoryScraping:
     def get_categories(self):
         """ all categories (3)"""
         global category
+        category = ''
         time.sleep(2)
-        try:
+
+        try: # category no such element scroll down
             category = self.driver.find_element_by_xpath(
                 '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div')
         except:
+            self.driver.execute_script('window.scrollTo(0, 1000);')
             category = self.driver.find_element_by_xpath(
-                '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]')
+                '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div')
         finally:
             return category
 
@@ -69,7 +74,6 @@ class CategoryScraping:
         idx : int
             target category a tag index
         """
-        print('click_category()')
         target_category = category.find_element_by_xpath(
             f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div/a[{idx + 1}]')
 
@@ -85,7 +89,6 @@ class CategoryScraping:
         count : int
             scroll down count
         """
-        print('scroll_down()')
         while count:
             self.driver.execute_script('window.scrollTo(0, 10000);')
             time.sleep(2)
@@ -115,7 +118,6 @@ class CategoryScraping:
         idx : int
             highlight review span tag index
         """
-        print('get_reviews()')
         try:
             span = self.driver.find_element_by_xpath(
                 f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[5]/a')
@@ -137,61 +139,29 @@ class CategoryScraping:
         try:
             info = {}
             highlight = span.find_element_by_class_name('highlight').text
-            # print(f'i:{i}, j:{j} highlight text: {highlight}')
-
             info['category'] = target_category.text
             info['title'] = title
             info['highlight_review'] = highlight
 
-            # target = element.find_element_by_xpath('div').text
-            # cnt = 1
-            # if target.split('\n')[cnt - 1] != '프로필':
-            #     pass
-            # info['user_name'] = target.split('\n')[cnt]
-            #
-            # review_pattern = re.compile(r'(\d)')
-            # info['review_count'] = review_pattern.findall(target.split('\n')[cnt + 1].split('리뷰 ')[cnt])[0]
-            #
-            # info['mean_star'] = target.split('\n')[cnt + 3]
-            #
-            # while True:
-            #     if target.split('\n')[cnt + 4] != '리뷰이미지':
-            #         break
-            #     else:
-            #         cnt += 1
-            #
-            # info['star'] = target.split('\n')[cnt + 4]
-            #
-            # date_pattern = re.compile(r'(\d{4}.\d{2}.\d{2})')
-            # info['date'] = date_pattern.findall(target.split('\n')[cnt + 5])[0]
-            #
-            # visit_pattern = re.compile(r'\d' + '번째')
-            # info['visit_count'] = visit_pattern.findall(target.split('\n')[cnt + 5])[0].split('번째')[0]
+            # date, visit count, reservation info
+            try:
+                info['visit_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[2]/div[2]').text
+            except:
+                info['visit_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[3]/div[2]').text
 
+            # user review count / picture num / mean star info
+            try:
+                info['user_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[1]/a/div/div[2]').text
+            except:
+                pass
         except:
             print('NoSuchElement Error')
-            print(f'info:{info}')
         return info
 
+    def save_res(self, reviews):
+        naverv5_df = pd.DataFrame()
 
-if __name__ == '__main__':
-    camping_list = ['캠핑장']
-    highlight_reviews = []
+        for review in reviews:
+            naverv5_df = naverv5_df.append(review, ignore_index=True)
 
-    for title in camping_list:
-        s = CategoryScraping(title)
-        s.switch_iframe()
-        title = s.move_tab()
-        category = s.get_categories()
-
-        try:
-            for i in range(1, 10):
-                target_category = s.click_cagetory(category, i)
-                elements = s.scroll_down()
-                for j, element in enumerate(elements[:3]):
-                    info = s.get_reviews(title, target_category, j)
-                    highlight_reviews.append(info)
-        finally:
-            s.driver.quit()
-
-    print(highlight_reviews)
+        naverv5_df.to_csv(config.Config.PATH + '/v5_category.csv', encoding="utf-8-sig", header=True)
