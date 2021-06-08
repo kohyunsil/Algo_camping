@@ -28,43 +28,72 @@ class OgcampScraping:
         submit.click()
         time.sleep(2)
 
-
+    def get_url(self):
         url_links = []
-        for i in tqdm(range(1,19)):
-            self.driver.get(f"https://www.5gcamp.com/?c=5g&p={i}&campID=2601")
+        levels = []
+        for i in tqdm(range(1, 19)):
+            self.driver.get(f"https://www.5gcamp.com/?c=5g&p={i}")
             items = self.driver.find_elements_by_xpath('//*[@id="camplist"]/div[2]/div[2]/div/div[2]/div')
+            level = [item.find_element_by_css_selector('li.star > p').text.strip() for item in items]
             links = [item.find_element_by_css_selector('a').get_attribute('href') for item in items]
             url_links.extend(links)
+            levels.extend(level)
 
+        self.df2 = pd.DataFrame(levels)
+
+        return url_links
+
+    def get_details(self):
+        links = self.get_url()
         datas = []
-        for link in tqdm(url_links):
+        for link in tqdm(links):
             time.sleep(1)
             self.driver.get(link)
+            title = self.driver.find_element_by_css_selector('#campcontents > div.viewheader > h3').text
+            addr = self.driver.find_element_by_css_selector(
+                '#vContent > h4.chead.address.first.fblack > a.clipboardCopy').text
+
+            # 위도경도 값 예외처리
             try:
-                title = self.driver.find_element_by_css_selector('#campcontents > div.viewheader > h3').text
-                addr = self.driver.find_element_by_css_selector(
-                    '#vContent > h4.chead.address.first.fblack > a.clipboardCopy').text
                 lats = self.driver.find_element_by_css_selector('#vContent > p > em').text
                 lat = lats.split('경도')[0].strip()
                 lon = '경도' + lats.split('경도')[1].strip()
-                envs = self.driver.find_elements_by_css_selector('#vContent > div.facilities > div > div')
-                env = [env.find_element_by_css_selector("p.f_name").text for env in envs]
-                en = ', '.join(env)
-                desc = self.driver.find_element_by_xpath('//*[@id="vContent"]/div[6]').get_attribute('innerText')
-                photoss = self.driver.find_elements_by_css_selector('#vContent > div.photos > div')
-                photos = [photos.find_element_by_css_selector('img').get_attribute('src') for photos in photoss]
-                photo = ', '.join(photos)
-                # time.sleep(1)
-                # self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                # click_review = self.driver.find_element_by_xpath('//*[@id="moreComment"]/a').click()
-                # time.sleep(2)
-                # reviews = self.driver.find_element_by_id("clist").text
+
             except NoSuchElementException:
+                lats = "정보없음"
                 lat = "정보없음"
                 lon = "정보없음"
-                en = "정보없음"
+
+            envs = self.driver.find_elements_by_css_selector('#vContent > div.facilities > div > div')
+            env = [env.find_element_by_css_selector("p.f_name").text for env in envs]
+            en = ', '.join(env)
+
+            try:
+                desc = self.driver.find_element_by_class_name('short_cont').text
+            except NoSuchElementException:
                 desc = "정보없음"
-                photo = "정보없음"
+
+            photoes = self.driver.find_elements_by_css_selector('#vContent > div.photos > div')
+            photos = [photos.find_element_by_css_selector('img').get_attribute('src') for photos in photoes]
+            photo = ', '.join(photos)
+
+            # 리뷰 크롤링을 위해 스크롤 조정 후 예외처리
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(1)
+
+            try:
+                self.driver.find_element_by_xpath('//*[@id="moreComment"]/a').click
+                time.sleep(1)
+                reviewes = self.driver.find_elements_by_class_name('commentbox')
+                reviews = [reviews.find_element_by_class_name('cont').text for reviews in reviewes]
+                review = [review.replace("\n", ' ') for review in reviews]
+                review = ', '.join(review)
+
+            except NoSuchElementException:
+                reviewes = self.driver.find_elements_by_class_name('commentbox')
+                reviews = [reviews.find_element_by_class_name('cont').text for reviews in reviewes]
+                review = [review.replace("\n", ' ') for review in reviews]
+                review = ', '.join(review)
 
             data = {
                 "title": title,
@@ -74,9 +103,11 @@ class OgcampScraping:
                 "environment": en,
                 "desc": desc,
                 "photo": photo,
+                "review": review,
             }
             datas.append(data)
 
         self.df = pd.DataFrame(datas)
-        self.df.to_csv(constant.PATH + 'ogcamp.csv', encoding="utf-8-sig")
+        self.df3 = pd.concat([self.df, self.df2], 1)
+        self.df3.to_csv(constant.PATH + 'ogcamp_scraping.csv', encoding="utf-8-sig")
         self.driver.quit()
