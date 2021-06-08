@@ -1,5 +1,8 @@
+# 카테고리 태그별 리뷰
+from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 import time
+from selenium.webdriver.common.action_chains import ActionChains
 import pandas as pd
 import re
 
@@ -18,10 +21,9 @@ class CategoryScraping:
         """main search list iframe switch (1)"""
         iframe = self.driver.find_element_by_xpath('//*[@id="searchIframe"]')
         self.driver.switch_to.frame(iframe)
-
-        time.sleep(2)
+        time.sleep(1)
         items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
-        print(len(items))
+
         items[0].find_element_by_xpath('div[1]/a').click()
         self.driver.switch_to.default_content()
         time.sleep(1)
@@ -43,118 +45,153 @@ class CategoryScraping:
         except:
             print('Index Error')
             self.driver.switch_to.default_content()
-        time.sleep(1)
 
         return title
 
-    def click_category(self, idx=0):
-        """ select category (3)"""
-        print(self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div').text)
-        category = self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div')
+    def get_categories(self):
+        """ all categories (3)"""
+        global category
+        time.sleep(2)
+        try:
+            category = self.driver.find_element_by_xpath(
+                '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div')
+        except:
+            category = self.driver.find_element_by_xpath(
+                '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]')
+        finally:
+            return category
 
-        # click category
-        time.sleep(1)
-        target_category = category.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div/a[{idx + 1}]')
-        print(target_category.text)
+    def click_cagetory(self, category, idx=1):
+        """
+        click category (4)
+        category : str
+            target category
+        idx : int
+            target category a tag index
+        """
+        print('click_category()')
+        target_category = category.find_element_by_xpath(
+            f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div/a[{idx + 1}]')
+
+        print(f'current target category : {target_category.text}')
         time.sleep(2)
         webdriver.ActionChains(self.driver).move_to_element(target_category).click(target_category).perform()
 
         return target_category
 
     def scroll_down(self, count=5):
-        """selected category scroll down (4)"""
-        # scroll down
+        """
+        selected category scroll down (5)
+        count : int
+            scroll down count
+        """
+        print('scroll_down()')
         while count:
             self.driver.execute_script('window.scrollTo(0, 10000);')
             time.sleep(2)
-            self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[2]/a').click()
+            try:  # scroll more button not exist
+                self.driver.find_element_by_xpath(
+                    '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[2]/a').click()
+            except:
+                break
             count -= 1
 
-        # all li element
         time.sleep(1)
-        try:
-            elements = self.driver.find_elements_by_xpath('//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li')
+        try:  # user review li element
+            elements = self.driver.find_elements_by_xpath(
+                '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li')
         except:
             print('No Element')
         else:
             return elements
 
-    def get_reviews(self, title, target_category):
-        """selected category review scraping (5)"""
-        # get highlight reviews
+    def get_reviews(self, title, target_category, idx=0):
+        """
+        selected category review scraping (6)
+        title : str
+            camping title
+        target_category : str
+            selected category
+        idx : int
+            highlight review span tag index
+        """
+        print('get_reviews()')
         try:
             span = self.driver.find_element_by_xpath(
-                f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{j + 1}]/div[1]/div[5]/a')
+                f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[5]/a')
         except:
             try:
                 span = self.driver.find_element_by_xpath(
-                    f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{j + 1}]/div[1]/div[4]/a')
+                    f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[4]/a')
             except:
                 try:
                     span = self.driver.find_element_by_xpath(
-                        f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{j + 1}]/div/div[4]/a')
+                        f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[4]/a')
                 except:
                     try:
                         span = self.driver.find_element_by_xpath(
-                            f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{j + 1}]/div/div[5]/a')
+                            f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[5]/a')
                     except:
                         print('No Highlight review div')
 
-        # 하나의 div element에 대한 사용자 리뷰 정보 가져오기
         try:
             info = {}
             highlight = span.find_element_by_class_name('highlight').text
+            # print(f'i:{i}, j:{j} highlight text: {highlight}')
 
             info['category'] = target_category.text
             info['title'] = title
             info['highlight_review'] = highlight
 
-            target = element.find_element_by_xpath('div').text
-            cnt = 1
-            if target.split('\n')[cnt - 1] != '프로필':
-                pass
-            info['user_name'] = target.split('\n')[cnt]
-
-            review_pattern = re.compile(r'(\d)')
-            info['review_count'] = review_pattern.findall(target.split('\n')[cnt + 1].split('리뷰 ')[cnt])[0]
-
-            info['mean_star'] = target.split('\n')[cnt + 3]
-
-            while True:
-                if target.split('\n')[cnt + 4] != '리뷰이미지':
-                    break
-                else:
-                    cnt += 1
-
-            info['star'] = target.split('\n')[cnt + 4]
-
-            date_pattern = re.compile(r'(\d{4}.\d{2}.\d{2})')
-            info['date'] = date_pattern.findall(target.split('\n')[cnt + 5])[0]
-
-            visit_pattern = re.compile(r'\d' + '번째')
-            info['visit_count'] = visit_pattern.findall(target.split('\n')[cnt + 5])[0].split('번째')[0]
+            # target = element.find_element_by_xpath('div').text
+            # cnt = 1
+            # if target.split('\n')[cnt - 1] != '프로필':
+            #     pass
+            # info['user_name'] = target.split('\n')[cnt]
+            #
+            # review_pattern = re.compile(r'(\d)')
+            # info['review_count'] = review_pattern.findall(target.split('\n')[cnt + 1].split('리뷰 ')[cnt])[0]
+            #
+            # info['mean_star'] = target.split('\n')[cnt + 3]
+            #
+            # while True:
+            #     if target.split('\n')[cnt + 4] != '리뷰이미지':
+            #         break
+            #     else:
+            #         cnt += 1
+            #
+            # info['star'] = target.split('\n')[cnt + 4]
+            #
+            # date_pattern = re.compile(r'(\d{4}.\d{2}.\d{2})')
+            # info['date'] = date_pattern.findall(target.split('\n')[cnt + 5])[0]
+            #
+            # visit_pattern = re.compile(r'\d' + '번째')
+            # info['visit_count'] = visit_pattern.findall(target.split('\n')[cnt + 5])[0].split('번째')[0]
 
         except:
             print('NoSuchElement Error')
-        finally:
-            self.driver.quit()
-            return info
+            print(f'info:{info}')
+        return info
+
 
 if __name__ == '__main__':
-    camp_list = ['캠핑장', ' 평창 보물섬캠핑장', '서울숲']
-    highlight_reviews = []  # all reviews list
+    camping_list = ['캠핑장']
+    highlight_reviews = []
 
-    for i in range(len(camp_list)):
-        s = CategoryScraping(camp_list[i])
+    for title in camping_list:
+        s = CategoryScraping(title)
         s.switch_iframe()
         title = s.move_tab()
+        category = s.get_categories()
 
-        for i in range(1, 4):
-            time.sleep(1)
-            category = s.click_category(i)
-            time.sleep(1)
-            elements = s.scroll_down()
+        try:
+            for i in range(1, 10):
+                target_category = s.click_cagetory(category, i)
+                elements = s.scroll_down()
+                for j, element in enumerate(elements[:3]):
+                    info = s.get_reviews(title, target_category, j)
+                    highlight_reviews.append(info)
+        finally:
+            s.driver.quit()
 
-            for j, element in enumerate(elements[:3]):  # n개의 div
-                info = s.get_reviews(title, category)
-                highlight_reviews.append(info)
+    print(highlight_reviews)
