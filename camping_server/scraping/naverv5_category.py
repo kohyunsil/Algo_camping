@@ -29,14 +29,22 @@ class CategoryScraping:
         finally:
             self.driver.switch_to.default_content()
             time.sleep(1)
-            iframe = self.driver.find_element_by_css_selector('#entryIframe')
-            time.sleep(1)
-            self.driver.switch_to.frame(iframe)
-            time.sleep(1)
+            try:
+                iframe = self.driver.find_element_by_css_selector('#entryIframe')
+                time.sleep(1)
+                self.driver.switch_to.frame(iframe)
+                time.sleep(1)
+            except:
+                pass
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
-        title = self.driver.find_element_by_xpath('//*[@id="_title"]/span[1]').text
+        try:
+            title = self.driver.find_element_by_xpath('//*[@id="_title"]/span[1]').text
+        except:
+            title = ''
+            return title
+
         menus = self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[3]/div/div/div/div').text
         menus = str(menus).split(' ')
 

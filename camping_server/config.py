@@ -11,3 +11,4 @@ class Config:
     config.read(PATH)
     MAX_PAGE = 100  # naver v4 max page
     PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
+    COUNT = 100 # naver v5 review max count

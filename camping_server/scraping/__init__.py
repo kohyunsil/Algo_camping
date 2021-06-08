@@ -30,9 +30,12 @@ def get_nv5_result(camping_list):
     for title in camping_list:
         s = nv5.CategoryScraping(title)
         s.switch_iframe()
-        title = s.move_tab()
-        category = s.get_categories()
 
+        title = s.move_tab()
+        if title == '':
+            continue
+
+        category = s.get_categories()
         cnt = 1
         try:
             while True:
@@ -42,7 +45,7 @@ def get_nv5_result(camping_list):
                     break
                 else:
                     elements = s.scroll_down()
-                    for j, element in enumerate(elements[:100]):
+                    for j, element in enumerate(elements[:config.Config.COUNT]): # default 100
                         try:
                             info = s.get_reviews(title, target_category, j)
                             highlight_reviews.append(info)
@@ -51,6 +54,7 @@ def get_nv5_result(camping_list):
                     cnt += 1
         finally:
             s.driver.quit()
+
     print(highlight_reviews)
     s.save_res(highlight_reviews)
 
