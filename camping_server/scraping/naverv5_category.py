@@ -1,5 +1,6 @@
 from selenium import webdriver
 import camping_server.config as config
+import slackbot
 import time
 import pandas as pd
 
@@ -39,6 +40,7 @@ class CategoryScraping:
                 time.sleep(1)
             except:
                 self.driver.quit()
+                slackbot.IncomingWebhook.send_msg('line 43 : switch_iframe() exception error occured! ')
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
@@ -59,6 +61,7 @@ class CategoryScraping:
             print('Index Error')
             self.driver.switch_to.default_content()
             self.driver.quit()
+            slackbot.IncomingWebhook.send_msg('line 63 : move_tab() exception error occured! ')
 
         return title
 
@@ -187,4 +190,4 @@ class CategoryScraping:
         for review in reviews:
             naverv5_df = naverv5_df.append(review, ignore_index=True)
 
-        naverv5_df.to_csv(config.Config.PATH + '/v5_category_500.csv', encoding="utf-8-sig", header=True)
+        naverv5_df.to_csv(config.Config.PATH + '/v5_category_700.csv', encoding="utf-8-sig", header=True)
