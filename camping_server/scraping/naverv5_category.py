@@ -17,6 +17,7 @@ class CategoryScraping:
 
     def switch_iframe(self):
         """main search list iframe switch (1)"""
+        time.sleep(2)
         iframe = self.driver.find_element_by_xpath('//*[@id="searchIframe"]')
         self.driver.switch_to.frame(iframe)
         time.sleep(1)
@@ -24,8 +25,11 @@ class CategoryScraping:
         try:
             items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
             items[0].find_element_by_xpath('div[1]/a').click()
-        except:
-            pass # 메인에서 바로 iframe으로 진입되는 경우
+        except: # 메인에서 바로 iframe으로 진입되는 경우
+            try:
+                items[0].find_element_by_xpath('div[1]/div[1]/a').click()
+            except:
+                pass
         finally:
             self.driver.switch_to.default_content()
             time.sleep(1)
@@ -35,7 +39,7 @@ class CategoryScraping:
                 self.driver.switch_to.frame(iframe)
                 time.sleep(1)
             except:
-                pass
+                self.driver.quit()
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
@@ -64,7 +68,7 @@ class CategoryScraping:
         category = ''
         time.sleep(2)
 
-        try: # category no such element scroll down
+        try:  # category no such element scroll down
             category = self.driver.find_element_by_xpath(
                 '//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div')
         except:
@@ -82,8 +86,7 @@ class CategoryScraping:
         idx : int
             target category a tag index
         """
-        target_category = category.find_element_by_xpath(
-            f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/div[1]/div/a[{idx + 1}]')
+        target_category = category.find_element_by_xpath(f'a[{idx + 1}]')
 
         print(f'current target category : {target_category.text}')
         time.sleep(2)
@@ -153,13 +156,16 @@ class CategoryScraping:
 
             # date, visit count, reservation info
             try:
-                info['visit_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[2]/div[2]').text
+                info['visit_info'] = self.driver.find_element_by_xpath(
+                    f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[2]/div[2]').text
             except:
-                info['visit_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[3]/div[2]').text
+                info['visit_info'] = self.driver.find_element_by_xpath(
+                    f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[3]/div[2]').text
 
-            # user review count / picture num / mean star info
+            # user review count, picture num, mean star info
             try:
-                info['user_info'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[1]/a/div/div[2]').text
+                info['user_info'] = self.driver.find_element_by_xpath(
+                    f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[1]/a/div/div[2]').text
             except:
                 pass
         except:
