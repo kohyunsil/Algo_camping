@@ -1,6 +1,6 @@
 from selenium import webdriver
 import camping_server.config as config
-import slackbot
+from camping_server.bot import slackbot
 import time
 import pandas as pd
 
