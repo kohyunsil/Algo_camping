@@ -11,3 +11,6 @@ class Config:
     config.read(PATH)
     MAX_PAGE = 100  # naver v4 max page
     PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
+    COUNT = 100 # naver v5 review max count
+    SCROLL_NUM = 10 # naver v5 scroll count
+    WEBHOOK_URL = keys['WEBHOOK_URL'] # slack webhook url
