@@ -63,7 +63,7 @@ def get_nv5_result(camping_list):
 
 if __name__ == '__main__':
     camping_list = target_list()
-    get_nv5_result(camping_list[50:101])
+    get_nv5_result(camping_list[:])
 
     # s = kr.Scraping()
     # s.get_search(target_list())
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     # ogcamp = oc.OgcampScraping()
     # ogcamp.get_data()
     
-    ogcamp = oc.OgcampScraping()
-    ogcamp.get_data()
-    ogcamp.get_details()
+    # ogcamp = oc.OgcampScraping()
+    # ogcamp.get_data()
+    # ogcamp.get_details()
     

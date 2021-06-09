@@ -2,7 +2,6 @@ from selenium import webdriver
 import camping_server.config as config
 import time
 import pandas as pd
-import re
 
 
 class CategoryScraping:
@@ -153,6 +152,15 @@ class CategoryScraping:
             info['category'] = target_category.text
             info['title'] = title
             info['highlight_review'] = highlight
+
+            # user_name try-except
+            try:
+                info['user_name'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[1]/a/div/div[1]').text
+            except:
+                try:
+                    info['user_name'] = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div/ul/li[{idx + 1}]/div/div[1]/a/div/div[1]').text
+                except:
+                    info['user_name'] = ''
 
             # date, visit count, reservation info
             try:
