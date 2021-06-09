@@ -29,8 +29,8 @@ def get_nv5_result(camping_list):
     """
     highlight_reviews = []
     try:
-        for title in camping_list:
-            s = nv5.CategoryScraping(title)
+        for camping_title in camping_list:
+            s = nv5.CategoryScraping(camping_title)
             s.switch_iframe()
 
             title = s.move_tab()
@@ -49,7 +49,7 @@ def get_nv5_result(camping_list):
                         elements = s.scroll_down(config.Config.COUNT)
                         for j, element in enumerate(elements[:config.Config.COUNT]): # default 100
                             try:
-                                info = s.get_reviews(title, target_category, j)
+                                info = s.get_reviews(camping_title, target_category, j)
                                 highlight_reviews.append(info)
                             except:
                                 break
@@ -63,7 +63,7 @@ def get_nv5_result(camping_list):
 
 if __name__ == '__main__':
     camping_list = target_list()
-    get_nv5_result(camping_list[:])
+    get_nv5_result(camping_list[220:501])
 
     # s = kr.Scraping()
     # s.get_search(target_list())
