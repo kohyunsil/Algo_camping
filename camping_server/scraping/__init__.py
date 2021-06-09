@@ -63,7 +63,7 @@ def get_nv5_result(camping_list):
 
 if __name__ == '__main__':
     camping_list = target_list()
-    get_nv5_result(camping_list[220:501])
+    get_nv5_result(camping_list[218:501])
 
     # s = kr.Scraping()
     # s.get_search(target_list())

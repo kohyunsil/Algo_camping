@@ -47,19 +47,18 @@ class CategoryScraping:
         except:
             title = ''
             return title
+
         try: # 리뷰 탭 없는 iframe 진입 시 종료
             menus = self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[3]/div/div/div/div').text
             menus = str(menus).split(' ')
-        except:
-            self.driver.quit()
 
-        try:
             review_idx = menus.index('리뷰')
             self.driver.find_element_by_xpath(
                 f'//*[@id="app-root"]/div/div[2]/div[3]/div/div/div/div/a[{review_idx + 1}]').click()
         except:
             print('Index Error')
             self.driver.switch_to.default_content()
+            self.driver.quit()
 
         return title
 
@@ -188,4 +187,4 @@ class CategoryScraping:
         for review in reviews:
             naverv5_df = naverv5_df.append(review, ignore_index=True)
 
-        naverv5_df.to_csv(config.Config.PATH + '/v5_category_400.csv', encoding="utf-8-sig", header=True)
+        naverv5_df.to_csv(config.Config.PATH + '/v5_category_500.csv', encoding="utf-8-sig", header=True)
