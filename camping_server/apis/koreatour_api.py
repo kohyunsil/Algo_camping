@@ -5,6 +5,9 @@ import requests
 import json
 import pandas as pd
 from pandas.io.json import json_normalize
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import camping_server.config as config
 import xmltodict
 
@@ -33,7 +36,10 @@ class KoreaTourApi:
             rDD = json.loads(rDJ)
             print(rDD)
             festival_api_df = json_normalize(rDD['response']['body']['items']['item'])
-        festival_api_df.to_csv(config.Config.PATH + "festival_api_info.csv", encoding='utf-8-sig')
+
+        return festival_api_df
+        # festival_api_df.to_csv(config.Config.PATH + "festival_api_info.csv", encoding='utf-8-sig')
+
 
 
     def tourspotAPI(self, i, contentTypeId, radius=1000):
@@ -44,7 +50,7 @@ class KoreaTourApi:
          - contentType_dict= {'festival': 15, 'tourspot': 12, 'shopping': 38, 'restaurant': 39, }
         radius: 경도 위도 지점의 반경 몇 m 이내 검색 (default = 1000m)
         """
-        camp_api_df = pd.read_csv(config.Config.PATH + "camp_api_info.csv", encoding='utf-8-sig')
+        camp_api_df = pd.read_csv(config.Config.PATH + "/camp_api_info.csv", encoding='utf-8-sig')
 
         mapX = camp_api_df['mapX'].iloc[i]
         mapY = camp_api_df['mapY'].iloc[i]
@@ -67,7 +73,8 @@ class KoreaTourApi:
             # rDD_list.append(rDD)
             print(rDD)
             tourspot_api_df = json_normalize(rDD['response']['body']['items']['item'])
-            tourspot_api_df.to_csv(config.Config.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
+            return tourspot_api_df
+            # tourspot_api_df.to_csv(config.Config.PATH + "tourspot_api_info.csv", encoding='utf-8-sig')
 
     # 지역 기반 관광지 검색
     def tourlistAPI(self, num):
@@ -103,7 +110,8 @@ class KoreaTourApi:
         for k in item_list:
             data = pd.concat([data, globals()["{}_df".format(k)]], 1)
 
-        data.to_csv('tour_list.csv', index=False, encoding='utf-8-sig')
+        return data
+        # data.to_csv('tour_list.csv', index=False, encoding='utf-8-sig')
 
     def tour_estiDecoAPI(self, startYmd, endYmd):
         """
