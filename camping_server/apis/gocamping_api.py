@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import camping_server.config as config
 from urllib.request import Request, urlopen
 import xmltodict
@@ -25,4 +28,5 @@ class GocampingApi:
             rDD = json.loads(rDJ)
 
             camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
-            camp_api_df.to_csv(config.Config.PATH + "test.csv", encoding='utf-8-sig')
+            return camp_api_df
+            # camp_api_df.to_csv(config.Config.PATH + "test.csv", encoding='utf-8-sig')
