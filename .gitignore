@@ -46,3 +46,9 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 -- INSERT --
+
+camping_server/keys/data.ini
+
+datas/
+
+camping_server/scraping/chromedriver.exe
