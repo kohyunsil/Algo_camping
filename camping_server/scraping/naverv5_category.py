@@ -1,6 +1,5 @@
 from selenium import webdriver
 import camping_server.config as config
-from camping_server.bot import slackbot
 import time
 import pandas as pd
 
@@ -25,6 +24,8 @@ class CategoryScraping:
         try:
             items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
             items[0].find_element_by_xpath('div[1]/a').click()
+            addr = items[0].find_element_by_xpath('div[2]/div[2]/div/span/a/span[1]').text
+            print(f'네이버 기준 주소 : {addr}')
         except: # 메인에서 바로 iframe으로 진입되는 경우
             try:
                 items[0].find_element_by_xpath('div[1]/div[1]/a').click()
@@ -40,7 +41,9 @@ class CategoryScraping:
                 time.sleep(1)
             except:
                 self.driver.quit()
-                slackbot.IncomingWebhook.send_msg('line 43 : switch_iframe() exception error occured! ')
+                # slackbot.IncomingWebhook.send_msg('line 43 : switch_iframe() exception error occured! ')
+            else:
+                return addr
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
@@ -61,7 +64,7 @@ class CategoryScraping:
             print('Index Error')
             self.driver.switch_to.default_content()
             self.driver.quit()
-            slackbot.IncomingWebhook.send_msg('line 63 : move_tab() exception error occured! ')
+            # slackbot.IncomingWebhook.send_msg('line 63 : move_tab() exception error occured! ')
 
         return title
 
@@ -122,7 +125,7 @@ class CategoryScraping:
         else:
             return elements
 
-    def get_reviews(self, title, target_category, idx=0):
+    def get_reviews(self, title, camping_addr, addr, target_category, idx=0):
         """
         selected category review scraping (6)
         title : str
@@ -132,6 +135,19 @@ class CategoryScraping:
         idx : int
             highlight review span tag index
         """
+
+        # review star
+        try:
+            star = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div/div[3]/div[1]/span[2]').text
+        except:
+            try:
+                star = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[3]/div[1]/span[2]').text
+            except:
+                try:
+                    star = self.driver.find_element_by_xpath(f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[2]/div[1]/span[2]').text
+                except:
+                    star = ''
+
         try:
             span = self.driver.find_element_by_xpath(
                 f'//*[@id="app-root"]/div/div[2]/div[5]/div[4]/div[4]/div[1]/ul/li[{idx + 1}]/div[1]/div[5]/a')
@@ -156,6 +172,9 @@ class CategoryScraping:
             info['category'] = target_category.text
             info['title'] = title
             info['highlight_review'] = highlight
+            info['base_addr'] = camping_addr
+            info['addr'] = addr
+            info['star'] = star
 
             # user_name try-except
             try:
@@ -190,4 +209,4 @@ class CategoryScraping:
         for review in reviews:
             naverv5_df = naverv5_df.append(review, ignore_index=True)
 
-        naverv5_df.to_csv(config.Config.PATH + '/v5_category_700.csv', encoding="utf-8-sig", header=True)
+        naverv5_df.to_csv(config.Config.PATH + '/v5_category_re.csv', encoding="utf-8-sig", header=True)

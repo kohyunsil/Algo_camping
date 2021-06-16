@@ -14,25 +14,28 @@ def target_list():
     :return:
     gocamping title
     """
-    datas = pd.read_csv(config.Config.PATH + '/camp_detail_page.csv')
-    datas = datas[['title']]
-    name = datas.iloc[:]['title']
-    search_target = [target.split(']')[1].strip() for target in name.tolist()]
+    datas = pd.read_csv(config.Config.PATH + '/target_list.csv')
+    name = datas[['title']]
+    name = name.iloc[:]['title']
 
-    return search_target
+    base_addr = datas[['addr']]
+    base_addr = base_addr.iloc[:]['addr']
 
-def get_nv5_result(camping_list):
+    return list(name), list(base_addr)
+
+def get_nv5_result(camping_list, camping_addrs):
+
     """
     naverv5 category review scraping
-    :param camping_list:
+    :param camping_list, camping_addrs:
     :return:
     naver map v5 category review crawling result csv
     """
     highlight_reviews = []
     try:
-        for camping_title in camping_list:
+        for i, camping_title in enumerate(camping_list):
             s = nv5.CategoryScraping(camping_title)
-            s.switch_iframe()
+            addr = s.switch_iframe()
 
             title = s.move_tab()
             print(title)
@@ -50,7 +53,7 @@ def get_nv5_result(camping_list):
                         elements = s.scroll_down(config.Config.COUNT)
                         for j, element in enumerate(elements[:config.Config.COUNT]): # default 100
                             try:
-                                info = s.get_reviews(camping_title, target_category, j)
+                                info = s.get_reviews(camping_title, camping_addrs[i], addr, target_category, j)
                                 highlight_reviews.append(info)
                             except:
                                 break
@@ -58,6 +61,7 @@ def get_nv5_result(camping_list):
             finally:
                 s.driver.quit()
                 time.sleep(2)
+                slackbot.IncomingWebhook.send_msg(f'{i}번째 {camping_title}까지 완료')
 
     finally:
         print(highlight_reviews)
@@ -65,8 +69,8 @@ def get_nv5_result(camping_list):
         slackbot.IncomingWebhook.send_msg(f'crawling completed ! result line num : {len(highlight_reviews)}')
 
 if __name__ == '__main__':
-    camping_list = target_list()
-    get_nv5_result(camping_list[:])
+    camping_list, camping_addrs = target_list()
+    get_nv5_result(camping_list[:], camping_addrs[:])
 
     # s = kr.Scraping()
     # s.get_search(target_list())
