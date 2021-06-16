@@ -46,3 +46,5 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 -- INSERT --
+
+camping_client/.idea/
