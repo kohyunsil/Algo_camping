@@ -48,3 +48,9 @@ share/python-wheels/
 -- INSERT --
 
 camping_client/.idea/
+
+camping_server/.idea/
+
+camping_server/keys/
+
+.idea/
