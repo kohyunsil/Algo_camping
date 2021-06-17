@@ -1,6 +1,7 @@
 import kakao_reviews as kr
 import naverv4_blog as nv4
 import gocamp_crawl as gc
+import datetime
 from camping_server.bot import slackbot
 import camping_server.config as config
 import time
@@ -8,36 +9,41 @@ import naverv5_category as nv5
 import camping_server.scraping.ogcamp_crawl as oc
 import pandas as pd
 
+
 def target_list():
     """
     get gocamping title list
     :return:
     gocamping title
     """
-    datas = pd.read_csv(config.Config.PATH + '/camp_detail_page.csv')
-    datas = datas[['title']]
-    name = datas.iloc[:]['title']
-    search_target = [target.split(']')[1].strip() for target in name.tolist()]
+    datas = pd.read_csv(config.Config.PATH + '/target_list.csv')
+    name = datas[['title']]
+    name = name.iloc[:]['title']
 
-    return search_target
+    base_addr = datas[['addr']]
+    base_addr = base_addr.iloc[:]['addr']
 
-def get_nv5_result(camping_list):
+    return list(name), list(base_addr)
+
+
+def get_nv5_result(camping_list, camping_addrs):
     """
     naverv5 category review scraping
-    :param camping_list:
+    :param camping_list, camping_addrs:
     :return:
     naver map v5 category review crawling result csv
     """
     highlight_reviews = []
     try:
-        for camping_title in camping_list:
+        for i, camping_title in enumerate(camping_list):
             s = nv5.CategoryScraping(camping_title)
             s.switch_iframe()
 
-            title = s.move_tab()
-            print(title)
+            title, addr = s.move_tab()
+            print(title, addr)
             if title == '':
                 continue
+
             category = s.get_categories()
             cnt = 1
             try:
@@ -48,9 +54,9 @@ def get_nv5_result(camping_list):
                         break
                     else:
                         elements = s.scroll_down(config.Config.COUNT)
-                        for j, element in enumerate(elements[:config.Config.COUNT]): # default 100
+                        for j, element in enumerate(elements[:config.Config.COUNT]):  # default 100
                             try:
-                                info = s.get_reviews(camping_title, target_category, j)
+                                info = s.get_reviews(camping_title, camping_addrs[i], addr, target_category, j)
                                 highlight_reviews.append(info)
                             except:
                                 break
@@ -58,15 +64,17 @@ def get_nv5_result(camping_list):
             finally:
                 s.driver.quit()
                 time.sleep(2)
+                slackbot.IncomingWebhook.send_msg(f'{datetime.datetime.now()}  {i}번째 {camping_title}까지 완료')
 
     finally:
         print(highlight_reviews)
         s.save_res(highlight_reviews)
         slackbot.IncomingWebhook.send_msg(f'crawling completed ! result line num : {len(highlight_reviews)}')
 
+
 if __name__ == '__main__':
-    camping_list = target_list()
-    get_nv5_result(camping_list[:])
+    camping_list, camping_addrs = target_list()
+    get_nv5_result(camping_list[:], camping_addrs[:])
 
     # s = kr.Scraping()
     # s.get_search(target_list())
@@ -79,11 +87,11 @@ if __name__ == '__main__':
     # crawler.fetch_camp_list()
     # crawler.fetch_camp_details()
     # result = crawler.df
-    
+
     # ogcamp = oc.OgcampScraping()
     # ogcamp.get_data()
-    
+
     # ogcamp = oc.OgcampScraping()
     # ogcamp.get_data()
     # ogcamp.get_details()
-    
+
