@@ -1,6 +1,6 @@
 from flask import *
-from camping_client.app import app
+from app import app
 
-@app.route('/')
-def hello_world():
-    return render_template('index.html')
+@app.route("/")
+def index():
+    return render_template("index.html")
