@@ -58,3 +58,7 @@ camping_modeling/models/ko.zip
 camping_modeling/models/ko.tsv
 
 camping_modeling/models/ko.bin
+
+camping_modeling/models/
+
+*.pkl

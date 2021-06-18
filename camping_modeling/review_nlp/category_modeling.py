@@ -7,8 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-import review_nlp as nlp
-s = nlp.Review_nlp()
+import kakao_review_nlp as nlp
 
 class CategoryModel:
     def __init__(self):
@@ -17,8 +16,9 @@ class CategoryModel:
     def make_cat_predictor(self):
         # get tokenized data
         s = nlp.Review_nlp()
-        data = s.rv_tokenizing('v5_category_re', 'highlight_review')
-        data.dropna(inplace=True)
+        o_data = s.rv_tokenizing('v5_category_re', 'highlight_review')
+        data = o_data[['highlight_review', 'category']]
+        data.dropna(axis=0, inplace=True)
 
         train_x, test_x, train_y, test_y = train_test_split(
             data.highlight_review, data.category, test_size=0.2, random_state=0,
@@ -35,11 +35,12 @@ class CategoryModel:
         model = clf.fit(train_x, train_y)
         print("모델 정확도: ", np.round(model.score(test_x, test_y), 4) * 100)
 
-        with open("model.pkl", "wb") as file:
+        with open("../models/model2.pkl", "wb") as file:
             pickle.dump(model, file)
+        print("Model saved!")
 
     def apply_cat_predictor(self):
-        with open("model.pkl", "rb") as file:
+        with open("../models/model2.pkl", "rb") as file:
             load_model = pickle.load(file)
 
         kakao = pd.read_csv("../../datas/kakao_camping_review_revised.csv", encoding='utf-8-sig')
