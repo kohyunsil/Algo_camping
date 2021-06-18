@@ -1,5 +1,5 @@
 import pandas as pd
-import kakao_review_nlp as nlp
+import review_nlp as nlp
 import category_modeling as cm
 
 if __name__ == '__main__':
