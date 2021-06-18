@@ -52,3 +52,9 @@ camping_server/keys/data.ini
 datas/
 
 camping_server/scraping/chromedriver.exe
+
+camping_modeling/models/ko.zip
+
+camping_modeling/models/ko.tsv
+
+camping_modeling/models/ko.bin

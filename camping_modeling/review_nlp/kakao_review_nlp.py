@@ -1,28 +1,46 @@
 import re
 import pandas as pd
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
+import matplotlib.pyplot as plt
+# 한글 폰트 설정
+import platform
+from matplotlib import font_manager, rc
+import matplotlib.pyplot as plt
+plt.rcParams['axes.unicode_minus'] = False
+
+if platform.system() == 'Windows':
+    path = "c:/Windows/Fonts/malgun.ttf"
+    font_name = font_manager.FontProperties(fname=path).get_name()
+    rc('font', family=font_name)
+elif platform.system() == 'Darwin':
+    rc('font', family='AppleGothic')
+elif platform.system() == 'Linux':
+    rc('font', family='NanumBarunGothic')
+else:
+    print('Unknown system... sorry~')
+
 import nltk
 from konlpy.tag import *
 from konlpy.utils import pprint
+from konlpy.tag import Okt
+from gensim.models import Word2Vec
+from gensim.models import KeyedVectors
+from sklearn.decomposition import PCA
+# import sklearn.cluster.KMeans as km
 
-class review_nlp:
+class Review_nlp:
     def __init__(self):
         self.kakao = pd.read_csv("../../datas/kakao_camping_review_revised.csv", encoding='utf-8-sig')
-        self.po_dict = ['좋','친절','괜찮','최고','빠르','짱','훌륭','추천','감사','구수','최상','대박','훈훈','특별','개이득',
-                        '최고','만족','세련','최고','감동','친절','스윗','센스','괜찮','착하다','저렴','적당','싸다','좋다','합리적',
-                        '훌륭','백프','만족','마음','든든','알맞다','무난','괜춘','망최상','굿','엄지','조용','깔끔','적당',
-                        '깡패','굉장','아담','완벽','아기자기','고급','최고','세련','만족','아늑','훌륭','예쁘','이쁘','짱','심쿵',
-                        '따뜻','깨끗','독특','매력','모던','취향저격','로','마음','클래식','아름','인상적','귀엽','포근','재방문']
-        self.neg_dict = ['아쉽','최악','나쁘','느리','빡치','비추','별로','그냥품','낙제','쏘','엉망','실망','불친절','문제',
-                         '컴플레인','거지','그닥','그다지','구려','불편','엉성','헬','개판','불친절','똑바로','재수','딱딱하다','차갑다',
-                         '별로','다소','나쁘다','바쁘다','어수선하다','이상하다','촌스럽다','거','부담스럽다','시끄럽','복잡',
-                         '안','않','못','없','아닌','아니']
 
-    def rv_stemming(self):
-        reviews = self.kakao['contents']
+    def read_file(self, filename):
+        path = "../../datas/"
+        data = pd.read_csv(path+f"{filename}.csv", encoding='utf-8-sig')
+        return data
+
+    def rv_tokenizing(self, filename, colname):
+        data = self.read_file(filename)
+        okt = Okt()
+        reviews = data[f"{colname}"]
         result_list = []
         english = re.compile(r'[a-zA-Z]')
 
@@ -30,20 +48,61 @@ class review_nlp:
             rv = str(reviews[i])
 
             if len(rv) > 0:
-                rv = re.sub(english, "", rv)
-
-                a = re.sub(' ', 's', rv)  # 띄어쓰기 위해 s 붙힘
-                b = twitter.pos(a, stem=True, norm=True)  # 형태소 분석
-                string = ''
-                for word in b:  # 문장으로 합침
-                    string += word[0]
-                c = re.sub('s', ' ', string)  # 띄어쓰기 분리
-                result_list.append(c)
+                rv = re.sub(english,"",rv)
+                b = okt.pos(rv, stem = True, norm= True)  # tokenize
+                sentence = []
+                for word in b:
+                    sentence.append(word[0])
+                result_list.append(sentence)
             else:
                 result_list.append("")
-        self.kakao['contents'] = result_list
-        return kakao
+        data['contents'] = result_list
+        return data
 
-    def po_neg_reviews(self):
-        kakao = rv_stemming()
-        """작업 중 입니다."""
+    def vectorizing(self):
+        data = self.rv_tokenizing(filename, colname)
+        reviews = data['contents']
+        model = Word2Vec(reviews, sg=1, # skinp-gram: 중심단어로 주변단어 예측
+                         window=5,      # 중심 단어로부터 좌우 5개까지 학습에 적용
+                         min_count=10)   # 전체 문서에서 최소 10회 이상 출현 단어로 학습
+        model.save('../models/model.model')
+        # word_vectors = model.wv
+        # word_vectors.save('../models/word_vectors.kv')
+
+    def load_model(self):
+        word_vectors = KeyedVectors.load('../models/word_vectors.kv')
+
+        # print(list(word_vectors.index_to_key))
+        # vocabs = list(word_vectors.index_to_key)
+        # word_vectors_list = [word_vectors[v] for v in vocabs]
+        #
+        # pca = PCA(n_components=2)
+        # xys = pca.fit_transform(word_vectors_list)
+        # xs = xys[:, 0]
+        # ys = xys[:, 1]
+        #
+        # plt.figure(figsize=(8, 6))
+        # plt.title("try 1")
+        # plt.scatter(xs, ys, marker='o')
+        # for i, v in enumerate(vocabs):
+        #     plt.annotate(v, xy=(xs[i], ys[i]))
+        # plt.show()
+
+        model = Word2Vec.load("../models/model.model")
+        pretrained_model = KeyedVectors.load_word2vec_format("../models/ko.bin", binary=True)
+        model.intersect_word2vec_format("../models/ko.bin", binary=True)
+        word_vectors = model.wv
+        vocabs = list(word_vectors.index_to_key)
+        word_vectors_list = [word_vectors[v] for v in vocabs]
+
+        pca = PCA(n_components=2)
+        xys = pca.fit_transform(word_vectors_list)
+        xs = xys[:, 0]
+        ys = xys[:, 1]
+
+        plt.figure(figsize=(8, 6))
+        plt.title("try 2")
+        plt.scatter(xs, ys, marker='o')
+        for i, v in enumerate(vocabs):
+            plt.annotate(v, xy=(xs[i], ys[i]))
+        plt.show()
