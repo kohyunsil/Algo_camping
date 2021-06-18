@@ -62,3 +62,5 @@ camping_modeling/models/ko.bin
 camping_modeling/models/
 
 *.pkl
+
+camping_modeling/review_nlp/.ipynb_checkpoints/
