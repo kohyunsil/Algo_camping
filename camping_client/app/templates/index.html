@@ -3,34 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Main page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 </head>
 <body>
-    <div class="container">
-        <div>
-            <div id="headers">{% include "./layout/header.html" %}</div>
-        </div>
-    {#    <div class="container">#}
-    {#        <div class="row" id="main-text">#}
-    {#            <h3>Hi</h3>#}
-    {#        </div>#}
-    {#    </div>#}
-        <div>
-            <div id="footers">{% include "./layout/footer.html" %}</div>
+    <div class="container" style="height: 72px";>
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="container text-white pt-5">
+        <p class="h3">이런 키워드는 어떠세요?</p><br>
+        <div class="row justify-content-md-center tags">
+            <button type="button" class="btn btn-primary btn-lg col col-lg-2">#태그1</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-lg col col-lg-2">#태그2</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-lg col col-lg-2">#태그3</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-lg col col-lg-2">#태그4</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-lg col col-lg-2">#태그5</button>&nbsp;
         </div>
     </div>
+
+    <div class="container-fluid">
+
+    </div>
+
+    <div class="container-fluid">
+
+    </div>
+
+<div class="slider">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide ss1">
+                <img class="img-1" src="/static/imgs/test_img.jpg" alt="img"/>
+                <span class="h4 text-white pt-50">주목할 만한 캠핑</span>
+                <br>
+                <p class="text-white main_info">캠핑장 설명</p>
+            </div>
+            <div class="swiper-slide ss2">
+                <img class="img-2" src="/static/imgs/test_img2.jpg" alt="img"/>
+                <span class="h4 text-white pt-50">주목할 만한 캠핑</span>
+                <br>
+                <p class="text-white main_info">캠핑장 설명</p>
+            </div>
+            <div class="swiper-slide ss3">
+                <img class="img-3" src="/static/imgs/test_img3.jpg" alt="img"/>
+                <span class="h4 text-white pt-50">주목할 만한 캠핑</span>
+                <br>
+                <p class="text-white main_info">캠핑장 설명</p>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+
+{#    <div id="footer" class="container text-white">#}
+{#        <div id="footers">{% include "./layout/footer.html" %}</div>#}
+{#    </div>#}
 </body>
+<!-- Swiper JS -->
+<script src="/static/js/swiper.min.js"></script>
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        autoplay: {
+          delay: 10000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+  });
+</script>
 </html>
-<style>
-    html{
-        height: 100%;
-    }
-    body{
-        height: auto;
-        background-image: url('https://images.unsplash.com/photo-1504632348771-974e356b80af?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80');
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        z-index: 1;
-        opacity: 0.9;
-    }
-</style>

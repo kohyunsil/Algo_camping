@@ -1,59 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Header</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-    <div class="container my-10">
-        <div class="row">
-            <nav class="navbar fixed-top navbar-light bg-light py-3">
-                <div class="container-fluid">
-                    <div class="col-md-2">
-                        <h3 class="text-secondary">
-                            <a class="navbar-brand" href="#" id="logo">Algo Camping</a>
-                        </h3>
-                    </div>
-                    <div class="col-md-8">
-                        <form class="d-flex">
-                          <input class="form-control w-50 py-2" id="input" type="search" placeholder=" 지역이나 태그를 입력하세요." aria-label="Search">
-                            <button id="search-btn" type="submit">
-                                <i class="material-icons search">search</i>
-                            </button>
-                        </form>
-                    </div>
-                    <div>
-                        <span class="material-icons user">account_circle</span>
-                        <span class="mx-2 py-1">안녕하세요</span>
-                    </div>
+<div class="container my-10">
+    <div class="row">
+        <nav class="navbar fixed-top navbar-light bg-light py-3">
+            <div class="container-fluid">
+                <div class="col-md-3">
+                    <h3 class="text-secondary">
+                        <a class="navbar-brand" href="#" id="logo">Algo Camping</a>
+                    </h3>
                 </div>
-            </nav>
-        </div>
+                <div class="col-md-7">
+                    <form class="d-flex">
+                      <input class="form-control w-50 py-2" id="input" type="search" placeholder=" 지역이나 태그를 입력하세요." aria-label="Search">
+                        <button id="search-btn" type="submit">
+                            <i class="material-icons search">search</i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-2">
+                    <span class="material-icons user">account_circle</span>
+                    <span class="mx-2 py-1">안녕하세요</span>
+                </div>
+            </div>
+        </nav>
     </div>
-</body>
-<style>
-    #logo{
-        color: #1f284a;
-        font-weight: bold;
-        font-size: 25px;
-    }
-    #input{
-        background-color: #e3e3e3;
-        border-radius: 1.2rem;
-        border: none;
-    }
-    #search-btn {
-        border: none;
-        background-color: rgba(255, 255, 255, 0.5);
-        color: #1f284a;
-    }
-    .search{
-        font-size: 1.9em;
-    }
-    .user{
-        font-size: 2.3em;
-    }
-</style>
-</html>
+</div>
