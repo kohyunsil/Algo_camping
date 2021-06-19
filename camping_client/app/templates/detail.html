@@ -32,7 +32,21 @@
                 <div class="row row-cols-1 row-cols-md-2">
                     <div class="col">
                         <div class="row">
-                            <img src="/static/imgs/test_img.jpg" class="figure-img img-fluid rounded"/>
+{#                            <img src="/static/imgs/test_img.jpg" class="figure-img img-fluid rounded"/>#}
+                            <div class="swiper-container mySwiper">
+                              <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img src="/static/imgs/test_img2.jpg" class="figure-img img-fluid rounded" alt="...">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="/static/imgs/test_img3.jpg" class="figure-img img-fluid rounded" alt="...">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="/static/imgs/test_img.jpg" class="figure-img img-fluid rounded" alt="...">
+                                    </div>
+                              </div>
+                        </div>
+
                         </div>
                         <div class="row">
                             <figure class="line-chart">
@@ -100,5 +114,7 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 {#<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>#}
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/static/js/thumbnail_swiper.js"></script>
 <script src="/static/js/detail.js"></script>
 </html>

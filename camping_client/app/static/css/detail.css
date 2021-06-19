@@ -1,9 +1,29 @@
-.outer-2{
-    height: 150vh;
-}
+/*outer container layout*/
 .algo-star{
     color: #e35b20;
 }
+/* mobile device */
+@media (min-width: 10px) {
+    .outer-2{
+        height: 500vh;
+    }
+}
+/* tablet device*/
+@media (min-width: 768px){
+    .outer-2{
+        height: 120vh;
+    }
+}
+@media (min-width: 850px) {
+
+}
+/* pc */
+@media (min-width: 1200px) {
+    .outer-2{
+        height: 140vh;
+    }
+}
+/*table*/
 table td,
 table th{
     text-align: center;
@@ -22,4 +42,10 @@ table a{
 /*bubble chart*/
 .bubble-chart{
     margin: 1em auto;
+}
+/*swiper.js img*/
+.swiper-container {
+    width: 100%;
+    height: 23rem;
+
 }
