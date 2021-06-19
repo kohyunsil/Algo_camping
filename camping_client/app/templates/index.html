@@ -7,10 +7,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 </head>
 <body>
-    <div class="container" style="height: 72px";>
+    <div class="container" style="height: 72px;">
         {% include "./layout/header.html" %}
     </div>
 
@@ -25,6 +26,7 @@
         </div>
     </div>
     &nbsp;
+
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col col-md-auto">
@@ -43,8 +45,9 @@
                 <button type="button" class="btn btn-primary btn-lg fw-bolder">#중분류 태그1</button>&nbsp;
             </div>
         </div>
-        </div>
+    </div>
 <br><br>
+
 <div class="slider">
     <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -98,20 +101,5 @@
 
 <!-- Swiper JS -->
 <script src="/static/js/swiper.min.js"></script>
-<script>
-    var mySwiper = new Swiper('.swiper-container', {
-        autoplay: {
-          delay: 20000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-        },
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-  });
-</script>
+<script src="/static/js/swiper.js"></script>
 </html>
