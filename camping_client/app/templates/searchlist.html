@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Detail page</title>
+    <title>SearchList page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
@@ -31,77 +31,126 @@
             </div>
         </nav>
     </div>
-
     <br><br>
+
     <div class="container">
         <div class="row row-cols-1 row-cols-md-4">
             <div class="col">
                 <div class="card border-secondary">
-                  <img src="/static/imgs/test_img.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
-                        <p class="card-text">95% 일치</p>
-                        <div class="col justify-content-md-center tags">
-                            <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그3</button>
-                        </div>&nbsp;
-                        <p>Algo ★★★★★</p>
-                  </div>
+                      <div class="swiper-container card border-secondary mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p>Algo ★★★★★</p>
+                      </div>
                 </div>
             </div>
 
             <div class="col">
-                <div class="card border-secondary">
-                  <img src="/static/imgs/test_img2.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
-                        <p class="card-text">95% 일치</p>
-                        <div class="col justify-content-md-center tags">
-                            <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그3</button>
-                        </div>&nbsp;
-                        <p>Algo ★★★★★</p>
-                  </div>
+               <div class="card border-secondary">
+                      <div class="swiper-container card border-secondary mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p>Algo ★★★★★</p>
+                      </div>
                 </div>
             </div>
 
             <div class="col">
-                <div class="card border-secondary">
-                  <img src="/static/imgs/test_img3.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
-                        <p class="card-text">95% 일치</p>
-                        <div class="col justify-content-md-center tags">
-                            <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그3</button>
-                        </div>&nbsp;
-                        <p>Algo ★★★★★</p>
-                  </div>
+               <div class="card border-secondary">
+                      <div class="swiper-container card border-secondary mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p>Algo ★★★★★</p>
+                      </div>
                 </div>
             </div>
 
             <div class="col">
-                <div class="card border-secondary">
-                  <img src="/static/imgs/test_img.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
-                        <p class="card-text">95% 일치</p>
-                        <div class="col justify-content-md-center tags">
-                            <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary btn-sm">#태그3</button>
-                        </div>&nbsp;
-                        <p>Algo ★★★★★</p>
-                    </div>
+               <div class="card border-secondary">
+                      <div class="swiper-container card border-secondary mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-primary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-primary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p>Algo ★★★★★</p>
+                      </div>
                 </div>
             </div>
+
         </div>
     </div>
 </body>
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script></script>
+<script src="/static/js/thumbnail_swiper.js"></script>
 </html>
