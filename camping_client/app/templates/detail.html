@@ -3,8 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Detail page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/detail.css">
 </head>
 <body>
+    <div class="container" style="height: 72px;">
+        {% include "./layout/header.html" %}
+    </div>
+    <br><br>
 
+    <div class="container">
+        <div class="p-5 bg-light rounded-3 outer-2">
+            <div class="container-fluid">
+                <h2 class="display-12 fw-bold">힐링별밤수목원캠핑장&nbsp;
+                    <span class="fs-6 fw-normal">알고별점
+                        <span class="algo-star">★★★★★</span>
+                    </span>&nbsp;
+                    <span class="fs-6 fw-normal">방문객 평균
+                        <span class="point">4.0</span>
+                    </span>
+                </h2>
+                <p class="col-md-12 fs-7 text-black-50">경기 남양주시 수동면 비룡로 1516-19</p>
+                <p class="col-md-12 fs-7">서울 근교의 아름다운 숲속에서 진정한 휴식을 즐길 수 있는 캠핑장입니다. 천혜의 자연을 느끼고 싶은 분들을 환영합니다.</p>
+                <div class="row row-cols-1 row-cols-md-2">
+                    <div class="col">
+                        <div class="row">
+                            <img src="/static/imgs/test_img.jpg" class="figure-img img-fluid rounded"/>
+                        </div>
+                        <div class="row">
+                            <figure class="line-chart">
+                                <div id="line-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <figure class="polar-chart">
+                              <div id="polar-container"></div>
+                            </figure>
+                        </div>
+                        <div class="row">
+                            <figure class="bubble-chart">
+                              <div id="bubble-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">운영기간</th>
+                            <td>주중/주말 08:00 ~ 24:00</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">연락처</th>
+                            <td>010-1111-1111</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">주요시설</th>
+                            <td>개인 카라반, 일반야영장</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">홈페이지 주소</th>
+                            <td><a href="#">https://campingwithsongs.com</a></td>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <div class="row row-cols-2 row-cols-md-2">
+                    <div class="col">
+                        Kakao local API
+                    </div>
+                    <div class="col">
+                        <div class="row row-cols-2 row-cols-md-2">
+                            <div class="col">
+                                <img class="figure-img img-fluid rounded" src="/static/imgs/test_img3.jpg">
+                            </div>
+                            <div class="col">
+                                <span>
+                                    <h5>세영님 <br>남양주에서 열리는 축제/관광지는 어떠세요?</h5>
+                                    <p>관광지/축제/노지에 대한 간략 소개</p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>#}
+<script src="/static/js/detail.js"></script>
 </html>
