@@ -14,12 +14,57 @@
     background-color: rgba(255, 255, 255, 0.5);
     color: #1f284a;
 }
+.username{
+    float: right;
+}
 .search{
     font-size: 1.9em;
 }
 .user{
-    font-size: 2.3em;
+    font-size: 2.5em;
+    left: 2px;
 }
+
+/* mobile device */
+@media (min-width: 10px) {
+    #input{
+        background-color: #e3e3e3;
+        border-radius: 1.2rem;
+        border: none;
+        margin-top: 0.2rem;
+        width: 18rem;
+    }
+    .header-userinfo{
+        position: fixed;
+        display: inline-flex;
+        right: 0;
+        visibility: hidden;
+    }
+}
+/* tablet device*/
+@media (min-width: 768px) {
+    #input{
+        background-color: #e3e3e3;
+        border-radius: 1.2rem;
+        border: none;
+        width: 50%
+    }
+    .header-userinfo{
+        position: fixed;
+        display: inline-flex;
+        right: 0;
+        visibility: visible;
+    }
+}
+/* pc */
+@media (min-width: 992px) {
+
+}
+/* pc */
+@media (min-width: 1200px) {
+
+}
+
 /*main page*/
 html{
     height: 100%;
