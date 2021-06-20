@@ -16,7 +16,7 @@ body{
 .navbar-brand{
     text-align: center;
 }
-/*login container*/
+/*signup container*/
 .login{
     margin-top: 16rem;
 }
@@ -24,28 +24,12 @@ body{
     height: 100%;
     width: 100%;
 }
-div.container.col-md-6.login > div.p-5.bg-light.col-md-auto.rounded-3.outer-2 > div > h2{
-    color: #1f284a;
-}
-.signup-href{
-    color: #5a5a5a;
-    font-size: 0.8rem;
-}
-.signup-href:hover{
-    color: #1f284a;
-    font-size: 0.8rem;
-}
-.btn-signin,
-.btn-oauth{
+.btn-check,
+.btn-signin{
     background-color: #1f284a;
     color: white;
 }
-.btn-signin:hover,
-.btn-oauth:hover{
+.btn-signin:hover{
     background-color: white;
     color: #1f284a;
-}
-.text-or{
-    text-align: center;
-    padding-top: 0.5rem;
 }

@@ -81,7 +81,7 @@ Highcharts.chart('line-container', {
 
   yAxis: {
     title: {
-      text: 'Number of Employees'
+      text: '방문율'
     }
   },
 
