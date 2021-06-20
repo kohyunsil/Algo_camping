@@ -28,7 +28,7 @@ div:nth-child(3) > div > div > button:hover,
 div:nth-child(3) > div > div > button:focus,
 div:nth-child(3) > div > div > button:active{
     color: #ffffff;
-    background-color: rgb(226, 136, 49);
+    background-color: #49917D;
 }
 
 /*swiper.js*/

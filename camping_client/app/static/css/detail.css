@@ -1,27 +1,9 @@
 /*outer container layout*/
 .algo-star{
-    color: #e35b20;
+    color: #49917D;
 }
-/* mobile device */
-@media (min-width: 10px) {
-    .outer-2{
-        height: 500vh;
-    }
-}
-/* tablet device*/
-@media (min-width: 768px){
-    .outer-2{
-        height: 120vh;
-    }
-}
-@media (min-width: 850px) {
-
-}
-/* pc */
-@media (min-width: 1200px) {
-    .outer-2{
-        height: 140vh;
-    }
+.container-fluid{
+    height: 100%;
 }
 /*table*/
 table td,
@@ -47,5 +29,5 @@ table a{
 .swiper-container {
     width: 100%;
     height: 23rem;
-
 }
+

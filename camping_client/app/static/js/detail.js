@@ -7,11 +7,11 @@ Highcharts.chart('polar-container', {
     },
 
     title: {
-      text: '세영님과 95% 일치합니다.'
+      text: '김알고님과 95% 일치합니다.'
     },
 
     subtitle: {
-      text: '세영님과 힐링별밤수목원캠핑장에 대한 분석결과입니다.'
+      text: '김알고님과 힐링별밤수목원캠핑장에 대한 분석결과입니다.'
     },
 
     pane: {

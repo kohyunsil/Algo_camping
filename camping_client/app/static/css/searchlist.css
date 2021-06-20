@@ -20,6 +20,9 @@ body > div.container-fluid.search-result > nav > a{
     text-decoration: none;
     color: #3e3e3e;
 }
+.algo-star{
+    color: #49917D;
+}
 /*camping top3 tag*/
 div:nth-child(5) > div > div > div > div > div > button{
     background-color: #e2e2e2;

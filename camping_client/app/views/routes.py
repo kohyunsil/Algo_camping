@@ -12,3 +12,7 @@ def search():
 @app.route("/detail")
 def detail():
     return render_template('detail.html')
+
+@app.route('/signin')
+def signin():
+    return render_template('signin.html')
