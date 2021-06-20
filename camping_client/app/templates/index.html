@@ -2,9 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Camping Test</title>
+    <title>Main Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
 </head>
 <body>
-    <p></p>
+    <div class="container" style="height: 72px;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="container text-white pt-5">
+        <p class="h3 fw-bolder">이런 키워드는 어떠세요?</p><br>
+        <div class="row justify-content-md-center tags">
+            <button type="button" class="btn btn-secondary btn-lg col col-lg-2 fw-bolder">#태그1</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary btn-lg col col-lg-2 fw-bolder">#태그2</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary btn-lg col col-lg-2 fw-bolder">#태그3</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary btn-lg col col-lg-2 fw-bolder">#태그4</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary btn-lg col col-lg-2 fw-bolder">#태그5</button>&nbsp;&nbsp;
+        </div>
+    </div>
+    &nbsp;
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-md-auto">
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그1</button>&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그2</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그3</button>&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그4</button>&nbsp;
+            </div>
+        </div>
+        &nbsp;
+        <div class="row justify-content-md-center">
+            <div class="col col-md-auto">
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그5</button>&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그6</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그7</button>&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg fw-bolder">#중분류 태그8</button>&nbsp;
+            </div>
+        </div>
+    </div>
+<br><br>
+
+<div class="slider">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide ss1">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="/static/imgs/test_img.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-1">
+                        <p class="h4 fw-bolder text-white">주목할 만한 캠핑장</p>
+                        <br>
+                        <p class="text-white">캠핑장에 대한 설명</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide ss2">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="/static/imgs/test_img2.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-2">
+                        <p class="h4 fw-bolder text-white">주목할 만한 캠핑장</p>
+                        <br>
+                        <p class="text-white">캠핑장에 대한 설명</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide ss3">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="/static/imgs/test_img3.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-3">
+                        <p class="h4 fw-bolder text-white">주목할 만한 캠핑장</p>
+                        <br>
+                        <p class="text-white">캠핑장에 대한 설명</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+
+{#    <div id="footer" class="container text-white">#}
+{#        <div id="footers">{% include "./layout/footer.html" %}</div>#}
+{#    </div>#}
 </body>
+
+<!-- Swiper JS -->
+<script src="/static/js/swiper.min.js"></script>
+<script src="/static/js/swiper.js"></script>
 </html>

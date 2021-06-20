@@ -1,0 +1,35 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+#logo{
+    color: #1f284a;
+    font-weight: bold;
+    font-size: 25px;
+}
+.navbar-brand{
+    text-align: center;
+}
+/*signup container*/
+.login{
+    margin-top: 16rem;
+}
+.container-fluid{
+    height: 100%;
+    width: 100%;
+}
+.btn-check,
+.btn-signin{
+    background-color: #1f284a;
+    color: white;
+}
+.btn-signin:hover{
+    background-color: white;
+    color: #1f284a;
+}
