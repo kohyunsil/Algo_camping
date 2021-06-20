@@ -14,5 +14,5 @@ class CampMerge:
         merge_inner1 = merge_inner1.drop(['title', 'description', 'address', 'link', 'url_num'],1)
         merge_inner1.to_csv("../datas/camp_data_merge.csv", index=False, encoding='utf-8-sig')
 
-# c = CampMerge()
-# c.camp_api_data_merge()
+c = CampMerge()
+c.camp_api_data_merge()
