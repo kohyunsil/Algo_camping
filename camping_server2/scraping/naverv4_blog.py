@@ -1,4 +1,4 @@
-import camping_server.config as config
+import camping_server2.config as config
 from fake_useragent import UserAgent
 import json
 import pandas as pd

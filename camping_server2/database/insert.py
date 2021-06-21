@@ -2,7 +2,7 @@ import pandas as pd
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
-import MySQLdb
+# import MySQLdb
 engine = create_engine("mysql+mysqldb://root:dss@34.136.89.21/camping")
 conn = engine.connect()
 

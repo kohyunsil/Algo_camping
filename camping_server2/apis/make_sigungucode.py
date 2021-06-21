@@ -1,5 +1,5 @@
 import pandas as pd
-import camping_server.config as config
+import camping_server2.config as config
 from datetime import datetime
 
 class Sigungucode:

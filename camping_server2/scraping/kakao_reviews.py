@@ -1,4 +1,4 @@
-import camping_server.config as config
+import camping_server2.config as config
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from fake_useragent import UserAgent
