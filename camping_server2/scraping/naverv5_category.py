@@ -1,5 +1,5 @@
 from selenium import webdriver
-import camping_server.config as config
+import camping_server2.config as config
 import time
 import pandas as pd
 

@@ -1,5 +1,5 @@
 import requests, json
-import camping_server.config as config
+import camping_server2.config as config
 
 class IncomingWebhook:
     def send_msg(err_msg):

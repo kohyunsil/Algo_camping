@@ -3,7 +3,7 @@ from selenium.common.exceptions import NoSuchElementException
 from tqdm import tqdm
 import time
 import pandas as pd
-import camping_server.config as config
+import camping_server2.config as config
 import configparser
 
 class OgcampScraping:

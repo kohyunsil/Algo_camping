@@ -8,7 +8,7 @@ from pandas.io.json import json_normalize
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
-import camping_server.config as config
+import camping_server2.config as config
 import xmltodict
 
 class KoreaTourApi:
