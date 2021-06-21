@@ -1,21 +1,34 @@
 <div class="container my-10">
     <div class="row">
         <nav class="navbar fixed-top navbar-light bg-light py-3">
-            <div class="container-fluid">
-                <h3 class="text-secondary">
-                    <a class="navbar-brand" href="/" id="logo">Algo Camping</a>
-                </h3>
-                <form class="col-sm-1 col-md-9 d-flex search-form">
-                  <input class="form-control" id="input" type="search" placeholder=" 지역이나 태그를 입력하세요." aria-label="Search">
-                    <button id="search-btn" type="submit">
-                        <i class="material-icons search">search</i>
-                    </button>
-                </form>
+            <div class="container-fluid row">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="h3 logo">Algo Camping
+{#                            <a class="navbar-brand" href="/" id="logo">Algo Camping</a>#}
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                          <button class="btn btn-outline-secondary btn-secondary px-3 dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0.2rem;">전체</button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">서울</a></li>
+                            <li><a class="dropdown-item" href="#">경기</a></li>
+                            <li><a class="dropdown-item" href="#">인천</a></li>
+                          </ul>
+                          <input type="text" class="form-control input-form p-2 mx-2" style="border-radius: 1.2rem; background-color: #ebebeb; border: none;" aria-label="Text input with dropdown button" placeholder="태그나 캠핑장명을 입력해주세요. ex)친절한, 알고캠핑장">
+                            <button id="search-btn" type="submit">
+                                <i class="material-icons search">search</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-2 header-userinfo">
+                        <i class="material-icons user">account_circle</i>
+                        <span class="mx-2 py-1 fw-bold username">김알고님 안녕하세요</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-2 header-userinfo">
-                <i class="material-icons user">account_circle</i>
-                <span class="mx-2 py-1 username">김알고님 안녕하세요</span>
-            </div>
+
         </nav>
     </div>
 </div>

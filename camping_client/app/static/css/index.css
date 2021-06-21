@@ -2,33 +2,37 @@
 .h3{
     text-align: center;
 }
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:hover,
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:focus,
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:active{
+    background-color: #262b35;
+    color: #ffffff;
+}
 /*large category button*/
-div.container.text-white.pt-5 > div > button{
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div> button{
     background-color: #ffffff;
     border-radius: 1.3rem;
     border: none;
     font-size: 1.1rem;
     color: #424242;
 }
-div.container.text-white.pt-5 > div > button:hover,
-div.container.text-white.pt-5 > div > button:focus,
-div.container.text-white.pt-5 > div > button:active{
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:hover,
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:focus,
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:active{
     background-color: #262b35;
     color: #ffffff;
 }
-/*middle category button*/
-div:nth-child(3) > div > div > button{
-    color: #434343;
-    border: none;
-    font-size: 0.9rem;
-    background-color: rgba(245, 245, 245, 0.5);
+/*small category button*/
+div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags{
+    text-align: center;
 }
-
-div:nth-child(3) > div > div > button:hover,
-div:nth-child(3) > div > div > button:focus,
-div:nth-child(3) > div > div > button:active{
-    color: #ffffff;
-    background-color: #49917D;
+#flexCheckDefault{
+    background-color: #e3b110;
+    border: none;
+}
+#flexCheckDefault:checked{
+    background-color: #1f284a;
+    border: none;
 }
 
 /*swiper.js*/

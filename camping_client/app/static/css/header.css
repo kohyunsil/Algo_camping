@@ -8,20 +8,20 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
-#logo{
+div:nth-child(1) > div > div > nav > div > div > div:nth-child(1) > button{
     color: #1f284a;
     font-weight: bold;
     font-size: 25px;
-}
-#input{
-    background-color: #e3e3e3;
-    border-radius: 1.2rem;
     border: none;
+    background-color: rgba(255, 255, 255, 0);
 }
 #search-btn {
     border: none;
     background-color: rgba(255, 255, 255, 0.5);
     color: #1f284a;
+}
+body > div:nth-child(1) > div > div > nav > div > div > div.col-6 > div > input{
+    padding: 10px;
 }
 .username{
     float: right;
