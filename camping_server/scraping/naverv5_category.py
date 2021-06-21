@@ -24,8 +24,6 @@ class CategoryScraping:
         try:
             items = self.driver.find_elements_by_xpath('//*[@id="_pcmap_list_scroll_container"]/ul/li')
             items[0].find_element_by_xpath('div[1]/a').click()
-            addr = items[0].find_element_by_xpath('div[2]/div[2]/div/span/a/span[1]').text
-            print(f'네이버 기준 주소 : {addr}')
         except: # 메인에서 바로 iframe으로 진입되는 경우
             try:
                 items[0].find_element_by_xpath('div[1]/div[1]/a').click()
@@ -41,14 +39,20 @@ class CategoryScraping:
                 time.sleep(1)
             except:
                 self.driver.quit()
-                # slackbot.IncomingWebhook.send_msg('line 43 : switch_iframe() exception error occured! ')
-            else:
-                return addr
+                #slackbot.IncomingWebhook.send_msg('line 43 : switch_iframe() exception error occured! ')
 
     def move_tab(self):
         """enter iframe + click review tab (2)"""
         try:
             title = self.driver.find_element_by_xpath('//*[@id="_title"]/span[1]').text
+            try:
+                addr = self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[4]/div/div[1]/div/ul/li[2]/div/span[1]').text
+                print(f'네이버 기준 주소 (iframe) : {addr}')
+            except:
+                try:
+                    addr = self.driver.find_element_by_xpath('//*[@id="app-root"]/div/div[2]/div[4]/div/div[1]/div/ul/li[1]/div/span[1]').text
+                except:
+                    addr = ''
         except:
             title = ''
             return title
@@ -66,7 +70,7 @@ class CategoryScraping:
             self.driver.quit()
             # slackbot.IncomingWebhook.send_msg('line 63 : move_tab() exception error occured! ')
 
-        return title
+        return title, addr
 
     def get_categories(self):
         """ all categories (3)"""
@@ -201,6 +205,8 @@ class CategoryScraping:
                 pass
         except:
             print('NoSuchElement Error')
+
+        print(info)
         return info
 
     def save_res(self, reviews):
@@ -209,4 +215,4 @@ class CategoryScraping:
         for review in reviews:
             naverv5_df = naverv5_df.append(review, ignore_index=True)
 
-        naverv5_df.to_csv(config.Config.PATH + '/v5_category_re.csv', encoding="utf-8-sig", header=True)
+        naverv5_df.to_csv(config.Config.PATH + '/v5_category_re300.csv', encoding="utf-8-sig", header=True)
