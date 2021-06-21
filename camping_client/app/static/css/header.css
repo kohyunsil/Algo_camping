@@ -8,26 +8,28 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
-div:nth-child(1) > div > div > nav > div > div > div:nth-child(1) > button{
+.logo{
     color: #1f284a;
     font-weight: bold;
     font-size: 25px;
     border: none;
+    text-decoration: none;
     background-color: rgba(255, 255, 255, 0);
 }
-#search-btn {
+.search{
+    padding-top: 8px;
+    padding-bottom: 8px;
     border: none;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: #1f284a;
+    background-color: #ececec;
 }
-body > div:nth-child(1) > div > div > nav > div > div > div.col-6 > div > input{
-    padding: 10px;
+.dropdown-btn{
+    background-color: #1f284a;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .username{
+    margin-top: 2px;
     float: right;
-}
-.search{
-    font-size: 1.9em;
 }
 .user{
     font-size: 2.5em;
@@ -35,33 +37,14 @@ body > div:nth-child(1) > div > div > nav > div > div > div.col-6 > div > input{
 }
 /* mobile device */
 @media (min-width: 10px) {
-    #input{
-        background-color: #e3e3e3;
-        border-radius: 1.2rem;
-        border: none;
-        margin-top: 0.2rem;
-        width: 18rem;
-    }
-    .header-userinfo{
-        position: fixed;
-        display: inline-flex;
-        right: 0;
-        visibility: hidden;
+    .user-dropdown{
+        display: none;
     }
 }
 /* tablet device*/
 @media (min-width: 768px) {
-    #input{
-        background-color: #e3e3e3;
-        border-radius: 1.2rem;
-        border: none;
-        width: 50%
-    }
-    .header-userinfo{
-        position: fixed;
-        display: inline-flex;
-        right: 0;
-        visibility: visible;
+    .user-dropdown{
+        display: block;
     }
 }
 /* pc */

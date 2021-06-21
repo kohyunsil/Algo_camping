@@ -2,14 +2,14 @@
 .h3{
     text-align: center;
 }
-div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:hover,
-div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:focus,
-div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div > button:active{
+div.container-fluid.text-white.pt-5 > div.row.tags > div > button:hover,
+div.container-fluid.text-white.pt-5 > div.row.tags > div > button:focus,
+div.container-fluid.text-white.pt-5 > div.row.tags > div > button:active{
     background-color: #262b35;
     color: #ffffff;
 }
 /*large category button*/
-div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags > div> button{
+div.container-fluid.text-white.pt-5 > div.row.tags > div> button{
     background-color: #ffffff;
     border-radius: 1.3rem;
     border: none;
