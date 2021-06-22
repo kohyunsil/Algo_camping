@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SearchList Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/searchlist.css">
+</head>
+<body>
+    <div class="container-fluid" style="background-color: white;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="container-fluid search-result">
+        <nav class="navbar navbar-light">
+            <a class="h4 navbar-brand col-md-2 text-white" href="#">가족과 함께, 힐링에 대한 4개의 검색 결과가 있습니다.</a>
+            <div class="btn-group mr-3 col-md-3 sort" role="group" aria-label="Basic radio toggle button group">
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                <label class="btn btn-outline-light" for="btnradio1">인기순</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-light" for="btnradio2">최신순</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                <label class="btn btn-outline-light" for="btnradio3">조회순</label>
+            </div>
+        </nav>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4">
+            <div class="col">
+                <div class="card border-0">
+                    <div class="swiper-container card mySwiper">
+                      <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                            </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                        <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                        <p class="card-text">95% 일치</p>
+                        <div class="col justify-content-md-center tags">
+                            <button type="button" class="btn btn-secondary btn-sm">#태그1</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-secondary btn-sm">#태그2</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-secondary btn-sm">#태그3</button>
+                        </div>&nbsp;
+                        <p class="algo-text">Algo
+                                <span class="algo-star">★★★★★</span>
+                            </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+               <div class="card border-0">
+                      <div class="swiper-container card border-0 mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-secondary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p class="algo-text">Algo
+                                <span class="algo-star">★★★★★</span>
+                            </p>
+                      </div>
+                </div>
+            </div>
+
+            <div class="col">
+               <div class="card border-0">
+                      <div class="swiper-container card border-0 mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body border-0">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-secondary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p class="algo-text">Algo
+                                <span class="algo-star">★★★★★</span>
+                            </p>
+                      </div>
+                </div>
+            </div>
+
+            <div class="col">
+               <div class="card border-0">
+                      <div class="swiper-container card border-0 mySwiper">
+                          <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img2.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="/static/imgs/test_img3.jpg" class="card-img-fluid" alt="...">
+                                </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <a class="h5 card-title fw-bolder" href="#">캠핑장 명</a>
+                            <p class="card-text">95% 일치</p>
+                            <div class="col justify-content-md-center tags">
+                                <button type="button" class="btn btn-secondary btn-sm">#태그1</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그2</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm">#태그3</button>
+                            </div>&nbsp;
+                            <p class="algo-text">Algo
+                                <span class="algo-star">★★★★★</span>
+                            </p>
+                      </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/static/js/thumbnail_swiper.js"></script>
+</html>

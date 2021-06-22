@@ -1,0 +1,69 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+.logo{
+    color: #1f284a;
+    font-weight: bold;
+    font-size: 30px;
+    border: none;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0);
+    font-family: "Harlow Solid Italic";
+}
+.search{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    background-color: #ececec;
+}
+.dropdown-btn{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #1f284a;
+    padding-left: 16px;
+    padding-right: 16px;
+    border : none;
+}
+.username{
+    margin-top: 2px;
+    float: right;
+}
+.user{
+    font-size: 2.5em;
+    left: 2px;
+}
+/* mobile device */
+@media (min-width: 10px) {
+    .user-dropdown{
+        display: none;
+    }
+}
+/* tablet device*/
+@media (min-width: 768px) {
+    .user-dropdown{
+        display: none;
+    }
+}
+/* pc */
+@media (min-width: 992px) {
+    .user-dropdown{
+        display: block;
+    }
+}
+/* pc */
+@media (min-width: 1200px) {
+
+}
