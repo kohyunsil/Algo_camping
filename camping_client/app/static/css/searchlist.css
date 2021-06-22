@@ -23,6 +23,15 @@ body > div.container-fluid.search-result > nav > a{
 .algo-star{
     color: #49917D;
 }
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+.algo-text{
+    font-family: "Harlow Solid Italic";
+}
 /*camping top3 tag*/
 div:nth-child(5) > div > div > div > div > div > button{
     background-color: #e2e2e2;

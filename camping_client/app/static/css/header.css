@@ -8,24 +8,34 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
 .logo{
     color: #1f284a;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
     border: none;
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0);
+    font-family: "Harlow Solid Italic";
 }
 .search{
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border: none;
     background-color: #ececec;
 }
 .dropdown-btn{
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: #1f284a;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border : none;
 }
 .username{
     margin-top: 2px;
@@ -44,12 +54,14 @@ body{
 /* tablet device*/
 @media (min-width: 768px) {
     .user-dropdown{
-        display: block;
+        display: none;
     }
 }
 /* pc */
 @media (min-width: 992px) {
-
+    .user-dropdown{
+        display: block;
+    }
 }
 /* pc */
 @media (min-width: 1200px) {
