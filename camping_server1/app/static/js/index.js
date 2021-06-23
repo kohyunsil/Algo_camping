@@ -4,7 +4,7 @@ var items = []
 $(function(){
     var cnt = 0
 
-    $('header').append(
+    $('.outer-1').append(
         ' <div class="alert alert-warning alert-dismissible fade" id="alert-form" style="display:none;" role="alert">\n' +
             '<strong>🙋🏻‍♀️</strong> 최대 3개의 태그까지 입력할 수 있습니다.\n' +
             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
