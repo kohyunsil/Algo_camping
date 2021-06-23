@@ -19,7 +19,7 @@ Highcharts.chart('polar-container', {
     },
 
     xAxis: {
-      categories: ['안전성', '청결함', '접근성', '편의성', '다양성'],
+      categories: ['편의성', '청결함', '힐링', '다양성', '함께'],
       tickmarkPlacement: 'on',
       lineWidth: 0
     },
@@ -96,7 +96,7 @@ Highcharts.chart('line-container', {
       label: {
         connectorAllowed: false
       },
-      pointStart: 2010
+
     }
   },
 

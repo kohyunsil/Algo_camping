@@ -1,10 +1,5 @@
-<!-- Bootstrap 4.3-->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">
-
-<header class="py-3 mb-3 border-bottom">
-    <div class="container-fluid d-grid align-items-center" style="grid-template-columns: 0.5fr 2fr;">
+<div class="container-fluid">
+    <div class="container-fluid d-grid align-items-center" style="grid-template-columns: 0.5fr 2fr; padding-top: 10px;">
         <div class="dropdown">
             <a class="logo" href="#">Algo Camping</a>
         </div>
@@ -36,17 +31,12 @@
                                 <li><a class="dropdown-item" href="#">제주</a></li>
                             </ul>
                         </span>
-                        <input class="col-8" type="search" data-role="tagsinput" value="">
-                        <span>
-                            <button class="col-1 search-btn" type="submit">
-                                <i class="material-icons search">search</i>
-                            </button>
-                        </span>
+                        <input class="col-8" type="search" data-role="tagsinput" value="" style="display: none">
+                        <button class="col-0 search-btn" type="submit" style="">
+                            <i class="material-icons search" width="32" height="32">search</i>
+                        </button>
                     </form>
                 </div>
-                <!-- test -->
-                <p id="text-output"></p>
-                <!-- -->
             </div>
 
             <div class="flex-shrink-0 dropdown user-dropdown">
@@ -61,9 +51,10 @@
         </div>
     </div>
     <div class="row">
-        <span class="text-secondary text-center">태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장</span>
+        <span class="text-secondary text-center info-text">태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장</span>
     </div>
-</header>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
