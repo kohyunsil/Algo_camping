@@ -5,6 +5,11 @@
     <title>SearchList Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{#<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">#}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">#}
+
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,10 +17,69 @@
     <link rel="stylesheet" type="text/css" href="/static/css/searchlist.css">
 </head>
 <body>
-    <div class="container-fluid" style="background-color: white;">
         {% include "./layout/header.html" %}
-    </div>
 
+<!------------->
+{#    <div class="container-fluid d-grid align-items-center" style="grid-template-columns: 0.5fr 2fr;">#}
+{#        <div class="dropdown">#}
+{#            <a class="logo" href="#">Algo Camping</a>#}
+{#        </div>#}
+{##}
+{#        <div class="d-flex align-items-center">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{#                    <form>#}
+{#                        <span>#}
+{#                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                             전체#}
+{#                            </button>#}
+{#                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">#}
+{#                                <li><a class="dropdown-item" href="#">서울</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">경기</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">인천</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">강원</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">충남</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">대전</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">충북</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">부산</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">울산</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">대구</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">경북</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">경남</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">전남</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">광주</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">전북</a></li>#}
+{#                                <li><a class="dropdown-item" href="#">제주</a></li>#}
+{#                            </ul>#}
+{#                        </span>#}
+{#                        <input class="col-8" type="search" data-role="tagsinput" value="">#}
+{#                        <span>#}
+{#                            <button class="col-1 search-btn" type="submit">#}
+{#                                <i class="material-icons search">search</i>#}
+{#                            </button>#}
+{#                        </span>#}
+{#                    </form>#}
+{#                </div>#}
+{#                <!-- test -->#}
+{#                <p id="text-output"></p>#}
+{#                <!-- -->#}
+{#            </div>#}
+{##}
+{#            <div class="flex-shrink-0 dropdown user-dropdown">#}
+{#                <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                    <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>#}
+{#                    <span class="mx-2 py-1 username">김알고님 안녕하세요</span>#}
+{#                </a>#}
+{#                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">#}
+{#                    <li><a class="dropdown-item" href="#">로그아웃</a></li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="row">#}
+{#        <span class="text-secondary text-center">태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장</span>#}
+{#    </div>#}
+<!-------------->
     <div class="container-fluid search-result">
         <nav class="navbar navbar-light">
             <a class="h4 navbar-brand col-md-2 text-white" href="#">가족과 함께, 힐링에 대한 4개의 검색 결과가 있습니다.</a>
@@ -159,7 +223,13 @@
         </div>
     </div>
 </body>
-
+<!------ tmp ----->
+{#<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>#}
+{#<script src="/static/js/tagsinput.js"></script>#}
+<!---------------->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="/static/js/thumbnail_swiper.js"></script>
 </html>

@@ -13,8 +13,6 @@ div.container-fluid.text-white.pt-5 > div.row.tags > div> button{
 border-radius: 1.3rem;
     border: none;
     font-size: 1.1rem;
-    color: #424242;
-
     background-color: #262b35;
     color: #ffffff;
 }
@@ -39,7 +37,6 @@ div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags{
     background-color: #1f284a;
     border: none;
 }
-
 /*swiper.js*/
 .swiper-container {
     width: 100%;
