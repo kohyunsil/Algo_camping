@@ -16,11 +16,11 @@ $(function(){
         if (cnt > 1){
             $('#alert-form').addClass('show');
             $('#alert-form').show();
-            // 4개 이상 선택한 경우 비활성화
+            // 3개 이상 선택한 경우 비활성화
             $('input:not(:checked)').attr('disabled', 'disabled');
         }
         if ($(this).prop('checked')) {
-            items.push($(this).val());
+            items.push('#' + $(this).val());
             cnt += 1
         }else {
             // 3개 이하일시 비활성화 해제
@@ -51,9 +51,9 @@ function getKeywords() {
     req += '#' + $(".dropdown-toggle").text();
 
     for (var i = 0; i < items.length; i++) {
-        arr.push('#' + items[i].split(',')[0]);
+        arr.push(items[i].split(',')[0]);
     }
-
+        console.log(arr);
     var tmp = arr.toString().split(',');
 
     for (var i = 0; i < tmp.length; i++) {

@@ -37,6 +37,10 @@ div.container-fluid.text-white.pt-5 > div.row.justify-content-md-center.tags{
     background-color: #1f284a;
     border: none;
 }
+.form-check-label{
+    color: #dedede;
+    font-size: 0.8rem;
+}
 /*swiper.js*/
 .swiper-container {
     width: 100%;

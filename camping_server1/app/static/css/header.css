@@ -17,7 +17,7 @@ body{
 .logo{
     color: #1f284a;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 1.4rem;
     border: none;
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0);
@@ -85,7 +85,7 @@ body{
     color: #555;
     vertical-align: middle;
     border-radius: 4px;
-    width: 60%;
+    width: 80%;
     line-height: 22px;
     cursor: text;
 }
@@ -131,9 +131,8 @@ body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > 
 .bootstrap-tagsinput .badge [data-role="remove"]:after {
     content: "×";
     padding: 0px 4px;
-    background-color:rgba(0, 0, 0, 0.1);
     border-radius:50%;
-    font-size:13px;
+    font-size:14px;
 }
 .bootstrap-tagsinput .badge [data-role="remove"]:hover:after {
     background-color:rgba(0, 0, 0, 0.62);
@@ -162,7 +161,6 @@ body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > 
     background-clip: padding-box;
     cursor: pointer;
 }
-
 .tt-suggestion {
     display: block;
     padding: 3px 20px;
@@ -172,7 +170,6 @@ body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > 
     color: #333333;
     white-space: nowrap;
 }
-
 .tt-suggestion:hover,
 .tt-suggestion:focus {
     color: #ffffff;
@@ -180,4 +177,7 @@ body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > 
     outline: 0;
     background-color: #f3f3f3;
     padding: 4px;
+}
+.info-text{
+    padding-right: 7rem;
 }
