@@ -19,7 +19,7 @@ Highcharts.chart('polar-container', {
     },
 
     xAxis: {
-      categories: ['편의성', '청결함', '힐링', '다양성', '함께'],
+      categories: ['COMFORT', 'CLEAN', 'HEALING', 'FUN', 'TOGETHER'],
       tickmarkPlacement: 'on',
       lineWidth: 0
     },
@@ -165,13 +165,16 @@ Highcharts.chart('bubble-container', {
     }
   },
   series: [{
-    name: '상위 n개 카테고리',
+    name: '상위 5개 카테고리',
     data: [{
         name: '분위기 좋은',
         value: 767.1
       }, {
         name: '친절한',
         value: 600.7
+      },{
+        name: '별보기 좋은',
+        value: 367.1
       },
       {
         name: '벌레가 없는',

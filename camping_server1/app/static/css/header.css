@@ -14,10 +14,11 @@ body{
     font-weight: normal;
     src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
 }
+.logo:hover,
 .logo{
     color: #1f284a;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     border: none;
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0);

@@ -48,12 +48,14 @@ function getKeywords() {
     var req = '';
 
     // 선택된 지역
-    req += '#' + $(".dropdown-toggle").text();
+    req += '#' + $(".dropdown-toggle").text().trim();
+    if (req === '#'){
+        req += '전체';
+    }
 
     for (var i = 0; i < items.length; i++) {
         arr.push(items[i].split(',')[0]);
     }
-        console.log(arr);
     var tmp = arr.toString().split(',');
 
     for (var i = 0; i < tmp.length; i++) {
@@ -71,10 +73,12 @@ $(document).ready(function(){
     $('form').on('submit', function(event){
     event.preventDefault();
     var req = getKeywords().replace(/#/g, ';');
-    var url = "/search/list?keywords=" + req.toString();
+    var url = '/place/' + req.toString();
 
-    $.getJSON(url, function(response){
-        console.log(response);
-    });
+        $.getJSON(url, function(response){
+            location.href = '/search?keywords=' + req.toString();
+            // $('#search-res-info').text(req.toString());
+            // console.log($('#search-res-info').text());
+        });
     });
 })
