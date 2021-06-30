@@ -65,3 +65,5 @@ camping_modeling/models/
 
 camping_modeling/review_nlp/.ipynb_checkpoints/
 camping_server/keys/config generator.py
+
+camping_modeling/clustering/.ipynb_checkpoints/
