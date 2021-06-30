@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74701dba-cd57-4000-8750-267850422dd9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camping_modeling/models/model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/models/model.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camping_modeling/models/word_vectors.kv" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/models/word_vectors.kv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camping_modeling/clustering/review_clustering_100d.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/clustering/review_clustering_100d.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camping_modeling/clustering/review_clustering_2d.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/clustering/review_clustering_2d.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camping_modeling/review_nlp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/review_nlp/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camping_modeling/review_nlp/category_modeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/review_nlp/category_modeling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camping_modeling/review_nlp/kakao_review_nlp.py" beforeDir="false" afterPath="$PROJECT_DIR$/camping_modeling/review_nlp/kakao_review_nlp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
