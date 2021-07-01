@@ -1,6 +1,7 @@
 from flask import *
 from ..model.place_dao import PlaceDAO as model_place
 from ..model.search_dao import SearchDAO as model_search
+from sqlalchemy import case
 from ..view import *
 from ..model import *
 
@@ -56,15 +57,22 @@ def search_tags():
 
         '''
         # select * from place where content_id in(
-        # select content_id from search where addr like '%지역%' or place_name like '%캠핑장 관련 키워드%'  or (태그=1 or 태그=1) ) order by content_id asc;
+        # select content_id from search where addr like '%지역%' or place_name like '%캠핑장명%' or (태그=1 or 태그=1)) order by (case 
+        # when place_name like '%캠핑장명%' then 1
+        # when addr like '%지역%' then 2
+        # else 3
+        # end);
         '''
         sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
                                                                    model_search.place_name.like(place_keyword) |
                                                                    tag_query).subquery()
-        main_query = session_.query(model_place).filter(model_place.content_id.in_(sub_query)).order_by(model_place.content_id.asc()).all()
-        # print(main_query)
-        # session_.commit()
-
+        main_query = session_.query(model_place).filter(model_place.content_id.in_(sub_query)).order_by(
+            case(
+                (model_place.place_name.like(place_keyword), 1),
+                (model_place.addr.like(area), 2),
+                else_=3
+            )
+        ).limit(Config.LIMIT).all()
 
         place_info = []
         for query in main_query:
@@ -72,4 +80,5 @@ def search_tags():
             query.detail_image = str(query.detail_image).split(',')[:]
             place_info.append(query)
 
-        return render_template('searchlist.html', keywords=', '.join(split_params), res_num=len(main_query), place_info=place_info)
+        return render_template('searchlist.html', keywords=', '.join(split_params), res_num=len(main_query),
+                               place_info=place_info)
