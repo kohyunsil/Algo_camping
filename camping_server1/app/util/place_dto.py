@@ -5,6 +5,7 @@ class PlaceDTO:
     api = Namespace('place', description='relating to place')
     place = api.model('place', {
         'place_name': fields.String(required=False),
+        'content_id': fields.Integer(required=False),
         'sigungu_code': fields.Integer(required=False),
         'addr': fields.String(required=False),
         'lat': fields.Float(required=False),

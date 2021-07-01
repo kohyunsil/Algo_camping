@@ -52,3 +52,5 @@ datas/
 /camping_server/.idea/
 
 .idea/ 
+
+camping_server1/app/data.ini

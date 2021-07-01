@@ -961,7 +961,7 @@
   /**
    * Most options support both a string or number as well as a function as
    * option value. This function makes sure that the option with the given
-   * key in the given options is wrapped in a function
+   * keys in the given options is wrapped in a function
    */
   function makeOptionItemFunction(options, key) {
     if (typeof options[key] !== 'function') {
@@ -993,7 +993,7 @@
     * 사용자가 입력에 필요한 키 (Enter)를 눌렀는지 확인
     * @param object keyPressEvent: JavaScript event object, refer
     *     http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
-    * @param object lookupList: expected key combinations, as in:
+    * @param object lookupList: expected keys combinations, as in:
     *     [13, {which: 188, shiftKey: true}]
     */
   function keyCombinationInList(keyPressEvent, lookupList) {
@@ -1253,7 +1253,7 @@ $('form').on('submit', function(event){
   /**
    * Most options support both a string or number as well as a function as
    * option value. This function makes sure that the option with the given
-   * key in the given options is wrapped in a function
+   * keys in the given options is wrapped in a function
    */
   function makeOptionItemFunction(options, key) {
     if (typeof options[key] !== 'function') {
@@ -1285,7 +1285,7 @@ $('form').on('submit', function(event){
     * 사용자가 입력에 필요한 키 (Enter)를 눌렀는지 확인
     * @param object keyPressEvent: JavaScript event object, refer
     *     http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
-    * @param object lookupList: expected key combinations, as in:
+    * @param object lookupList: expected keys combinations, as in:
     *     [13, {which: 188, shiftKey: true}]
     */
   function keyCombinationInList(keyPressEvent, lookupList) {

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from sqlalchemy import Column, Integer, String
 from ..model import db
 
+
 @dataclass
 class UserDAO(db.Model):
 
