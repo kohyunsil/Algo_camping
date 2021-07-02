@@ -19,7 +19,6 @@ def search_place(keywords):
 
 
 # url param이 유효하면 이동, 유효하지 않으면 main으로 이동
-@app.route('/search')
 @app.route('/searchlist')
 def search_tags():
     params = request.args.to_dict()
@@ -49,7 +48,8 @@ def search_tags():
                 else:
                     if Config.TAGS.get(param.replace(' ', '')) is not None:
                         category_keyword.append(Config.TAGS[param.replace(' ', '')])
-
+        print(place_keyword)
+        print(category_keyword)
         # 태그 컬럼명과 동적 매칭
         tag_query = ''
         for tag in category_keyword:
@@ -66,8 +66,6 @@ def search_tags():
 
         Session = sessionmaker(bind=client)
         session_ = Session()
-
-        print(area, place_keyword)
 
         sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
                                                                    model_search.place_name.like(place_keyword) |
@@ -86,5 +84,11 @@ def search_tags():
             query.detail_image = str(query.detail_image).split(',')[:]
             place_info.append(query)
 
-        return render_template('searchlist.html', keywords=', '.join(split_params), res_num=len(main_query),
-                               place_info=place_info)
+        params['code'] = 200
+        params['keywords'] = ', '.join(split_params)
+        params['res_num'] = len(main_query)
+        params['place_info'] = place_info
+
+        print(place_info)
+
+        return jsonify(params)

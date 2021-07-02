@@ -68,17 +68,12 @@ function getKeywords() {
     return req
 }
 
-// 입력 submit
-$(document).ready(function(){
-    $('form').on('submit', function(event){
+// 검색 click
+$('.search-btn').on('click', function(event){
     event.preventDefault();
-    var req = getKeywords().replace(/#/g, ';');
-    var url = '/place/' + req.toString();
-
-        $.getJSON(url, function(response){
-            location.href = '/search?keywords=' + req.toString();
-            // $('#search-res-info').text(req.toString());
-            // console.log($('#search-res-info').text());
-        });
-    });
-})
+    var url = '/search?';
+    var params = {
+        keywords: getKeywords().replace(/#/g, ';')
+    }
+    location.href = url + encodeURI(encodeURIComponent(params.keywords));
+});
