@@ -19,9 +19,4 @@ app = Flask(__name__)
 # api = Api(app)
 app.config.from_object(Config)
 
-# SQLAlchemy
-db = SQLAlchemy(app)
-pymysql.install_as_MySQLdb()
-
-
 from app.view import routes, apis

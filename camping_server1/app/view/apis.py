@@ -2,9 +2,9 @@ from flask import *
 from ..model.place_dao import PlaceDAO as model_place
 from ..model.search_dao import SearchDAO as model_search
 from sqlalchemy import case
-from ..view import *
 from ..model import *
 
+from sqlalchemy.orm import sessionmaker
 
 @app.route('/')
 @app.route('/main')
@@ -63,6 +63,12 @@ def search_tags():
         # else 3
         # end);
         '''
+
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+
+        print(area, place_keyword)
+
         sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
                                                                    model_search.place_name.like(place_keyword) |
                                                                    tag_query).subquery()

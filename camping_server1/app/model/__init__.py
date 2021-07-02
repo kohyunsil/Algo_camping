@@ -1,7 +1,13 @@
-from app import db
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from app.config import Config
+import pymysql
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from app import app
 
-engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
-session = sessionmaker(bind=engine, autoflush=False)
+# SQLAlchemy
+db = SQLAlchemy(app)
+pymysql.install_as_MySQLdb()
+
+client = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+Base = declarative_base(client)
