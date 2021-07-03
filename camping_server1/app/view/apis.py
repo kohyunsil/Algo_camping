@@ -1,94 +1,50 @@
 from flask import *
 from ..model.place_dao import PlaceDAO as model_place
 from ..model.search_dao import SearchDAO as model_search
-from sqlalchemy import case
 from ..model import *
-
-from sqlalchemy.orm import sessionmaker
+from ..service import search_service
+from ..util import place_dto
+from ..config import Config
+from operator import itemgetter
 
 @app.route('/')
 @app.route('/main')
 def main_page():
     return make_response(render_template('index.html'))
 
-
-# select tag request
-@app.route('/place/<keywords>', methods=['GET'])
-def search_place(keywords):
-    return jsonify({'abc': keywords})
-
-
 # url param이 유효하면 이동, 유효하지 않으면 main으로 이동
 @app.route('/searchlist')
 def search_tags():
     params = request.args.to_dict()
-    split_params = []
 
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
         print(str(params.keys()))
         return redirect('/main', code=302)
     else:
-        for param in params['keywords'].split(';'):
-            if param != '':
-                split_params.append(param)
+        return search_service.get_searchlist(params)
 
-        place_keyword, area = '', ''
-        category_keyword = []
+@app.route('/search/popular')
+def search_popular():
+    # getter
+    place_obj = dto.place
 
-        # 입력 데이터 태그/캠핑장 구분
-        for i, param in enumerate(split_params):
-            if i == 0:
-                area = '%{}%'.format(split_params[0].replace(' ', ''))
-            else:
-                search = '%{}%'.format(param.replace(' ', ''))
-                row = model_search.query.filter(model_search.tag.like(search)).all()
+    place_info = []
+    for i in range(len(place_obj)):
+        arr = [place_obj[i].place_name, place_obj[i].content_id, place_obj[i].detail_image,
+               place_obj[i].tag, place_obj[i].readcount]
 
-                if len(row) == 0:
-                    place_keyword = search
-                else:
-                    if Config.TAGS.get(param.replace(' ', '')) is not None:
-                        category_keyword.append(Config.TAGS[param.replace(' ', '')])
-        print(place_keyword)
-        print(category_keyword)
-        # 태그 컬럼명과 동적 매칭
-        tag_query = ''
-        for tag in category_keyword:
-            tag_query += (getattr(model_search, tag) == 1)
+        place_info.append(arr)
 
-        '''
-        # select * from place where content_id in(
-        # select content_id from search where addr like '%지역%' or place_name like '%캠핑장명%' or (태그=1 or 태그=1)) order by (case 
-        # when place_name like '%캠핑장명%' then 1
-        # when addr like '%지역%' then 2
-        # else 3
-        # end);
-        '''
+    # 인기순 정렬
+    place_info.sort(key=itemgetter(Config.READCOUNT), reverse=True) # readcount = 4
+    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount']
 
-        Session = sessionmaker(bind=client)
-        session_ = Session()
+    params, param_list = {}, []
+    for info in place_info:
+        param = {key: info[i] for i, key in enumerate(key_list)}
+        param_list.append(param)
 
-        sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                   model_search.place_name.like(place_keyword) |
-                                                                   tag_query).subquery()
-        main_query = session_.query(model_place).filter(model_place.content_id.in_(sub_query)).order_by(
-            case(
-                (model_place.place_name.like(place_keyword), 1),
-                (model_place.addr.like(area), 2),
-                else_=3
-            )
-        ).limit(Config.LIMIT).all()
+    params['code'] = 200
+    params['place_info'] = param_list
 
-        place_info = []
-        for query in main_query:
-            query.tag = str(query.tag).split('#')[1:4]
-            query.detail_image = str(query.detail_image).split(',')[:]
-            place_info.append(query)
-
-        params['code'] = 200
-        params['keywords'] = ', '.join(split_params)
-        params['res_num'] = len(main_query)
-        params['place_info'] = place_info
-
-        print(place_info)
-
-        return jsonify(params)
+    return jsonify(params)

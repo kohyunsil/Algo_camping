@@ -9,7 +9,28 @@ var SearchList = {
         //     visibleOnly: true
         // })
     },
+    // 검색결과 정렬
+    sortlist: function(){
+        $('#btnradio-popular').click(function() {
+            console.log('click1!!');
+            $.getJSON('/search/popular').done(function(response){
+                if(response.code == 200){
+                    console.log('xhr response');
+                }else{
+                    alert(response.msg);
+                }
+            })
+        });
 
+        $('#btnradio-update').click(function() {
+            console.log('click!!2');
+        });
+
+        $('#btnradio-readcount').click(function() {
+            console.log('click!!3');
+        });
+    },
+    // 검색결과 리스트
     getlist: function(){
         var param = document.location.href.split("?");
         var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
@@ -89,5 +110,7 @@ var SearchList = {
         }
     }
 }
-SearchList.lazy()
+
+// SearchList.lazy()
+SearchList.sortlist()
 SearchList.getlist()
