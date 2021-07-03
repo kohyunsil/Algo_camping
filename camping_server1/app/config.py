@@ -10,9 +10,9 @@ class Config(object):
     TEMPLATE_AUTO_RELOAD = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
-    # SQLALCHEMY_DATABASE_URI = 'mysql://root:dss@34.136.89.21:3306/camping?charset=utf8
-    LIMIT = 10
+    LIMIT = 40
     READCOUNT = 4
+    MODIFIED_DATE = 5
     TAGS = {'즐길거리': 'fun_m', '쾌적/편리': 'comfort_m', '함께': 'together', '자연/힐링': 'nature_m', '액티비티': 'activity_m',
             '생태교육': 'ecological_s', '둘레길': 'trail_s', '축제': 'festival_s', '문화유적': 'cultural_s',
             '온수잘나오는': 'hot_water_s', '깨끗한': 'clean_s', '차대기편한': 'parking_s', '사이트간격이넓은': 'spacious_s',

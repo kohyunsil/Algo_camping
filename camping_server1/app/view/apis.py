@@ -1,11 +1,6 @@
 from flask import *
-from ..model.place_dao import PlaceDAO as model_place
-from ..model.search_dao import SearchDAO as model_search
 from ..model import *
 from ..service import search_service
-from ..util import place_dto
-from ..config import Config
-from operator import itemgetter
 
 @app.route('/')
 @app.route('/main')
@@ -23,28 +18,26 @@ def search_tags():
     else:
         return search_service.get_searchlist(params)
 
+# 인기순 정렬
 @app.route('/search/popular')
 def search_popular():
     # getter
     place_obj = dto.place
 
-    place_info = []
-    for i in range(len(place_obj)):
-        arr = [place_obj[i].place_name, place_obj[i].content_id, place_obj[i].detail_image,
-               place_obj[i].tag, place_obj[i].readcount]
+    return search_service.get_readcount_list(place_obj)
 
-        place_info.append(arr)
+# 조회순 정렬
+@app.route('/search/readcount')
+def search_readcount():
+    # getter
+    place_obj = dto.place
 
-    # 인기순 정렬
-    place_info.sort(key=itemgetter(Config.READCOUNT), reverse=True) # readcount = 4
-    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount']
+    return search_service.get_readcount_list(place_obj)
 
-    params, param_list = {}, []
-    for info in place_info:
-        param = {key: info[i] for i, key in enumerate(key_list)}
-        param_list.append(param)
+# 등록순 정렬
+@app.route('/search/recent')
+def search_recent():
+    # getter
+    place_obj = dto.place
 
-    params['code'] = 200
-    params['place_info'] = param_list
-
-    return jsonify(params)
+    return search_service.get_modified_list(place_obj)

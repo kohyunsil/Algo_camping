@@ -28,6 +28,7 @@ class PlaceDAO(db.Model):
     industry: str
     oper_date: str
     oper_pd: str
+    modified_date: str
 
     id = Column(db.Integer, primary_key=True)
     place_name = Column(db.String(50), primary_key=False)
@@ -49,11 +50,12 @@ class PlaceDAO(db.Model):
     industry = Column(db.String, primary_key=False)
     oper_date = Column(db.String, primary_key=False)
     oper_pd = Column(db.String, primary_key=False)
+    modified_date = Column(db.String, primary_key=False)
 
     def __init__(self, place_name, content_id, sigungu_code, addr, lat, lng,
                  event_start_date, event_end_date, first_image,
                  second_image, detail_image, tel, tag, homepage, line_intro,
-                 readcount, industry, oper_date, oper_pd):
+                 readcount, industry, oper_date, oper_pd, modified_date):
         self.place_name = place_name
         self.content_id = content_id
         self.sigungu_code = sigungu_code
@@ -73,5 +75,6 @@ class PlaceDAO(db.Model):
         self.industry = industry
         self.oper_date = oper_date
         self.oper_pd = oper_pd
+        self.modified_date = modified_date
 
 db.create_all()

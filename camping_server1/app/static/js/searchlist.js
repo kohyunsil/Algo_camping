@@ -11,25 +11,41 @@ var SearchList = {
     },
     // 검색결과 정렬
     sortlist: function(){
+        // 인기순
         $('#btnradio-popular').click(function() {
-            console.log('click1!!');
             $.getJSON('/search/popular').done(function(response){
-                if(response.code == 200){
-                    console.log('xhr response');
+                if(response.code === 200){
+                    $('#card-layout').empty();
+                    SearchList.showsearchlist(response);
                 }else{
                     alert(response.msg);
                 }
             })
         });
-
+        // 등록순
         $('#btnradio-update').click(function() {
-            console.log('click!!2');
+            $.getJSON('/search/recent').done(function(response){
+                if(response.code === 200){
+                    $('#card-layout').empty();
+                    SearchList.showsearchlist(response);
+                }else{
+                    alert(response.msg);
+                }
+            })
         });
-
+        // 조회순
         $('#btnradio-readcount').click(function() {
-            console.log('click!!3');
+            $.getJSON('/search/readcount').done(function(response){
+                if(response.code === 200){
+                    $('#card-layout').empty();
+                    SearchList.showsearchlist(response);
+                }else{
+                    alert(response.msg);
+                }
+            })
         });
     },
+
     // 검색결과 리스트
     getlist: function(){
         var param = document.location.href.split("?");
