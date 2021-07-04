@@ -46,6 +46,6 @@ def search_recent():
 # 상세 페이지
 @app.route('/detail/info')
 def detail_info():
+    # param = request.get_json()
     param = request.args.to_dict()
-
     return search_service.get_detail(param)
