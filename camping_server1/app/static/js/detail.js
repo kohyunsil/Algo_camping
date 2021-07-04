@@ -76,24 +76,20 @@ var DetailInfo = {
         });
     },
     showMap: function(res){
-        var appkey = res.appkey;
-
         $('.kakao-map').append(
             '<div id="map" style="width:30rem; height:17rem;"></div>\n'
         )
-        var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-        var options = { //지도를 생성할 때 필요한 기본 옵션
-            center: new window.kakao.maps.LatLng(res.place_info.lng, res.place_info.lat), //지도의 중심좌표.
-            level: 3 //지도의 레벨(확대, 축소 정도)
+        var container = document.getElementById('map');
+        var options = {
+            center: new window.kakao.maps.LatLng(res.place_info.lng, res.place_info.lat),
+            level: 3
         };
-
-        var map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-        // 지도를 클릭한 위치에 표출할 마커입니다
+        //지도 생성
+        var map = new window.kakao.maps.Map(container, options);
         var marker = new kakao.maps.Marker({
-            // 지도 중심좌표에 마커를 생성합니다
             position: map.getCenter()
         });
-        // 지도에 마커를 표시합니다
+        // 마커 표시
         marker.setMap(map);
     },
     showHighCharts: function(res){
