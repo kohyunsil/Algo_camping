@@ -1,10 +1,6 @@
 from flask import *
 from ..model import *
 from ..service import search_service
-from sqlalchemy.orm import sessionmaker
-from ..model.place_dao import PlaceDAO as model_place
-from ..model.review_dao import ReviewDAO as model_review
-from sqlalchemy.sql import func
 
 @app.route('/')
 @app.route('/main')
@@ -52,31 +48,4 @@ def search_recent():
 def detail_info():
     param = request.args.to_dict()
 
-    if len(param) == 0 or str(list(param.keys())[0]) != 'content_id':
-        print(str(param.keys()))
-        return redirect('/main', code=302)
-
-    else:
-        req_contentid = param['content_id']
-        place_obj = dto.place
-        params = {}
-
-        for obj in place_obj:
-            if str(obj.content_id) == req_contentid:
-                params['target_info'] = obj
-                break
-
-        '''
-        # select avg(star) from review where place_id in(
-        # select id from place where content_id = 7722);
-        '''
-        Session = sessionmaker(bind=client)
-        session_ = Session()
-
-        if req_contentid is not None:
-            main_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(model_review.place_id == 20).all()
-
-        params['code'] = 200
-        print(main_query)
-
-    return jsonify(params)
+    return search_service.get_detail(param)

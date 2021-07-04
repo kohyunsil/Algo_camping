@@ -1,5 +1,6 @@
 from ..model.place_dao import PlaceDAO as model_place
 from ..model.search_dao import SearchDAO as model_search
+from ..model.review_dao import ReviewDAO as model_review
 from ..model import *
 from sqlalchemy.orm import sessionmaker
 from flask import *
@@ -86,6 +87,7 @@ def get_searchlist(params):
 
     return params
 
+# 조회순 정렬
 def get_readcount_list(place_obj):
     place_info = []
 
@@ -95,7 +97,6 @@ def get_readcount_list(place_obj):
 
         place_info.append(arr)
 
-    # 인기순 정렬
     place_info.sort(key=itemgetter(Config.READCOUNT), reverse=True) # readcount = 4
     key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount']
 
@@ -109,6 +110,7 @@ def get_readcount_list(place_obj):
 
     return jsonify(params)
 
+# 등록순 정렬
 def get_modified_list(place_obj):
     place_info = []
 
@@ -121,7 +123,6 @@ def get_modified_list(place_obj):
 
         place_info.append(arr)
 
-    # 등록일 기준 정렬
     place_info = sorted(place_info, key=lambda x: datetime.strptime(x[Config.MODIFIED_DATE], '%Y-%m-%d %H:%M:%S'),
                         reverse=True)
 
@@ -134,4 +135,39 @@ def get_modified_list(place_obj):
 
     params['code'] = 200
     params['place_info'] = param_list
+    return jsonify(params)
+
+# 상세 정보
+def get_detail(param):
+    if len(param) == 0 or str(list(param.keys())[0]) != 'content_id':
+        print(str(param.keys()))
+        return redirect('/main', code=302)
+
+    else:
+        req_contentid = param['content_id']
+        params = {}
+
+        '''
+        # select avg(star) from review where place_id in(
+        # select id from place where content_id = 특정 장소의 content_id);
+        '''
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+
+        if req_contentid is not None:
+            place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
+            id = place_info[0].id
+
+            review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(model_review.place_id == id).all()
+
+            if review_query[0][0] is None:
+                avg_star = 0
+            else:
+                avg_star = round(float(review_query[0][0]), 2)
+
+            params['place_info'] = place_info[0]
+            params['avg_star'] = avg_star
+
+        params['code'] = 200
+
     return jsonify(params)
