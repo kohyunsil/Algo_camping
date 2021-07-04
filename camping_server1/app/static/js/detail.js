@@ -1,3 +1,22 @@
+var DetailInfo = {
+    showInfo: function(){
+        var param = document.location.href.split("?content_id=");
+        var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
+        var param = {
+            content_id: decode_param
+        }
+        $.getJSON('/detail/info', param).done(function(response){
+            if (response.code === 200){
+                console.log(response);
+            }else{
+                alert(response.msg);
+            }
+        })
+    }
+}
+
+DetailInfo.showInfo();
+
 // spider web (polar) chart
 Highcharts.chart('polar-container', {
     chart: {
@@ -187,41 +206,3 @@ Highcharts.chart('bubble-container', {
   }]
 });
 
-var items = []
-
-// 사용자 입력 키워드
-function getKeywords() {
-    var arr = [];
-    var req = '';
-
-    // 선택된 지역
-    req += '#' + $(".dropdown-toggle").text();
-
-    for (var i = 0; i < items.length; i++) {
-        arr.push('#' + items[i].split(',')[0]);
-    }
-
-    var tmp = arr.toString().split(',');
-
-    for (var i = 0; i < tmp.length; i++) {
-        req += tmp[i];
-    }
-    // 검색창에 유저가 태그를 추가로 입력했을 경우에 대한 추가
-    if ($('.badge-info').text() != '') {
-        req += $('.badge-info').text();
-    }
-    return req
-}
-
-// 입력 submit
-$(document).ready(function(){
-    $('form').on('submit', function(event){
-    event.preventDefault();
-    var req = getKeywords().replace(/#/g, ';');
-    var url = "/search/list?keywords=" + req.toString();
-
-    $.getJSON(url, function(response){
-        console.log(response);
-    });
-    });
-})

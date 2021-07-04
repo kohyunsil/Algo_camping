@@ -1349,16 +1349,3 @@ function getKeywords() {
     }
     return req
 }
-
-// 입력 submit
-// $(document).ready(function(){
-//     $('form').on('submit', function(event){
-//     event.preventDefault();
-//     var req = getKeywords().replace(/#/g, ';');
-//     var url = "/model/list?keywords=" + req.toString();
-//
-//     $.getJSON(url, function(response){
-//         console.log(response);
-//     });
-//     });
-// })

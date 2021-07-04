@@ -1,90 +1,82 @@
 from flask import *
-from ..model.place_dao import PlaceDAO as model_place
-from ..model.search_dao import SearchDAO as model_search
-from sqlalchemy import case
 from ..model import *
-
+from ..service import search_service
 from sqlalchemy.orm import sessionmaker
+from ..model.place_dao import PlaceDAO as model_place
+from ..model.review_dao import ReviewDAO as model_review
+from sqlalchemy.sql import func
 
 @app.route('/')
 @app.route('/main')
 def main_page():
     return make_response(render_template('index.html'))
 
-
-# select tag request
-@app.route('/place/<keywords>', methods=['GET'])
-def search_place(keywords):
-    return jsonify({'abc': keywords})
-
-
 # url param이 유효하면 이동, 유효하지 않으면 main으로 이동
-@app.route('/search')
+# 검색 결과 리스트
 @app.route('/searchlist')
 def search_tags():
     params = request.args.to_dict()
-    split_params = []
 
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
         print(str(params.keys()))
         return redirect('/main', code=302)
     else:
-        for param in params['keywords'].split(';'):
-            if param != '':
-                split_params.append(param)
+        return search_service.get_searchlist(params)
 
-        place_keyword, area = '', ''
-        category_keyword = []
+# 인기순 정렬
+@app.route('/search/popular')
+def search_popular():
+    # getter
+    place_obj = dto.place
 
-        # 입력 데이터 태그/캠핑장 구분
-        for i, param in enumerate(split_params):
-            if i == 0:
-                area = '%{}%'.format(split_params[0].replace(' ', ''))
-            else:
-                search = '%{}%'.format(param.replace(' ', ''))
-                row = model_search.query.filter(model_search.tag.like(search)).all()
+    return search_service.get_readcount_list(place_obj)
 
-                if len(row) == 0:
-                    place_keyword = search
-                else:
-                    if Config.TAGS.get(param.replace(' ', '')) is not None:
-                        category_keyword.append(Config.TAGS[param.replace(' ', '')])
+# 조회순 정렬
+@app.route('/search/readcount')
+def search_readcount():
+    # getter
+    place_obj = dto.place
 
-        # 태그 컬럼명과 동적 매칭
-        tag_query = ''
-        for tag in category_keyword:
-            tag_query += (getattr(model_search, tag) == 1)
+    return search_service.get_readcount_list(place_obj)
+
+# 등록순 정렬
+@app.route('/search/recent')
+def search_recent():
+    # getter
+    place_obj = dto.place
+
+    return search_service.get_modified_list(place_obj)
+
+# 상세 페이지
+@app.route('/detail/info')
+def detail_info():
+    param = request.args.to_dict()
+
+    if len(param) == 0 or str(list(param.keys())[0]) != 'content_id':
+        print(str(param.keys()))
+        return redirect('/main', code=302)
+
+    else:
+        req_contentid = param['content_id']
+        place_obj = dto.place
+        params = {}
+
+        for obj in place_obj:
+            if str(obj.content_id) == req_contentid:
+                params['target_info'] = obj
+                break
 
         '''
-        # select * from place where content_id in(
-        # select content_id from search where addr like '%지역%' or place_name like '%캠핑장명%' or (태그=1 or 태그=1)) order by (case 
-        # when place_name like '%캠핑장명%' then 1
-        # when addr like '%지역%' then 2
-        # else 3
-        # end);
+        # select avg(star) from review where place_id in(
+        # select id from place where content_id = 7722);
         '''
-
         Session = sessionmaker(bind=client)
         session_ = Session()
 
-        print(area, place_keyword)
+        if req_contentid is not None:
+            main_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(model_review.place_id == 20).all()
 
-        sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                   model_search.place_name.like(place_keyword) |
-                                                                   tag_query).subquery()
-        main_query = session_.query(model_place).filter(model_place.content_id.in_(sub_query)).order_by(
-            case(
-                (model_place.place_name.like(place_keyword), 1),
-                (model_place.addr.like(area), 2),
-                else_=3
-            )
-        ).limit(Config.LIMIT).all()
+        params['code'] = 200
+        print(main_query)
 
-        place_info = []
-        for query in main_query:
-            query.tag = str(query.tag).split('#')[1:4]
-            query.detail_image = str(query.detail_image).split(',')[:]
-            place_info.append(query)
-
-        return render_template('searchlist.html', keywords=', '.join(split_params), res_num=len(main_query),
-                               place_info=place_info)
+    return jsonify(params)
