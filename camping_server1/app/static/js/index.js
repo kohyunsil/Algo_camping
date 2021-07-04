@@ -71,7 +71,7 @@ function getKeywords() {
 // 검색 click
 $('.search-btn').on('click', function(event){
     event.preventDefault();
-    var url = '/search?';
+    var url = '/search?keywords=';
     var params = {
         keywords: getKeywords().replace(/#/g, ';')
     }

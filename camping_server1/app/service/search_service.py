@@ -57,20 +57,19 @@ def get_searchlist(params):
 
     if tag_query == '':
         sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                   model_search.place_name.like(place_keyword)).subquery()
+                                                                   model_search.place_name.like(place_keyword))
     else:
         sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
                                                                    model_search.place_name.like(place_keyword) |
-                                                                   text(tag_query)).subquery()
+                                                                   text(tag_query))
 
     main_query = session_.query(model_place).filter(model_place.content_id.in_(sub_query)).order_by(
-        case(
-            (model_place.place_name.like(place_keyword), 1),
-            (model_place.addr.like(area), 2),
-            else_=3
-        )
-    ).limit(Config.LIMIT).all()
-
+                                                        case(
+                                                            (model_place.place_name.contains(place_keyword), 1),
+                                                            (model_place.addr.contains(area), 2),
+                                                            else_=3
+                                                        )
+                                                    ).limit(Config.LIMIT).all()
     place_info = []
     for query in main_query:
         query.tag = str(query.tag).split('#')[1:4]

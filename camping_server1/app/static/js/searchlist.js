@@ -10,13 +10,13 @@ var SearchList = {
         // })
     },
     // 검색결과 정렬
-    sortlist: function(){
+    sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
             $.getJSON('/search/popular').done(function(response){
                 if(response.code === 200){
                     $('#card-layout').empty();
-                    SearchList.showsearchlist(response);
+                    SearchList.showSearchList(response);
                 }else{
                     alert(response.msg);
                 }
@@ -27,7 +27,7 @@ var SearchList = {
             $.getJSON('/search/recent').done(function(response){
                 if(response.code === 200){
                     $('#card-layout').empty();
-                    SearchList.showsearchlist(response);
+                    SearchList.showSearchList(response);
                 }else{
                     alert(response.msg);
                 }
@@ -38,7 +38,7 @@ var SearchList = {
             $.getJSON('/search/readcount').done(function(response){
                 if(response.code === 200){
                     $('#card-layout').empty();
-                    SearchList.showsearchlist(response);
+                    SearchList.showSearchList(response);
                 }else{
                     alert(response.msg);
                 }
@@ -47,8 +47,8 @@ var SearchList = {
     },
 
     // 검색결과 리스트
-    getlist: function(){
-        var param = document.location.href.split("?");
+    getList: function(){
+        var param = document.location.href.split("?keywords=");
         var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
         var req_param = decode_param.replaceAll('%3B', ';');
         var params = {
@@ -60,19 +60,19 @@ var SearchList = {
         $.getJSON('/searchlist', params).done(function(response){
             if(response.code === 200){
                 console.log(response);
-                SearchList.showsearchlist(response)
+                SearchList.showSearchList(response)
             }else{
                 alert(response.msg);
             }
         })
     },
-    showsearchlist: function(res){
+    showSearchList: function(res){
         $('.input-keyword').text(res.keywords);
         $('.input-size').text(res.res_num);
 
         for(var i=0; i<res.place_info.length; i++){
             $('#card-layout').append(
-                '<div class="col">\n' +
+                '<div class="col" style="cursor: pointer;">\n' +
                     '<div class="card border-0">\n' +
                         '<div class="swiper-container card mySwiper">\n' +
                             '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
@@ -106,7 +106,6 @@ var SearchList = {
             }
 
             for(var k=0; k< res.place_info[i].detail_image.length; k++){
-
                 $('#swiper'+ (i+1)).append(
                     '<div class="swiper-slide">\n' +
                         '<img src="' + res.place_info[i].detail_image[k] + '" class="card-img-fluid" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
@@ -124,9 +123,23 @@ var SearchList = {
                 }
             });
         }
+
+        // 장소 클릭
+        $('.col').each(function(idx){
+            $(this).click(function(event){
+                event.preventDefault();
+                console.log(idx / 2);
+                var id = res.place_info[Number(idx / 2)].content_id;
+                var param = {
+                    content_id: id
+                }
+                var url = '/detail?content_id=';
+                location.href = url + encodeURI(encodeURIComponent(param.content_id));
+            })
+        })
     }
 }
 
 // SearchList.lazy()
-SearchList.sortlist()
-SearchList.getlist()
+SearchList.sortList()
+SearchList.getList()
