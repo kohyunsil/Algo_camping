@@ -20,3 +20,4 @@ class Config(object):
             '계곡옆': 'valley_s', '물맑은': 'pure_water_s', '별보기좋은': 'star_s', '힐링': 'healing_s',
             '물놀이하기좋은': 'waterplay_s', '자전거타기좋은': 'bicycle_s', '수영장있는': 'pool_s', '익스트림': 'extreme_s'}
     APPKEY = keys['APPKEY']
+    DATE_RANGE = 10

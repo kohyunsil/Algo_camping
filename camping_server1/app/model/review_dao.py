@@ -18,6 +18,6 @@ class ReviewDAO(db.Model):
 
     def __init__(self, place_id, star):
         self.place_id = place_id
-        self.star = avg_star
+        self.star = star
 
 db.create_all()

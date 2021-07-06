@@ -1,12 +1,14 @@
 from ..model.place_dao import PlaceDAO as model_place
 from ..model.search_dao import SearchDAO as model_search
 from ..model.review_dao import ReviewDAO as model_review
+from ..model.congestion_dao import CongestionDAO as model_congestion
 from ..model import *
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from operator import itemgetter
 from ..config import Config
-from datetime import datetime
+import datetime
+import pandas as pd
 
 def get_searchlist(params):
     split_params = []
@@ -123,7 +125,7 @@ def get_modified_list(place_obj):
 
         place_info.append(arr)
 
-    place_info = sorted(place_info, key=lambda x: datetime.strptime(x[Config.MODIFIED_DATE], '%Y-%m-%d %H:%M:%S'),
+    place_info = sorted(place_info, key=lambda x: datetime.datetime.strptime(x[Config.MODIFIED_DATE], '%Y-%m-%d %H:%M:%S'),
                         reverse=True)
 
     key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date']
@@ -166,10 +168,12 @@ def get_detail(param):
                 avg_star = round(float(review_query[0][0]), 2)
 
             local_obj = get_local(place_info[0].sigungu_code)
+            congestion_obj = get_congestion(place_info[0].content_id)
 
             params['place_info'] = place_info[0]
             params['avg_star'] = avg_star
             params['local_info'] = local_obj if local_obj is not None else None
+            params['congestion'] = congestion_obj if congestion_obj is not None else None
 
         params['code'] = 200
 
@@ -187,9 +191,25 @@ def get_local(sigungu_code):
         query = session_.query(model_place).filter(or_(model_place.place_num == 1, model_place.place_num == 2) &
                                                    (model_place.sigungu_code == int(sigungu_code))
                                                    ).order_by(model_place.readcount.desc()).limit(Config.LIMIT).all()
-        print(query)
-
         return query
     else:
         return None
 
+# 혼잡도
+def get_congestion(content_id):
+    if content_id is not None:
+        base = datetime.datetime.today().strftime('%Y-%m-%d 00:00:00')
+        past = (datetime.datetime.now() - datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
+        print(base, past)
+
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+
+        '''
+        # select * from congestion where base_ymd between date('과거일') and date('현재일')+1 and content_id=39 
+        # order by base_ymd;
+        '''
+        query = model_congestion.query.filter(model_congestion.base_ymd.between(past, base) + 1,
+                                                 model_congestion.content_id == int(content_id)).all()
+
+        return query

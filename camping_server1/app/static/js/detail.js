@@ -25,6 +25,8 @@ var DetailInfo = {
             if (response.code === 200){
                 $('.container').css({'visibility': 'visible'});
                 $('table').show();
+
+                console.log(response);
                 DetailInfo.showMap(response);
                 DetailInfo.showPlaceInfo(response);
                 DetailInfo.showHighCharts(response);
@@ -115,6 +117,16 @@ var DetailInfo = {
         infowindow.open(map, marker);
     },
     showHighCharts: function(res){
+        var base = new Date();
+        var past = new Date(res.congestion[0].base_ymd);
+
+        var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
+        var pastdate = past.getFullYear() + '-' + ('0'+(past.getMonth()+1)).slice(-2) + '-' + ('0' + past.getDate()).slice(-2);
+        var congestion = [];
+
+        for (var i=0; i<res.congestion.length; i++){
+            congestion.push(res.congestion[i].congestion);
+        }
         // spider web (polar) chart
         Highcharts.chart('polar-container', {
             chart: {
@@ -193,12 +205,12 @@ var DetailInfo = {
           },
 
           subtitle: {
-            text: '2021.06.20 ~ 2021.06.26 기준'
+            text: pastdate + ' ~ '+ basedate + '기준'
           },
 
           yAxis: {
             title: {
-              text: '방문율'
+              text: '방문객 수'
             }
           },
 
@@ -218,12 +230,13 @@ var DetailInfo = {
           },
 
           series: [{
-            name: '앞으로 1주일 간 예상 방문율',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-          }, {
-            name: '지난 1주일 간 방문율',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+            name: '지난' + res.congestion.length + '일 간 방문객 수',
+            data: congestion
           }
+          // , {
+          //   name: '지난 1주일 간 방문율',
+          //   data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+          // }
           ],
 
           responsive: {
