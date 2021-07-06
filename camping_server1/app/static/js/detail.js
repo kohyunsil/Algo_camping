@@ -27,6 +27,7 @@ var DetailInfo = {
                 DetailInfo.showMap(response);
                 DetailInfo.showPlaceInfo(response);
                 DetailInfo.showHighCharts(response);
+                DetailInfo.showLocalList(response);
             }else{
                 alert(response.msg);
             }
@@ -59,14 +60,22 @@ var DetailInfo = {
             '</div>\n' +
             '</div>'
         );
-        var img_array = res.place_info.detail_image.split(',');
-        $('.swiper-wrapper').empty();
-        for(var i=0; i< img_array.length; i++){
+        if (res.place_info.detail_image === null){
             $('.swiper-wrapper').append(
                 '<div class="swiper-slide">\n' +
-                        '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
+                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
                 '</div>\n'
             )
+        }else{
+            var img_array = res.place_info.detail_image.split(',');
+            $('.swiper-wrapper').empty();
+            for(var i=0; i< img_array.length; i++){
+                $('.swiper-wrapper').append(
+                    '<div class="swiper-slide">\n' +
+                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
+                    '</div>\n'
+                )
+            }
         }
         var swiper = new Swiper(".mySwiper", {
             autoplay: {
@@ -77,12 +86,12 @@ var DetailInfo = {
     },
     showMap: function(res){
         $('.kakao-map').append(
-            '<div id="map" style="width:30rem; height:17rem;"></div>\n'
+            '<div id="map" style="width:32rem; height:23rem;"></div>\n'
         )
         var container = document.getElementById('map');
         var options = {
             center: new window.kakao.maps.LatLng(res.place_info.lng, res.place_info.lat),
-            level: 3
+            level: 2
         };
         //지도 생성
         var map = new window.kakao.maps.Map(container, options);
@@ -91,6 +100,18 @@ var DetailInfo = {
         });
         // 마커 표시
         marker.setMap(map);
+
+        var iwContent = '<div class="h6 fw-bold" style="padding:4px;">' + res.place_info.place_name + '<br><p class="small fw-light text-muted">' + res.place_info.addr + '</p>',
+        iwPosition = new kakao.maps.LatLng(res.place_info.lng, res.place_info.lat);
+
+        // 인포윈도우 생성
+        var infowindow = new kakao.maps.InfoWindow({
+            position : iwPosition,
+            content : iwContent
+        });
+
+        // 마커 위에 인포윈도우 표시
+        infowindow.open(map, marker);
     },
     showHighCharts: function(res){
         // spider web (polar) chart
@@ -281,6 +302,45 @@ var DetailInfo = {
             }]
           }]
         });
+    },
+    showLocalList: function(res){
+        $('.mySwiper2').empty();
+        $('.mySwiper2').append(
+            '<div class="col">\n' +
+                '<span>\n' +
+                    '<h5 class="text-center"><span class="h5 user-name">김알고님</span>\n' +
+                        '<span class="h5 fw-bold festival-addr" style="color: #49917D">' + res.place_info.addr.split(' ')[1] + '</span> 인근 축제/관광지는 어떠세요?\n' +
+                    '</h5>\n' +
+                '</span>\n' +
+            '</div>\n' +
+            '<div class="swiper-wrapper">\n' +
+            '</div>'
+        );
+        for(var i=0; i<res.local_info.length; i++){
+            if (res.local_info[i] === null){
+                continue
+            }else{
+                if (res.local_info[i].line_intro === null){
+                    res.local_info[i].line_intro = ' ';
+                }
+                $('.swiper-wrapper').append(
+                    '<div class="swiper-slide">\n' +
+                        '<div class="h5 fw-bold local-title">' + res.local_info[i].place_name + '\n' +
+                            '<span class="text-muted fw-normal small">'+ res.local_info[i].addr + '</span>\n' +
+                        '</div>\n' +
+
+                        '<div class="fw-light local-subtitle">' + res.local_info[i].line_intro + '</div><br>\n' +
+                        '<img src="' + res.local_info[i].first_image + '" alt="...">\n' +
+                    '</div>'
+                );
+            }
+        }
+        var swiper2 = new Swiper('.mySwiper2', {
+            autoplay: {
+              delay: 2000,
+              disableOnInteraction: false
+            }
+      });
     }
 }
 

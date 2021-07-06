@@ -165,9 +165,31 @@ def get_detail(param):
             else:
                 avg_star = round(float(review_query[0][0]), 2)
 
+            local_obj = get_local(place_info[0].sigungu_code)
+
             params['place_info'] = place_info[0]
             params['avg_star'] = avg_star
+            params['local_info'] = local_obj if local_obj is not None else None
 
         params['code'] = 200
+        print(params)
 
     return jsonify(params)
+
+# 관광지, 축제 정보
+def get_local(sigungu_code):
+    if sigungu_code is not None:
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+        '''
+        # select * from place where (place_num = 1 or place_num = 2 )
+        # and sigungu_code = 47130 order by readcount desc limit 5;
+        '''
+        query = session_.query(model_place).filter((model_place.place_num == 1) |
+                                                   (model_place.place_num == 2) &
+                                                   (model_place.sigungu_code == int(sigungu_code))
+                                                   ).order_by(model_place.readcount.desc()).limit(Config.LIMIT).all()
+        return query
+    else:
+        return None
+
