@@ -123,9 +123,13 @@ var DetailInfo = {
         var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
         var pastdate = past.getFullYear() + '-' + ('0'+(past.getMonth()+1)).slice(-2) + '-' + ('0' + past.getDate()).slice(-2);
         var congestion = [];
+        var daterange = [];
 
         for (var i=0; i<res.congestion.length; i++){
             congestion.push(res.congestion[i].congestion);
+            var date = new Date(res.congestion[i].base_ymd);
+            var ymd_date = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            daterange.push(ymd_date);
         }
         // spider web (polar) chart
         Highcharts.chart('polar-container', {
@@ -207,26 +211,38 @@ var DetailInfo = {
           subtitle: {
             text: pastdate + ' ~ '+ basedate + '기준'
           },
-
-          yAxis: {
-            title: {
-              text: '방문객 수'
-            }
-          },
-
-          legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-          },
-
           plotOptions: {
             series: {
               label: {
                 connectorAllowed: false
               },
-
+              pointStart: 2000
             }
+          },
+          yAxis: {
+            title: {
+              text: '방문객 수'
+            }
+          },
+          xAxis: {
+            tickInterval: 1,
+            labels: {
+              enabled: true,
+              formatter: function() { return daterange[this.value]},
+            }
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+          },
+          plotOptions: {
+            series: [{
+              label: {
+                connectorAllowed: false
+              },
+              date: daterange
+            }]
           },
 
           series: [{
