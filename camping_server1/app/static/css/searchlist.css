@@ -1,5 +1,9 @@
 /*search result nav*/
+.container-fluid{
+    background-color: white;
+}
 .search-result{
+    visibility: hidden;
     width: 100vw;
     margin-top: 8rem;
     padding: 2px;
@@ -29,7 +33,6 @@ body > div.container-fluid.search-result > nav > a{
     height: 100%;
     overflow: hidden;
     object-fit: cover;
-    border-radius: 5px;
 }
 @font-face {
     font-family: 'Harlow Solid Italic';

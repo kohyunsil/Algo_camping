@@ -1,4 +1,7 @@
 /*outer container layout*/
+.container{
+    visibility: hidden;
+}
 .outer-2{
     margin-top: 2.5rem;
 }

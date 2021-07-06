@@ -69,6 +69,7 @@ var SearchList = {
     showSearchList: function(res){
         $('.input-keyword').text(res.keywords);
         $('.input-size').text(res.res_num);
+        $('.search-result').css({'visibility': 'visible'});
 
         for(var i=0; i<res.place_info.length; i++){
             $('#card-layout').append(

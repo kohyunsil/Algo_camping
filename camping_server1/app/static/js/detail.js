@@ -23,7 +23,8 @@ var DetailInfo = {
 
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
-                console.log(response);
+                $('.container').css({'visibility': 'visible'});
+                $('table').show();
                 DetailInfo.showMap(response);
                 DetailInfo.showPlaceInfo(response);
                 DetailInfo.showHighCharts(response);
@@ -56,19 +57,19 @@ var DetailInfo = {
 
         $('.swiper-banner').append(
             '<div class="swiper-container mySwiper">\n' +
-            '<div class="swiper-wrapper">\n' +
+            '<div class="swiper-wrapper" id="swiper-place">\n' +
             '</div>\n' +
             '</div>'
         );
         if (res.place_info.detail_image === null){
-            $('.swiper-wrapper').append(
+            $('#swiper-place').append(
                 '<div class="swiper-slide">\n' +
                         '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
                 '</div>\n'
             )
         }else{
             var img_array = res.place_info.detail_image.split(',');
-            $('.swiper-wrapper').empty();
+            $('#swiper-place').empty();
             for(var i=0; i< img_array.length; i++){
                 $('.swiper-wrapper').append(
                     '<div class="swiper-slide">\n' +
@@ -86,7 +87,7 @@ var DetailInfo = {
     },
     showMap: function(res){
         $('.kakao-map').append(
-            '<div id="map" style="width:32rem; height:23rem;"></div>\n'
+            '<div id="map" style="width:100%; height:100%;"></div>\n'
         )
         var container = document.getElementById('map');
         var options = {
@@ -313,7 +314,7 @@ var DetailInfo = {
                     '</h5>\n' +
                 '</span>\n' +
             '</div>\n' +
-            '<div class="swiper-wrapper">\n' +
+            '<div class="swiper-wrapper" id="swiper-local">\n' +
             '</div>'
         );
         for(var i=0; i<res.local_info.length; i++){
@@ -323,7 +324,7 @@ var DetailInfo = {
                 if (res.local_info[i].line_intro === null){
                     res.local_info[i].line_intro = ' ';
                 }
-                $('.swiper-wrapper').append(
+                $('#swiper-local').append(
                     '<div class="swiper-slide">\n' +
                         '<div class="h5 fw-bold local-title">' + res.local_info[i].place_name + '\n' +
                             '<span class="text-muted fw-normal small">'+ res.local_info[i].addr + '</span>\n' +

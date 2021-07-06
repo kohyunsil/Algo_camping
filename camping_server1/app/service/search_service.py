@@ -172,7 +172,6 @@ def get_detail(param):
             params['local_info'] = local_obj if local_obj is not None else None
 
         params['code'] = 200
-        print(params)
 
     return jsonify(params)
 
@@ -185,10 +184,11 @@ def get_local(sigungu_code):
         # select * from place where (place_num = 1 or place_num = 2 )
         # and sigungu_code = 47130 order by readcount desc limit 5;
         '''
-        query = session_.query(model_place).filter((model_place.place_num == 1) |
-                                                   (model_place.place_num == 2) &
+        query = session_.query(model_place).filter(or_(model_place.place_num == 1, model_place.place_num == 2) &
                                                    (model_place.sigungu_code == int(sigungu_code))
                                                    ).order_by(model_place.readcount.desc()).limit(Config.LIMIT).all()
+        print(query)
+
         return query
     else:
         return None
