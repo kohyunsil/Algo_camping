@@ -1,7 +1,6 @@
 const MAX_TAG = 3;
 
 var SearchList = {
-
     // 검색결과 정렬
     sortList: function(){
         // 인기순
@@ -9,21 +8,30 @@ var SearchList = {
             $.getJSON('/search/popular').done(function(response){
                 if(response.code === 200){
                     $('#card-layout').empty();
+                    setTimeout(function(){
+                        $(window).lazyLoadXT();
+                    }, 0);
                     SearchList.showSearchList(response);
+                    SearchList.showSwiperImg(response);
                 }else{
                     alert(response.msg);
                 }
-            })
         });
         // 등록순
         $('#btnradio-update').click(function() {
-            $.getJSON('/search/recent').done(function(response){
-                if(response.code === 200){
-                    $('#card-layout').empty();
-                    SearchList.showSearchList(response);
-                }else{
-                    alert(response.msg);
-                }
+                $.getJSON('/search/recent').done(function (response) {
+                    if(response.code === 200){
+                        $('#card-layout').empty();
+                        setTimeout(function(){
+                            $(window).lazyLoadXT();
+                        }, 0);
+
+                        SearchList.showSearchList(response);
+                        SearchList.showSwiperImg(response);
+                    }else{
+                        alert(response.msg);
+                    }
+                })
             })
         });
         // 조회순
@@ -31,7 +39,11 @@ var SearchList = {
             $.getJSON('/search/readcount').done(function(response){
                 if(response.code === 200){
                     $('#card-layout').empty();
+                    setTimeout(function(){
+                        $(window).lazyLoadXT();
+                    }, 0);
                     SearchList.showSearchList(response);
+                    SearchList.showSwiperImg(response);
                 }else{
                     alert(response.msg);
                 }

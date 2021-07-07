@@ -14,7 +14,6 @@ def search_tags():
     params = request.args.to_dict()
 
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
-        print(str(params.keys()))
         return redirect('/main', code=302)
     else:
         return search_service.get_searchlist(params)

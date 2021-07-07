@@ -141,7 +141,6 @@ def get_modified_list(place_obj):
 # 상세 정보
 def get_detail(param):
     if len(param) == 0 or str(list(param.keys())[0]) != 'content_id':
-        print(str(param.keys()))
         return redirect('/main', code=302)
 
     else:
@@ -199,7 +198,6 @@ def get_congestion(content_id):
     if content_id is not None:
         base = datetime.datetime.today().strftime('%Y-%m-%d 00:00:00')
         past = (datetime.datetime.now() - datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
-        print(base, past)
 
         Session = sessionmaker(bind=client)
         session_ = Session()
