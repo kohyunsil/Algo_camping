@@ -51,4 +51,8 @@ camping_server/keys/
 datas/
 /camping_server/.idea/
 
-.idea/
+.idea/ 
+
+camping_server1/app/data.ini
+
+camping_server1/data.ini
