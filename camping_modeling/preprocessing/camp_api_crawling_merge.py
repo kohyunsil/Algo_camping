@@ -55,10 +55,19 @@ class CampMerge:
                            'animalCmgCl']]
 
         camp_algo_merge = pd.concat([camp_data1, tag_data], 1)
+
+        def col_count(colname):
+            camp_algo_merge[f'{colname}'] = camp_algo_merge[f'{colname}'].str.count(',') + 1
+            camp_algo_merge[f'{colname}'] = camp_algo_merge[f'{colname}'].fillna(0)
+            camp_algo_merge[f'{colname}'] = camp_algo_merge[f'{colname}'].astype('int')
+
+        for i in ['glampInnerFclty', 'caravInnerFclty', 'sbrsCl', 'sbrsEtc', 'posblFcltyCl']:
+            col_count(i)
+
         camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
 
-        print(camp_algo_merge)
-
+        # print(camp_algo_merge)
+s
 if __name__  == '__main__':
     c = CampMerge()
     # c.camp_api_data_merge()

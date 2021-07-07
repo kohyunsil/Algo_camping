@@ -5,7 +5,7 @@ class Calc_logic:
     def __init__(self):
         pass
 
-    def binary_calc(data, colname, h_point, l_point, h_con):
+    def binary_calc(self, data, colname, h_point, l_point, h_con):
         """
         특정 조건에 따라 True/False 이진 점수화
         h_point에 높은 점수, l_point에 낮은 점수 기입, h_point 를 받는 조건을 h_con 에 기입
@@ -23,9 +23,38 @@ class Calc_logic:
         return target_df
 
     def cls_calc(self, data, colname, c1, c2, c3, p1, p2, p3):
-        """3개의 분류로 점수 부여
-        condition(c1, c2, c3) type이 string / int 인지 파악 후 조건 함수 작성"""
-        pass
+        """
+        3개의 분류로 점수 부여
+        condition(c1, c2, c3) type이 string / int 인지 파악 후 조건 함수 작성
+        manageNmpr  int     /     3명(c1) 이상: 10점(p1)/ 2명이하(c2): 5점(p2)/ 0은(c3) 0점(p3)
+        brazierCl   str     /      개별(c1) 2점(p1) / 공동취사장(c2) 1점(p2)/ 불가(c3) 0점(p3)
+        """
+
+        if type(c1) != str:
+            def func(x):
+                if x >= c1:
+                    return p1
+                elif c3 < x <= c2:
+                    return p2
+                else:
+                    return p3
+
+            target_df = pd.DataFrame(data[f'{colname}'])
+            target_df[f'{colname}'] = target_df[f'{colname}'].apply(lambda x: func(x))
+
+        else:
+            def func(x):
+                if x == c1:
+                    return p1
+                elif x == c2:
+                    return p2
+                else:
+                    return p3
+
+            target_df = pd.DataFrame(data[f'{colname}'])
+            target_df[f'{colname}'] = target_df[f'{colname}'].apply(lambda x: func(x))
+
+        return target_df
 
     def percent_calc(self, data, colname):
         """percentile 기준 백분율 점수"""
@@ -60,3 +89,8 @@ class Cat5_points:
         pass
     def clean_point(self):
         pass
+
+if __name__ == '__main__':
+    cl = Calc_logic()
+    # cl.percent_calc()
+    # cls_calc(data, colname, c1, c2, c3, p1, p2, p3)
