@@ -2,13 +2,6 @@ const MAX_TAG = 3;
 
 var SearchList = {
 
-    lazy: function(){
-        // $('img.lazy').Lazy({
-        //     scrollDirection: 'vertical',
-        //     effect: 'fadeIn',
-        //     visibleOnly: true
-        // })
-    },
     // 검색결과 정렬
     sortList: function(){
         // 인기순
@@ -59,8 +52,12 @@ var SearchList = {
 
         $.getJSON('/searchlist', params).done(function(response){
             if(response.code === 200){
-                console.log(response);
-                SearchList.showSearchList(response)
+                setTimeout(function(){
+                    $(window).lazyLoadXT();
+                }, 0);
+
+                SearchList.showSearchList(response);
+                SearchList.showSwiperImg(response);
             }else{
                 alert(response.msg);
             }
@@ -77,7 +74,10 @@ var SearchList = {
                     '<div class="card border-0">\n' +
                         '<div class="swiper-container card mySwiper">\n' +
                             '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
-                           '</div>\n' +
+                                '<div class="swiper-slide">\n' +
+                                    '<img data-src="' + res.place_info[i].detail_image[0] + '" class="lazy-load card-img-fluid" alt="...">\n' +
+                                '</div>\n' +
+                            '</div>\n' +
                         '</div>\n' +
                         '<div class="card-body">\n' +
                             '<a class="h5 card-title fw-bolder" href="#">'+ res.place_info[i].place_name +'</a>\n' +
@@ -105,26 +105,7 @@ var SearchList = {
                     '</button>\n'
                 )}
             }
-
-            for(var k=0; k< res.place_info[i].detail_image.length; k++){
-                $('#swiper'+ (i+1)).append(
-                    '<div class="swiper-slide">\n' +
-                        '<img src="' + res.place_info[i].detail_image[k] + '" class="card-img-fluid" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
-                    '</div>\n'
-                    // '<div class="swiper-slide">\n' +
-                    //     '<img class="lazy" src="' + res.place_info[i].detail_image[k] + '" loading="lazy" class="card-img-fluid" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
-                    // '</div>\n'
-                )
-            }
-
-            var swiper = new Swiper(".mySwiper", {
-                autoplay: {
-                  delay: 2000,
-                  disableOnInteraction: false
-                }
-            });
         }
-
         // 장소 클릭
         $('.col').each(function(idx){
             $(this).click(function(event){
@@ -138,9 +119,26 @@ var SearchList = {
                 location.href = url + encodeURI(encodeURIComponent(param.content_id));
             })
         })
+    },
+    showSwiperImg: function(res) {
+        $(this).lazyLoadXT();
+        for (var i = 0; i < res.place_info.length; i++) {
+            for (var k = 1; k < res.place_info[i].detail_image.length; k++) {
+                $('#swiper' + (i + 1)).append(
+                    '<div class="swiper-slide">\n' +
+                        '<img data-src="' + res.place_info[i].detail_image[k] + '"src="/static/imgs/test_img3.jpg"' + 'class="lazy-load card-img-fluid" alt="...">\n' +
+                    '</div>\n'
+                )
+            }
+        }
+        var swiper = new Swiper(".mySwiper", {
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+            },
+        });
     }
 }
 
-// SearchList.lazy()
 SearchList.sortList()
 SearchList.getList()

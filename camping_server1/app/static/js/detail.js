@@ -5,22 +5,6 @@ var DetailInfo = {
         var param = {
             content_id: decode_param
         }
-        // $.ajax({
-        //     url: '/detail/info',
-        //     type: 'POST',
-        //     contentType: 'application/json;charset=utf-8',
-        //     data: JSON.stringify(param),
-        //     dataType: 'JSON',
-        //     success: function(response){
-        //         DetailInfo.showMap(response);
-        //         DetailInfo.showPlaceInfo(response);
-        //         DetailInfo.showHighCharts(response);
-        //     },
-        //     error: function(req, status, error){
-        //         alert(error);
-        //     }
-        // })
-
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
                 $('.container').css({'visibility': 'visible'});
@@ -94,7 +78,7 @@ var DetailInfo = {
         var container = document.getElementById('map');
         var options = {
             center: new window.kakao.maps.LatLng(res.place_info.lng, res.place_info.lat),
-            level: 2
+            level: 4
         };
         //지도 생성
         var map = new window.kakao.maps.Map(container, options);

@@ -8,7 +8,6 @@ from flask import *
 from operator import itemgetter
 from ..config import Config
 import datetime
-import pandas as pd
 
 def get_searchlist(params):
     split_params = []
@@ -76,7 +75,7 @@ def get_searchlist(params):
     place_info = []
     for query in main_query:
         query.tag = str(query.tag).split('#')[1:4]
-        query.detail_image = str(query.detail_image).split(',')[:]
+        query.detail_image = str(query.detail_image).split(',')[:5]
         place_info.append(query)
 
     # setter
