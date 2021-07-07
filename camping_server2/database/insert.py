@@ -7,15 +7,18 @@ from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
 import MySQLdb
 
-engine = create_engine("mysql+mysqldb://root:dss@34.136.89.21/test")
+ip = ""
+db = ""
+pw = ""
+engine = create_engine(f"mysql+mysqldb://root:{pw}@{ip}/{db}]")
 conn = engine.connect()
 
 mydb = pymysql.connect(
-    user='root',
-    passwd='dss',
-    host='34.136.89.21',
-    db='test',
-    charset='utf8',
+    user = 'root',
+    passwd = pw,
+    host = ip,
+    db = db,
+    charset = 'utf8',
 )
 cursor = mydb.cursor(pymysql.cursors.DictCursor)
 
