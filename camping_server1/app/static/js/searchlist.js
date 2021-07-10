@@ -64,6 +64,7 @@ var SearchList = {
 
         $.getJSON('/searchlist', params).done(function(response){
             if(response.code === 200){
+                $('.loading-bar').css({'visibility': 'hidden'});
                 setTimeout(function(){
                     $(window).lazyLoadXT();
                 }, 0);
@@ -112,7 +113,7 @@ var SearchList = {
                     );
                 }else{
                     $('#tag'+ (i+1)).append(
-                    '<button type="button" class="btn btn-secondary btn-sm">\n' +
+                    '<button type="button" class="btn btn-secondary btn-sm btn-tag">\n' +
                         res.place_info[i].tag[j] +
                     '</button>\n'
                 )}

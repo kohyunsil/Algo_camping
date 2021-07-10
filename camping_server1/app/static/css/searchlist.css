@@ -2,6 +2,9 @@
 .container-fluid{
     background-color: white;
 }
+.loading-text{
+    margin-left: -13px;
+}
 .search-result{
     visibility: hidden;
     width: 100vw;
@@ -43,17 +46,18 @@ body > div.container-fluid.search-result > nav > a{
 .algo-text{
     font-family: "Harlow Solid Italic";
 }
-/*camping top3 tag*/
-div:nth-child(5) > div > div > div > div > div > button{
+
+.btn-tag{
     background-color: #e2e2e2;
     border-radius: 1.3rem;
     border: none;
     font-size: 0.9rem;
     color: #424242;
 }
-div:nth-child(5) > div > div > div > div > div > button:hover,
-div:nth-child(5) > div > div > div > div > div > button:focus,
-div:nth-child(5) > div > div > div > div > div > button:active{
+
+.btn-tag:hover,
+.btn-tag:focus,
+.btn-tag:active{
     background-color: #262b35;
     color: #ffffff;
 }

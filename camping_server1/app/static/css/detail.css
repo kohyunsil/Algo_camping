@@ -12,6 +12,9 @@
 .algo-star{
     color: #49917D;
 }
+.loading-bar{
+    margin-left: -13px;
+}
 /*table*/
 table td,
 table th{

@@ -7,6 +7,7 @@ var DetailInfo = {
         }
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
+                $('.loading-bar').css({'visibility': 'hidden'});
                 $('.container').css({'visibility': 'visible'});
                 $('table').show();
 
