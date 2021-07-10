@@ -109,7 +109,7 @@ var SearchList = {
             for (var j=0; j<MAX_TAG; j++){
                 if (res.place_info[i].tag[j] === undefined){
                     $('#tag'+ (i+1)).append(
-                        '<button type="button" class="btn btn-secondary btn-sm" style="visibility:hidden;"></button>'
+                        '<button type="button" class="btn btn-secondary btn-sm"' + 'src="/static/imgs/error_logo.png" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' + 'style="visibility:hidden;"></button>'
                     );
                 }else{
                     $('#tag'+ (i+1)).append(
@@ -139,7 +139,7 @@ var SearchList = {
             for (var k = 1; k < res.place_info[i].detail_image.length; k++) {
                 $('#swiper' + (i + 1)).append(
                     '<div class="swiper-slide">\n' +
-                        '<img data-src="' + res.place_info[i].detail_image[k] + '"src="/static/imgs/test_img3.jpg"' + 'class="lazy-load card-img-fluid" alt="...">\n' +
+                        '<img data-src="' + res.place_info[i].detail_image[k] + '"src="/static/imgs/error_logo.png" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' + 'class="lazy-load card-img-fluid" alt="...">\n' +
                     '</div>\n'
                 )
             }

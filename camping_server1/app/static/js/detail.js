@@ -51,7 +51,7 @@ var DetailInfo = {
         if (res.place_info.detail_image === null){
             $('#swiper-place').append(
                 '<div class="swiper-slide">\n' +
-                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
+                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';" alt="...">\n' +
                 '</div>\n'
             )
         }else{
@@ -60,7 +60,7 @@ var DetailInfo = {
             for(var i=0; i< img_array.length; i++){
                 $('.swiper-wrapper').append(
                     '<div class="swiper-slide">\n' +
-                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/test_img3.jpg\';" alt="...">\n' +
+                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';" alt="...">\n' +
                     '</div>\n'
                 )
             }
@@ -128,6 +128,10 @@ var DetailInfo = {
               text: '김알고님과 95% 일치합니다.'
             },
 
+            credits:{
+                enabled: false
+            },
+
             subtitle: {
               text: '김알고님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.'
             },
@@ -187,6 +191,10 @@ var DetailInfo = {
         Highcharts.chart('line-container', {
           chart: {
             backgroundColor: 'rgba(0,0,0,0)'
+          },
+
+          credits:{
+            enabled: false
           },
 
           title: {
@@ -262,6 +270,11 @@ var DetailInfo = {
             type: 'packedbubble',
             backgroundColor: 'rgba(0,0,0,0)'
           },
+
+          credits:{
+            enabled: false
+          },
+
           title: {
             text: res.place_info.place_name + '의 주요태그'
           },
