@@ -9,3 +9,7 @@ if __name__ == '__main__':
     # algo.polar_points('답게')
     # algo.algo_star('별똥별 글램핑')
     algo.make_algo_df()
+
+    # wc = WeightsCalc()
+    # wc.data_preprocessing()
+    # wc.weights_calc()

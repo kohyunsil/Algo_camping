@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import warnings
+import config as config
 warnings.simplefilter("ignore", UserWarning)
 
 # 한글 폰트 설정
@@ -26,10 +27,10 @@ else:
 class WeightsCalc:
 
     def __init__(self):
-        self.path = '../datas/'
-        self.kakao = pd.read_csv(self.path + 'kakao_review_cat_revised.csv')
-        self.naver = pd.read_csv(self.path + 'v5_category_re.csv')
-        self.gocamp = pd.read_csv(self.path + 'algo_merge_result.csv')
+        self.path = config.Config.PATH
+        self.kakao = config.Config.KAKAO
+        self.naver = config.Config.NAVER
+        self.gocamp = config.Config.ALGO_DF
 
 
     def data_preprocessing(self):
@@ -139,10 +140,11 @@ class WeightsCalc:
         healing_w2 = self.count_weights(healing_tag, (100/10)*6)
         healing_w3 = self.camp_weights(healing_camp, (100/10)*1)
         healing_weights_sum = healing_w.weights.sum() + healing_w2.weights.sum() + healing_w3.sum()
-        healing_result_weights = pd.DataFrame(pd.concat([healing_w, healing_w2, healing_w3], 0))
+        healing_result_weights = pd.DataFrame(pd.concat([healing_w.weights, healing_w2.weights, healing_w3], 0))
+
 
         ## polar 별 가중치 점수 확인
-        return print(together_result_weights)
+        return print(healing_result_weights)
 
 
 if __name__  == '__main__':

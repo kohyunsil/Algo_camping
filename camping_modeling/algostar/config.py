@@ -13,3 +13,5 @@ class Config:
     with open(PATH + 'weight_dict.txt', 'rb') as wd:
         wd = pickle.load(wd)
         WEIGHTS_DF = pd.DataFrame(wd)
+    KAKAO = pd.read_csv(PATH+'kakao_review_cat_revised.csv')
+    NAVER = pd.read_csv(PATH+'v5_category_re.csv')
