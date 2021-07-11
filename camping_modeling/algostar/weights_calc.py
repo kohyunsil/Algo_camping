@@ -147,12 +147,6 @@ class WeightsCalc:
         return print(healing_result_weights)
 
 
-if __name__  == '__main__':
-    w = WeightsCalc()
-    w.data_preprocessing()
-    w.weights_calc()
-
-
 
 
 
