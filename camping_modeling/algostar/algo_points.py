@@ -35,7 +35,7 @@ class AlgoPoints(cp.Cat5Points):
         return algo_star
 
     def make_algo_df(self):
-        algo_df = self.df[['contentId', 'camp']][:10]
+        algo_df = self.df[['contentId', 'camp']]
         comfort, together, fun, healing, clean = [], [], [], [], []
         for idx in tqdm(algo_df['contentId'].tolist()):
             polar_list = self.polar_points(idx)
@@ -50,5 +50,5 @@ class AlgoPoints(cp.Cat5Points):
         algo_df['healing'] = healing
         algo_df['clean'] = clean
 
-        algo_df.to_csv(self.path + "algo_df3.csv", encoding='utf-8-sig')
+        # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
         return algo_df

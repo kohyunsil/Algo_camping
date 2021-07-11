@@ -60,7 +60,7 @@ class CalcLogic:
     def percent_calc(self, data, colname):
         """percentile 기준 백분율 점수"""
         target_df = pd.DataFrame(data[f'{colname}'])
-        target_df[f'{colname}'] = target_df[f'{colname}'].rank(method='dense', pct=True)
+        target_df[f'{colname}'] = target_df[f'{colname}'].rank(method='max', pct=True) #dense
         return target_df
 
 
