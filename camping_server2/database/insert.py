@@ -2,6 +2,8 @@ import pandas as pd
 import re
 from datetime import date
 
+from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler, MaxAbsScaler
+
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
@@ -185,8 +187,6 @@ place_df = data[['id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat',
 place_df.to_sql(name='place', con=engine, if_exists='append', index=False)
 
 ### convenience
-- id값 auto_increment 설정?
-- id는 두고 place_id라는 컬럼을 따로 두고 FK 설정
 
 qry2 = ('''
 CREATE TABLE convenience(
@@ -486,7 +486,7 @@ SET foreign_key_checks = 1;
 ''')
 cursor.execute(qry25)
 
-### search (FK 미완성)
+### search
 
 qry26 = ('''
 CREATE TABLE search(
@@ -521,7 +521,7 @@ CREATE TABLE search(
     fun_m          INT            , 
     comfort_m      INT            , 
     together_m     INT            , 
-    CONSTRAINT PK_modeling PRIMARY KEY (id, content_id)
+    CONSTRAINT PK_modeling PRIMARY KEY (id)
 );
 ''')
 cursor.execute(qry26)
@@ -556,9 +556,8 @@ main_df.index = camping_data_b.index
 last_df  = pd.concat([camping_data_b, main_df], 1)
 last_df[last_df > 1] = 1
 last_df['index']= last_df.index
-search_df = pd.merge(camping_data, last_df, how="left", left_on = 'id', right_on='index').drop("index", 1)
-search_df = search_df.drop(['animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
-search_df = search_df.rename(columns={'가족' : 'with_family_s',
+algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'id', right_on='index').drop("index", 1)
+algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
                                     '계곡옆' : 'valley_s',
                                     '깨끗한' : 'clean_s',
                                     '둘레길' : 'trail_s',
@@ -585,6 +584,7 @@ search_df = search_df.rename(columns={'가족' : 'with_family_s',
                                     '쾌적/편리' : 'comfort_m',
                                     '함께' : 'together_m'})
 
+search_df = algo_search_df.drop(['animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
 search_df.to_sql(name='search', con=engine, if_exists='append', index=False)
 
 qry27 = ('''
@@ -599,7 +599,7 @@ ALTER TABLE search
 ''')
 cursor.execute(qry28)
 
-### congestion (FK 미완성)
+### congestion
 
 qry29 = ('''
 CREATE TABLE congestion(
@@ -659,3 +659,194 @@ ALTER TABLE congestion
         REFERENCES place (sigungu_code) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ''')
 cursor.execute(qry31)
+
+# algorithm
+qry32 = ((('''
+CREATE TABLE algorithm(
+    id                INT            NOT NULL    AUTO_INCREMENT, 
+    place_name        TEXT           NULL, 
+    place_id          INT            NOT NULL, 
+    content_id        INT            NULL, 
+    insrnc_at         VARCHAR(45)    NULL, 
+    trsagnt_no        VARCHAR(45)    NULL, 
+    mange             VARCHAR(45)    NULL, 
+    manage_num        INT            NULL, 
+    sited_stnc        INT            NULL, 
+    glampinner_fclty  INT            NULL, 
+    caravinner_fclty  INT            NULL, 
+    trler_acmpny      VARCHAR(45)    NULL, 
+    carav_acmpny      VARCHAR(45)        NULL, 
+    toilet_cnt        INT            NULL, 
+    swrm_cnt          INT            NULL, 
+    wtrpl_cnt         INT            NULL, 
+    brazier           VARCHAR(45)    NULL, 
+    sbrs              INT            NULL, 
+    sbrs_etc          INT            NULL, 
+    posblfclty        INT            NULL, 
+    extshr            INT            NULL, 
+    frprvtwrpp        INT            NULL, 
+    frprvtsand        INT            NULL, 
+    firesensor        INT            NULL, 
+    animal_cmg        VARCHAR(45)    NULL, 
+    spacious_s        INT            NULL, 
+    clean_s           INT            NULL, 
+    hot_water_s       INT            NULL, 
+    parking_s         INT            NULL, 
+    with_child_s      INT            NULL, 
+    ecological_s      INT            NULL, 
+    cultural_s        INT            NULL, 
+    festival_s        INT            NULL, 
+    trail_s           INT            NULL, 
+    bicycle_s         INT            NULL, 
+    star_s            INT            NULL, 
+    healing_s         INT            NULL, 
+    with_couple_s     INT            NULL, 
+    with_family_s     INT            NULL, 
+    pool_s            INT            NULL, 
+    valley_s          INT            NULL, 
+    waterplay_s       INT            NULL, 
+    pure_water_s      INT            NULL, 
+    shade_s           INT            NULL, 
+    ocean_s           INT            NULL, 
+    extreme_s         INT            NULL, 
+    price_r           INT            NULL, 
+    satisfied_r       INT            NULL, 
+    taste_r           INT            NULL, 
+    main_r            INT            NULL, 
+    object_r          INT            NULL, 
+    facility_r        INT            NULL, 
+    atmos_r           INT            NULL, 
+    equipment_r       INT            NULL, 
+    service_r         INT            NULL, 
+    pool_r            INT            NULL, 
+    manage_r          INT            NULL, 
+    childlike_r       INT            NULL, 
+    reservation_r     INT            NULL, 
+    wifi_r            INT            NULL, 
+    location_r        INT            NULL, 
+    food_r            INT            NULL, 
+    enter_r           INT            NULL, 
+    view_r            INT            NULL, 
+    parking_r         INT            NULL, 
+    exciting_r        INT            NULL, 
+    clean_r           INT            NULL, 
+    conv_facility_r   INT            NULL, 
+    congestion_r      INT            NULL, 
+     PRIMARY KEY (id)
+);
+''')))
+
+cursor.execute(qry32)
+
+camping_data = data[data['place_num'] == 0]
+tmp = camping_data[['content_id', 'insrnc_at', 'trsagnt_no', 'mange', 'manage_num', 'sited_stnc', 'glampinner_fclty', 'caravinner_fclty', 'trler_acmpny', 
+                    'carav_acmpny', 'toilet_cnt', 'swrm_cnt', 'wtrpl_cnt', 'brazier', 'sbrs', 'sbrs_etc', 'posblfclty', 'extshr', 'frprvtwrpp', 'frprvtsand', 
+                    'firesensor',]]
+tmp_df = pd.merge(algo_search_df, tmp, how='left', on='content_id')
+def col_count(colname):
+    tmp_df[f'{colname}'] = tmp_df[f'{colname}'].str.count(',') + 1
+    tmp_df[f'{colname}'] = tmp_df[f'{colname}'].fillna(0)
+    tmp_df[f'{colname}'] = tmp_df[f'{colname}'].astype('int')
+
+col_list = ['glampinner_fclty', 'caravinner_fclty', 'sbrs', 'sbrs_etc', 'posblfclty']
+for i in col_list:
+    col_count(i)
+
+nv_data = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/v5_category_re.csv')
+kk_data = pd.read_csv('/Users/sol/Desktop/dss/Crawling/data/kakao_camping_review_revised.csv')
+
+nv_data['user_info'] = nv_data['user_info'].fillna(0)
+nv_data = nv_data[nv_data['user_info'] != 0]
+nv_data['user_info'] = nv_data['user_info'].apply(lambda x: x.split('\n')[-1])
+nv_data['visit_info'] = nv_data['visit_info'].apply(lambda x: x.split('번째')[0][-1])
+nv_data = nv_data[nv_data['star'] != 'star']
+
+nv_data['star'] = nv_data['star'].astype('float64')
+nv_data['user_info'] = nv_data['user_info'].astype('float64')
+nv_data['visit_info'] = nv_data['visit_info'].astype('float64')
+nv_data = nv_data.drop(['addr', 'base_addr', 'user_name', 'visit_info'], 1)
+nv_data = nv_data.rename(
+    columns={'title': 'camp', 'highlight_review': 'review', 'star': 'point', 'user_info': 'avg_point'})
+
+nv_data = nv_data[['camp', 'review', 'point', 'category', 'avg_point']]
+nv_data['point'] = nv_data['point'].astype('float64')
+nv_data['avg_point'] = nv_data['avg_point'].astype('float64')
+
+reviews_df = pd.concat([nv_data, kk_data], 0)
+
+reviews_df['weights'] = reviews_df['point'] * (reviews_df['point'] / reviews_df['avg_point'])
+reviews_df = reviews_df.reset_index(drop=True)
+
+rb = RobustScaler()
+rb_df = rb.fit_transform(reviews_df[['weights']])
+rb_df = pd.DataFrame(rb_df)
+
+rb_df = rb_df.rename(columns={0: 'weights2'})
+rb_df['weights2'] = rb_df['weights2'] * 0.01
+
+re_df = pd.concat([reviews_df, rb_df], 1)
+
+re_df['final_point'] = re_df['point'] * (1 + re_df['weights2'])
+
+mm = MinMaxScaler()
+mm_df = mm.fit_transform(re_df[['final_point']])
+mm_df = pd.DataFrame(mm_df)
+
+re_df['final_point'] = mm_df * 5
+re_df = re_df.drop(['weights', 'weights2'], 1)
+re_df['final_point'] = round(re_df['final_point'], 1)
+
+re_df2 = re_df.groupby(['camp', 'category']).mean().reset_index()
+re_df3 = re_df.groupby(['camp', 'category']).size().reset_index(name='count')
+re_df4 = pd.merge(re_df2, re_df3)
+
+df = re_df4[['camp', 'category', 'final_point']]
+df = pd.pivot_table(df, index='camp', columns='category')
+df = df.fillna(0)
+df = df.reset_index()
+review_result = pd.concat([df["camp"], df["final_point"]], 1)
+
+camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
+             '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
+             '포시즌 캠핑장']
+
+for i in camp_name:
+    review_result = review_result.query(f'camp != "{i}"')
+
+merge_result = pd.merge(api, review_result, how='outer', left_on='place_name', right_on='camp')
+
+result1 = merge_result.iloc[:, 44:].fillna(0)
+result2 = merge_result.iloc[:, :44]
+algo_result = pd.concat([result2, result1], 1)
+algo_result = algo_result[['content_id', '가격', '만족도',
+       '맛', '메인시설', '목적', '부대/공용시설', '분위기', '비품', '서비스', '수영장', '시설물관리',
+       '아이 만족도', '예약', '와이파이', '위치', '음식/조식', '입장', '전망', '주차', '즐길거리',
+       '청결도', '편의/부대시설', '혼잡도']]
+algo_df = pd.merge(tmp_df, algo_result, how='left', on='content_id')
+algo_df = algo_df.rename(columns={'id' : 'place_id',
+                       '그늘이많은' : 'shade_s',
+                       '가격' : 'price_r',
+                       '만족도' : 'satisfied_r', 
+                        '맛' : 'taste_r',
+                        '메인시설' : 'main_r', 
+                        '목적' : 'object_r', 
+                        '부대/공용시설' : 'facility_r', 
+                        '분위기' : 'atmos_r', 
+                        '비품' : 'equipment_r', 
+                        '서비스' : 'service_r', 
+                        '수영장' : 'pool_r', 
+                        '시설물관리' : 'manage_r', 
+                        '아이 만족도' : 'childlike_r',
+                        '예약' : 'reservation_r', 
+                        '와이파이' : 'wifi_r', 
+                        '위치' : 'location_r', 
+                        '음식/조식' : 'food_r', 
+                        '입장' : 'enter_r', 
+                        '전망' : 'view_r', 
+                        '주차' : 'parking_r', 
+                        '즐길거리' : 'exciting_r', 
+                        '청결도' : 'clean_r', 
+                        '편의/부대시설' : 'conv_facility_r',
+                        '혼잡도' : 'congestion_r'})
+algo_df = algo_df.drop(['addr', 'tag', '여유있는', '재미있는', '친절한', 'activity_m', 'nature_m', 'fun_m', 'comfort_m', 'together_m', 'with_pet_s' ],1)
+algo_df.to_sql(name='algorithm', con=engine, if_exists='append', index=False)
