@@ -1,5 +1,10 @@
 import pandas as pd
 from datetime import datetime
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import config as config
 import cat_points as cp
 import algo_points as ap

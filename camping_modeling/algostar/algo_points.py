@@ -34,21 +34,23 @@ class AlgoPoints(cp.Cat5Points):
         print(f"{camp_id} - algo star: 별이 {algo_star}개!")
         return algo_star
 
-    def make_algo_df(self):
-        algo_df = self.df[['contentId', 'camp']]
-        comfort, together, fun, healing, clean = [], [], [], [], []
-        for idx in tqdm(algo_df['contentId'].tolist()):
-            polar_list = self.polar_points(idx)
-            comfort.append(polar_list[0])
-            together.append(polar_list[1])
-            fun.append(polar_list[2])
-            healing.append(polar_list[3])
-            clean.append(polar_list[4])
-        algo_df['comfort'] = comfort
-        algo_df['together'] = together
-        algo_df['fun'] = fun
-        algo_df['healing'] = healing
-        algo_df['clean'] = clean
-
-        # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
+    def make_algo_df(self, just_load_file=False):
+        if not just_load_file:
+            algo_df = self.df[['contentId', 'camp']]
+            comfort, together, fun, healing, clean = [], [], [], [], []
+            for idx in tqdm(algo_df['contentId'].tolist()):
+                polar_list = self.polar_points(idx)
+                comfort.append(polar_list[0])
+                together.append(polar_list[1])
+                fun.append(polar_list[2])
+                healing.append(polar_list[3])
+                clean.append(polar_list[4])
+            algo_df['comfort'] = comfort
+            algo_df['together'] = together
+            algo_df['fun'] = fun
+            algo_df['healing'] = healing
+            algo_df['clean'] = clean
+            # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
+        else:
+            algo_df = pd.read_csv(self.path + f"algo_df_{just_load_file}.csv", encoding='utf-8-sig')
         return algo_df
