@@ -45,14 +45,3 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
--- INSERT --
-camping_server/scraping/chromedriver.exe
-camping_server/keys/
-datas/
-/camping_server/.idea/
-
-.idea/ 
-
-camping_server1/app/data.ini
-
-camping_server1/data.ini
