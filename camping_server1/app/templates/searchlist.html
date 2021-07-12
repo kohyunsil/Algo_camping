@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algo Camping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/searchlist.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container-fluid">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="position-absolute top-50 start-50 loading-bar">
+        <div class="loading spinner-border text-white" role="status"></div>
+        <p class="text-white loading-text">Loading..</p>
+    </div>
+
+    <div class="container-fluid search-result">
+        <nav class="navbar navbar-light">
+            <span class="h5 navbar-brand col-md-2 text-white" href="#">
+                &nbsp;&nbsp;<span class="input-keyword"></span>
+                <span class="input-size"></span>개의 검색 결과가 있습니다.
+            </span>
+            <div class="btn-group mr-3 col-md-3 sort" role="group" aria-label="Basic radio toggle button group">
+
+                <input type="radio" class="btn-check" name="btnradio" autocomplete="off">
+                <label class="btn btn-outline-light" for="btnradio1" id="btnradio-popular">인기순</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-light" for="btnradio2" id="btnradio-update">등록순</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                <label class="btn btn-outline-light" for="btnradio3" id="btnradio-readcount">조회순</label>
+            </div>
+        </nav>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4" id="card-layout"></div>
+    </div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/static/js/searchlist.js"></script>
+<script src="/static/js/index.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyloadxt/1.0.0/jquery.lazyloadxt.min.js"></script>
+</body>
+</html>

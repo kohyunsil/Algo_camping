@@ -45,33 +45,3 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
--- INSERT --
-
-camping_server/keys/data.ini
-
-datas/
-
-camping_server/scraping/chromedriver.exe
-
-camping_modeling/models/ko.zip
-
-camping_modeling/models/ko.tsv
-
-camping_modeling/models/ko.bin
-
-camping_modeling/models/
-
-*.pkl
-
-camping_modeling/review_nlp/.ipynb_checkpoints/
-camping_server/keys/config generator.py
-
-camping_modeling/clustering/.ipynb_checkpoints/
-
-.idea/
-
-camping_modeling/preprocessing/.ipynb_checkpoints/
-
-camping_modeling/nlp/.ipynb_checkpoints/
-
-camping_modeling/clustering/results/

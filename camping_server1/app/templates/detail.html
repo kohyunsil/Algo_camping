@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algo Camping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/detail.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container-fluid" style="background-color: white;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="position-absolute top-50 start-50 loading-bar">
+        <div class="loading spinner-border text-white" role="status"></div>
+        <p class="text-white loading-text">Loading..</p>
+    </div>
+
+    <div class="container">
+        <div class="p-5 bg-light rounded-3 outer-2">
+            <div class="container-fluid">
+                <div class="col">
+                    <div class="row">
+                        <h2 class="display-12 fw-bold col-4" id="title"></h2>
+                        <div class="col pt-3" >
+                            <span class="fs-6 fw-normal algo-star-text">알고별점
+                                <span class="algo-star col-5"></span>
+                            </span>
+                            <span class="fs-6 fw-normal visitor-text">&nbsp;&nbsp;방문객 평균
+                                <span class="point"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="col-md-12 fs-7 text-black-50 addr"></p>
+                <p class="col-md-12 fs-7 line-intro"></p>
+                <div class="row row-cols-1 row-cols-md-2">
+                    <div class="col">
+                        <div class="row swiper-banner">
+                        </div>
+                        <div class="row">
+                            <figure class="line-chart">
+                                <div id="line-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <figure class="polar-chart">
+                              <div id="polar-container"></div>
+                            </figure>
+                        </div>
+                        <div class="row">
+                            <figure class="bubble-chart">
+                              <div id="bubble-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th scope="col">운영기간</th>
+                            <td class="oper-date"></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">연락처</th>
+                            <td class="tel"></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">주요시설</th>
+                            <td class="facility"></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">홈페이지 주소</th>
+                            <td><a href="#" class="homepage"></a></td>
+                        </tr>
+                    </thead>
+                </table>
+                <br>
+                <div class="row row-cols-2 row-cols-md-2">
+                    <div class="col-5 kakao-map"></div>
+                    <div class="col local-banner">
+                        <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper-container mySwiper2">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><br><br>
+    </div>
+</body>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>#}
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=30d72d58b0b7ddc0a4ebd7fba31f8052"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/static/js/detail.js"></script>
+<script src="/static/js/index.js"></script>
+</html>
