@@ -5,7 +5,6 @@ from datetime import date
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
-import MySQLdb
 
 ip = ""
 db = ""
@@ -185,8 +184,8 @@ place_df = data[['id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat',
 place_df.to_sql(name='place', con=engine, if_exists='append', index=False)
 
 ### convenience
-- id값 auto_increment 설정?
-- id는 두고 place_id라는 컬럼을 따로 두고 FK 설정
+# - id값 auto_increment 설정?
+# - id는 두고 place_id라는 컬럼을 따로 두고 FK 설정
 
 qry2 = ('''
 CREATE TABLE convenience(
