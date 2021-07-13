@@ -34,8 +34,15 @@ class AlgoPoints(cp.Cat5Points):
         print(f"{camp_id} - algo star: 별이 {algo_star}개!")
         return algo_star
 
-    def make_algo_df(self, just_load_file=False):
-        if not just_load_file:
+    def make_algo_df(self, just_load_file=True):
+        """default: 저장되어있는 파일을 불러온다.
+        새로 점수 산출을 하려면 just_load_file=False로 설정"""
+
+        if just_load_file:
+            # 불러올 저장된 파일명을 기입해주세요.
+            algo_df = pd.read_csv(self.path + f"algo_df_0713.csv", encoding='utf-8-sig')
+
+        else:
             algo_df = self.df[['contentId', 'camp']]
             comfort, together, fun, healing, clean = [], [], [], [], []
             for idx in tqdm(algo_df['contentId'].tolist()):
@@ -51,6 +58,5 @@ class AlgoPoints(cp.Cat5Points):
             algo_df['healing'] = healing
             algo_df['clean'] = clean
             # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
-        else:
-            algo_df = pd.read_csv(self.path + f"algo_df_{just_load_file}.csv", encoding='utf-8-sig')
+
         return algo_df
