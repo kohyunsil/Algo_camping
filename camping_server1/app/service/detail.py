@@ -36,7 +36,7 @@ def get_detail(param):
                 avg_star = round(float(review_query[0][0]), 2)
 
             local_obj = get_local(place_info[0].sigungu_code)
-            congestion_obj = get_congestion(place_info[0].content_id)
+            congestion_obj = get_past_congestion(place_info[0].content_id)
 
             params['place_info'] = place_info[0]
             params['avg_star'] = avg_star
@@ -64,8 +64,8 @@ def get_local(sigungu_code):
     else:
         return None
 
-# 혼잡도
-def get_congestion(content_id):
+# 과거 혼잡도
+def get_past_congestion(content_id):
     if content_id is not None:
         base = datetime.datetime.today().strftime('%Y-%m-%d 00:00:00')
         past = (datetime.datetime.now() - datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
@@ -81,3 +81,7 @@ def get_congestion(content_id):
                                                  model_congestion.content_id == int(content_id)).all()
 
         return query
+
+# 미래 혼잡도 예측
+def get_future_congestion(content_id):
+    if content_id is not None:
