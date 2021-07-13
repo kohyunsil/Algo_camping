@@ -27,8 +27,15 @@ body > div.container-fluid.search-result > nav > a{
     text-decoration: none;
     color: #3e3e3e;
 }
-.algo-star{
+.star{
     color: #49917D;
+    font-family: BlinkMacSystemFont, avenir next, avenir, helvetica, helvetica neue, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+.detail-score{
+    color: #2b2b2b;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica, helvetica neue, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 .card-img-fluid{
     display: inline-block;
@@ -37,16 +44,6 @@ body > div.container-fluid.search-result > nav > a{
     overflow: hidden;
     object-fit: cover;
 }
-@font-face {
-    font-family: 'Harlow Solid Italic';
-    font-style: normal;
-    font-weight: normal;
-    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
-}
-.algo-text{
-    font-family: "Harlow Solid Italic";
-}
-
 .btn-tag{
     background-color: #e2e2e2;
     border-radius: 1.3rem;

@@ -23,16 +23,20 @@ var DetailInfo = {
     },
     showPlaceInfo: function(res){
         var star = '';
+
         $('.point').text(res.avg_star);
         $('#title').text(res.place_info.place_name);
 
-        for (var i=0; i<parseInt(res.avg_star); i++){
+        for (var i=0; i<parseInt(res.algo_star); i++){
             star += '★';
         }
-        for (var i=0; i<(5 - parseInt(res.avg_star)); i++){
+        for (var i=0; i<(5 - parseInt(res.algo_star)); i++){
             star += '☆';
         }
         $('.algo-star').text(star + ' ');
+        $('.algo-star').append(
+            '<span class="detail-score">' + res.algo_star + '  ' + '</span>'
+        );
         $('.addr').text(res.place_info.addr);
         $('.line-intro').text(res.place_info.line_intro);
         $('.tel').text(res.place_info.tel);
@@ -51,7 +55,7 @@ var DetailInfo = {
         if (res.place_info.detail_image === null){
             $('#swiper-place').append(
                 '<div class="swiper-slide">\n' +
-                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';" alt="...">\n' +
+                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
                 '</div>\n'
             )
         }else{
@@ -60,16 +64,20 @@ var DetailInfo = {
             for(var i=0; i< img_array.length; i++){
                 $('.swiper-wrapper').append(
                     '<div class="swiper-slide">\n' +
-                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';" alt="...">\n' +
+                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
                     '</div>\n'
                 )
             }
         }
         var swiper = new Swiper(".mySwiper", {
             autoplay: {
-              delay: 2000,
+              delay: 3000,
               disableOnInteraction: false
-            }
+            },
+            lazy:{
+                loadPrevNext: true,
+                loadPrevNextAmount: 1,  // 미리 로드할 이미지 개수
+            },
         });
     },
     showMap: function(res){
@@ -159,14 +167,15 @@ var DetailInfo = {
             },
 
             series: [{
-              name: res.place_info.place_name,
-              data: [43000, 19000, 60000, 35000, 17000],
-              pointPlacement: 'on'
-            }, {
-              name: '사용자',
-              data: [50000, 39000, 42000, 31000, 26000],
-              pointPlacement: 'on'
+                name: res.place_info.place_name,
+                data: res.algo_score,
+                pointPlacement: 'on'
             }],
+            //{
+            //   name: '사용자',
+            //   data: [50000, 39000, 42000, 31000, 26000],
+            //   pointPlacement: 'on'
+            // }],
 
             responsive: {
               rules: [{
@@ -198,7 +207,7 @@ var DetailInfo = {
           },
 
           title: {
-            text: res.place_info.place_name + '의 예상 혼잡도'
+            text: res.place_info.place_name + '의 혼잡도'
           },
 
           subtitle: {
@@ -358,7 +367,7 @@ var DetailInfo = {
                         '</div>\n' +
 
                         '<div class="fw-light local-subtitle">' + res.local_info[i].line_intro + '</div><br>\n' +
-                        '<img src="' + res.local_info[i].first_image + '" alt="...">\n' +
+                        '<img src="' + res.local_info[i].first_image + '" alt="..." onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';">\n' +
                     '</div>'
                 );
             }
@@ -367,11 +376,14 @@ var DetailInfo = {
             autoplay: {
               delay: 2000,
               disableOnInteraction: false
-            }
+            },
+            lazy:{
+                loadPrevNext: true,
+                loadPrevNextAmount: 1,  // 미리 로드할 이미지 개수
+            },
       });
     }
 }
-
 DetailInfo.getPlaceInfo();
 
 

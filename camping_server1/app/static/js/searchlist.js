@@ -71,10 +71,28 @@ var SearchList = {
 
                 SearchList.showSearchList(response);
                 SearchList.showSwiperImg(response);
+                SearchList.showAlgoStars(response);
             }else{
                 alert(response.msg);
             }
         })
+    },
+    showAlgoStars: function(res){
+        var star = '';
+
+        for (var i=0; i<res.algo_star.length; i++){
+            for (var j=0; j<parseInt(res.algo_star[i]); j++){
+                star += '★';
+            }
+            for (var j=0; j<(5 - parseInt(res.algo_star[i])); j++){
+                star += '☆';
+            }
+            $('#algo-star' + (i+1)).text(star);
+            $('#algo-star' + (i+1)).append(
+                '<span class="detail-score">' + ' ' + res.algo_star[i] + '</span>'
+            )
+            star = '';
+        }
     },
     showSearchList: function(res){
         $('.input-keyword').text(res.keywords);
@@ -97,8 +115,8 @@ var SearchList = {
                             '<p class="card-text">95% 일치</p>\n' +
                             '<div class="col justify-content-md-center tags" id="tag' + (i+1) + '">\n' +
                             '</div>&nbsp;\n' +
-                            '<p class="algo-text">Algo \n' +
-                                '<span class="algo-star">★★★★★</span> \n' +
+                            '<p class="algo-text">\n' +
+                                '<span class="star" id="algo-star' + (i+1) + '"></span> \n' +
                             '</p> \n' +
                         '</div> \n' +
                     '</div> \n' +
@@ -123,7 +141,6 @@ var SearchList = {
         $('.col').each(function(idx){
             $(this).click(function(event){
                 event.preventDefault();
-                console.log(idx / 2);
                 var id = res.place_info[Number(idx / 2)].content_id;
                 var param = {
                     content_id: id
@@ -133,7 +150,7 @@ var SearchList = {
             })
         })
     },
-    showSwiperImg: function(res) {
+    showSwiperImg: function(res){
         $(this).lazyLoadXT();
         for (var i = 0; i < res.place_info.length; i++) {
             for (var k = 1; k < res.place_info[i].detail_image.length; k++) {
@@ -152,6 +169,5 @@ var SearchList = {
         });
     }
 }
-
 SearchList.sortList()
 SearchList.getList()

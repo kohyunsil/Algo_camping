@@ -1,6 +1,7 @@
 from flask import *
 from ..model import *
-from ..service import search_service
+from ..service import search
+from ..service import detail
 
 @app.route('/')
 @app.route('/main')
@@ -16,35 +17,31 @@ def search_tags():
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
         return redirect('/main', code=302)
     else:
-        return search_service.get_searchlist(params)
+        return search.get_searchlist(params)
 
 # 인기순 정렬
 @app.route('/search/popular')
 def search_popular():
     # getter
     place_obj = dto.place
-
-    return search_service.get_readcount_list(place_obj)
+    return search.get_readcount_list(place_obj)
 
 # 조회순 정렬
 @app.route('/search/readcount')
 def search_readcount():
     # getter
     place_obj = dto.place
-
-    return search_service.get_readcount_list(place_obj)
+    return search.get_readcount_list(place_obj)
 
 # 등록순 정렬
 @app.route('/search/recent')
 def search_recent():
     # getter
     place_obj = dto.place
-
-    return search_service.get_modified_list(place_obj)
+    return search.get_modified_list(place_obj)
 
 # 상세 페이지
 @app.route('/detail/info')
 def detail_info():
-    # param = request.get_json()
     param = request.args.to_dict()
-    return search_service.get_detail(param)
+    return detail.get_detail(param)

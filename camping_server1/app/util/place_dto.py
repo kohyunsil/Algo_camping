@@ -1,7 +1,7 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 
-class PlaceDTO(object):
 
+class PlaceDTO(object):
     @hybrid_property
     def place(self):
         return self.place_obj

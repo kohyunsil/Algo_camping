@@ -1,4 +1,7 @@
 import configparser
+from datetime import datetime
+import pandas as pd
+import pickle
 import os
 
 config = configparser.ConfigParser()
@@ -21,3 +24,20 @@ class Config(object):
             '물놀이하기좋은': 'waterplay_s', '자전거타기좋은': 'bicycle_s', '수영장있는': 'pool_s', '익스트림': 'extreme_s'}
     APPKEY = keys['APPKEY']
     DATE_RANGE = 10
+
+    # 모델링 관련 경로 및 파일 불러오기
+    PATH = os.path.abspath('../datas')
+    ALGO_DF = pd.read_csv(PATH + '/algo_merge_result.csv', encoding='utf-8-sig')
+    WEIGHTS = pd.read_excel(PATH + '/cat_weights_revised.xlsx')
+
+    wdf = WEIGHTS[['category', 'colname', 'weights']]
+    weight_dict = wdf.to_dict('records')
+
+    with open(PATH + 'weight_dict.txt', 'wb') as wd:
+        pickle.dump(weight_dict, wd)
+    with open(PATH + 'weight_dict.txt', 'rb') as wd:
+        wd = pickle.load(wd)
+        WEIGHTS_DF = pd.DataFrame(wd)
+
+    TODAY = datetime.today().strftime('%m%d')
+    NOW = datetime.today().strftime('%m%d_%X')
