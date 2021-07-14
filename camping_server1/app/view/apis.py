@@ -2,6 +2,7 @@ from flask import *
 from ..model import *
 from ..service import search
 from ..service import detail
+from ..service import user
 
 @app.route('/')
 @app.route('/main')
@@ -45,3 +46,9 @@ def search_recent():
 def detail_info():
     param = request.args.to_dict()
     return detail.get_detail(param)
+
+# 회원가입 중복 이메일 체크
+@app.route('/user/check')
+def check_email():
+    param = request.args.to_dict()
+    return user.check_duplicate(param)

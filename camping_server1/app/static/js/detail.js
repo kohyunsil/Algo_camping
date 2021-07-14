@@ -110,20 +110,49 @@ var DetailInfo = {
         infowindow.open(map, marker);
     },
     showHighCharts: function(res){
-        var base = new Date();
-        var past = new Date(res.congestion[0].base_ymd);
+        // var base = new Date();
+        var past = new Date(res.past_congestion[0].base_ymd);
 
-        var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
+        // var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
         var pastdate = past.getFullYear() + '-' + ('0'+(past.getMonth()+1)).slice(-2) + '-' + ('0' + past.getDate()).slice(-2);
+        var futuredate = ''
+
         var congestion = [];
+        var future_congestion = [];
         var daterange = [];
 
-        for (var i=0; i<res.congestion.length; i++){
-            congestion.push(res.congestion[i].congestion);
-            var date = new Date(res.congestion[i].base_ymd);
+        for (var i=0; i<res.past_congestion.length; i++){
+            var date = new Date(res.past_congestion[i].base_ymd);
             var ymd_date = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
             daterange.push(ymd_date);
         }
+
+        for (var i=0; i<res.future_date.length; i++){
+            daterange.push(res.future_date[i]);
+
+            if (i === res.future_date.length -1){
+                futuredate = res.future_date[i];
+            }
+        }
+
+        // 과거 혼잡도 시각화용 데이터 정리
+        for (var i=0; i<daterange.length; i++){
+            try{
+                congestion.push(res.past_congestion[i].congestion);
+                future_congestion.push('');
+            }catch(e){
+                congestion.push('');
+            }
+        }
+
+        // 미래 혼잡도 시각화용 데이터 정리
+        for (var i=0; i<(daterange.length - res.past_congestion.length); i++){
+            future_congestion.push(res.future_congestion[i]);
+        }
+
+        console.log(congestion);
+        console.log(future_congestion);
+
         // spider web (polar) chart
         Highcharts.chart('polar-container', {
             chart: {
@@ -211,7 +240,7 @@ var DetailInfo = {
           },
 
           subtitle: {
-            text: pastdate + ' ~ '+ basedate + '기준'
+            text: pastdate + ' ~ '+ futuredate + ' 기준'
           },
           plotOptions: {
             series: {
@@ -248,14 +277,13 @@ var DetailInfo = {
           },
 
           series: [{
-            name: '지난' + res.congestion.length + '일 간 방문객 수',
+            name: '지난 ' + res.past_congestion.length + '일 간 방문객 수',
             data: congestion
           }
-          // , {
-          //   name: '지난 1주일 간 방문율',
-          //   data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-          // }
-          ],
+          ,{
+            name: '앞으로 ' + res.future_date.length + '일 간 예측 방문객 수',
+            data: future_congestion
+          }],
 
           responsive: {
             rules: [{
