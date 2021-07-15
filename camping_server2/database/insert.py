@@ -7,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler, Ma
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
+import MySQLdb
 
 ip = ""
 db = ""
@@ -25,10 +26,10 @@ cursor = mydb.cursor(pymysql.cursors.DictCursor)
 
 ### dataset
 
-api = pd.read_csv('../scraping/datas/camp_api_info_210613.csv')
-festival = pd.read_csv('../scraping/datas/festival_210613.csv')
-tour = pd.read_csv('../scraping/datas/tour_list_210612.csv')
-camp_details = pd.read_csv('../scraping/datas/camp_crawl_links.csv')
+api = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/camp_api_info_210613.csv')
+festival = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/festival_210613.csv')
+tour = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/tour_list_210612.csv')
+camp_details = pd.read_csv("/Users/sol/Desktop/dss/Crawling/camp_crawl_links.csv", encoding='utf-8-sig')
 
 api = api.drop(['Unnamed: 0', 'allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
@@ -101,22 +102,22 @@ festival =festival.rename(columns={'addr1' : 'addr',
                                 'createdtime' : 'created_date',
                                 'eventenddate' : 'event_end_date',
                                 'eventstartdate' : 'event_start_date',
-                        'firstimage' : 'first_image',
-                        'firstimage2' : 'second_image',
-                        'mapx' : 'lat',
-                        'mapy' : 'lng',
-                        'modifiedtime' : 'modified_date',
-                        'sigungucode' : 'sigungu_code',
-                        'title' : 'place_name'})
+                                'firstimage' : 'first_image',
+                                'firstimage2' : 'second_image',
+                                'mapx' : 'lat',
+                                'mapy' : 'lng',
+                                'modifiedtime' : 'modified_date',
+                                'sigungucode' : 'sigungu_code',
+                                'title' : 'place_name'})
 festival['place_num'] = 1
 tour = tour.rename(columns={'addr1' : 'addr',
-                        'contentid' : 'content_id',
-                        'firstimage' : 'first_image',
-                        'firstimage2' : 'second_image',
-                        'mapx' : 'lat',
-                        'mapy' : 'lng',
-                        'sigungucode' : 'sigungu_code',
-                        'title' : 'place_name'})
+                            'contentid' : 'content_id',
+                            'firstimage' : 'first_image',
+                            'firstimage2' : 'second_image',
+                            'mapx' : 'lat',
+                            'mapy' : 'lng',
+                            'sigungucode' : 'sigungu_code',
+                            'title' : 'place_name'})
 tour['place_num'] = 2
 
 camp_details['view'] = camp_details['view'].str.split(' ').str[1]
@@ -135,14 +136,13 @@ data = pd.concat([dataset_b, tour], 0)
 data = data.dropna(subset = ['addr'])
 data = data.reset_index().reset_index()
 data = data.drop(['index'],1)
-data = data.rename(columns={'level_0' : 'id', 
+data = data.rename(columns={'level_0' : 'place_id', 
                             'img_url' : 'detail_image', 
                             'tags' : 'tag',
                             'view' : 'readcount', 
                             })
 
 ### place
-
 qry1 = ('''
 CREATE TABLE place(
     id                INT            NOT NULL    AUTO_INCREMENT, 
@@ -167,7 +167,7 @@ CREATE TABLE place(
     detail_image      TEXT           NULL, 
     tag               TEXT           NULL, 
     readcount         INT            NULL, 
-    content_id        INT            NOT NULL, 
+    content_id        INT            NOT NULL   UNIQUE, 
     industry          VARCHAR(45)    NULL, 
     oper_date         VARCHAR(45)    NULL, 
     oper_pd           VARCHAR(45)    NULL, 
@@ -178,20 +178,19 @@ CREATE TABLE place(
 
 cursor.execute(qry1)
 
-place_df = data[['id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 'event_start_date', 
+place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 'event_start_date', 
                 'event_end_date', 'first_image', 'second_image', 'tel', 'addr2', 'thema_envrn', 'tour_era', 
                 'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount', 
                 'content_id', 'industry', 'oper_date', 'oper_pd',]]
+place_df = place_df.rename(columns={'place_id' : 'id'})
 
 place_df.to_sql(name='place', con=engine, if_exists='append', index=False)
 
 ### convenience
-# - id는 두고 place_id라는 컬럼을 따로 두고 FK 설정
-# - id값 auto_increment 설정?
-
 qry2 = ('''
 CREATE TABLE convenience(
-    id            INT            NOT NULL,
+    id                INT            NOT NULL    AUTO_INCREMENT, 
+    place_id          INT            NOT NULL,
     sited_stnc    INT            NULL    , 
     brazier       VARCHAR(45)    NULL    , 
     site_bottom1  INT            NULL    , 
@@ -211,7 +210,7 @@ CREATE TABLE convenience(
 cursor.execute(qry2)
 
 camp_convenience_df = data[data['place_num'] == 0]
-convenience_df = camp_convenience_df[['id','sited_stnc', 'brazier', 'site_bottom1', 'site_bottom2', 'site_bottom3', 
+convenience_df = camp_convenience_df[['place_id','sited_stnc', 'brazier', 'site_bottom1', 'site_bottom2', 'site_bottom3', 
                                         'site_bottom4', 'site_bottom5', 'swrm_cnt', 'toilet_cnt', 'wtrpl_cnt', 'sbrs', 'sbrs_etc', 
                                         'eqpmn_lend']]
 
@@ -224,7 +223,7 @@ cursor.execute(qry3)
 
 qry4 = ('''
 ALTER TABLE convenience
-    ADD CONSTRAINT FK_convenience_id_place_id FOREIGN KEY (id)
+    ADD CONSTRAINT FK_convenience_id_place_id FOREIGN KEY (place_id)
         REFERENCES place (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
         ''')
 cursor.execute(qry4)
@@ -235,10 +234,10 @@ SET foreign_key_checks = 1;
 cursor.execute(qry5)
 
 ### operation
-
 qry6 = ('''
 CREATE TABLE operation(
-    id            INT            NOT NULL, 
+    id                INT            NOT NULL    AUTO_INCREMENT, 
+    place_id          INT            NOT NULL, 
     mange         VARCHAR(45) , 
     manage_sttus  VARCHAR(45) , 
     prmisn_date   DATETIME    , 
@@ -252,7 +251,7 @@ CREATE TABLE operation(
 cursor.execute(qry6)
 
 camp_operation_df = data[data['place_num'] == 0]
-operation_df = camp_operation_df[['id', 'mange', 'manage_sttus', 'prmisn_date', 'faclt_div', 'trsagnt_no', 
+operation_df = camp_operation_df[['place_id', 'mange', 'manage_sttus', 'prmisn_date', 'faclt_div', 'trsagnt_no', 
                                 'mgc_div', 'bizrno']]
 
 operation_df.to_sql(name='operation', con=engine, if_exists='append', index=False)
@@ -264,7 +263,7 @@ cursor.execute(qry7)
 
 qry8 = ('''
 ALTER TABLE operation
-    ADD CONSTRAINT FK_operation_id_place_id FOREIGN KEY (id)
+    ADD CONSTRAINT FK_operation_id_place_id FOREIGN KEY (place_id)
         REFERENCES place (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
         ''')
 cursor.execute(qry8)
@@ -275,10 +274,10 @@ SET foreign_key_checks = 1;
 cursor.execute(qry9)
 
 ### variety
-
 qry10 = ('''
 CREATE TABLE variety(
-    id                INT            NOT NULL    , 
+    id                INT            NOT NULL    AUTO_INCREMENT, 
+    place_id          INT            NOT NULL,
     glamp_site        INT            , 
     gnrl_site         INT            , 
     indvdlcarav_site  INT            , 
@@ -302,7 +301,7 @@ CREATE TABLE variety(
 cursor.execute(qry10)
 
 camp_variety_df = data[data['place_num'] == 0]
-variety_df = camp_variety_df[['id', 'glamp_site', 'gnrl_site', 'indvdlcarav_site', 'carav_site', 'auto_site', 
+variety_df = camp_variety_df[['place_id', 'glamp_site', 'gnrl_site', 'indvdlcarav_site', 'carav_site', 'auto_site', 
                                 'carav_acmpny', 'trler_acmpny', 'lct', 'animal_cmg', 'clturevent_at', 
                                 'exprnprogrm_at', 'clturevent', 'posblfclty', 'posblfclty_etc', 'glampinner_fclty', 
                                 'caravinner_fclty', 'exprnprogrm']]
@@ -316,7 +315,7 @@ cursor.execute(qry11)
 
 qry12 = ('''
 ALTER TABLE variety
-    ADD CONSTRAINT FK_variety_id_place_id FOREIGN KEY (id)
+    ADD CONSTRAINT FK_variety_id_place_id FOREIGN KEY (place_id)
         REFERENCES place (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ''')
 cursor.execute(qry12)
@@ -327,10 +326,10 @@ SET foreign_key_checks = 1;
 cursor.execute(qry13)
 
 ### safety
-
 qry14 = ('''
 CREATE TABLE safety(
-    id          INT            NOT NULL, 
+    id                INT            NOT NULL    AUTO_INCREMENT, 
+    place_id          INT            NOT NULL, 
     insrnc_at   VARCHAR(45)    , 
     manage_num  INT            , 
     extshr      INT            , 
@@ -343,7 +342,7 @@ CREATE TABLE safety(
 cursor.execute(qry14)
 
 camp_safety_df = data[data['place_num'] == 0]
-safety_df = camp_safety_df[['id', 'insrnc_at', 'manage_num', 'extshr', 'firesensor', 'frprvtsand', 'frprvtwrpp']]
+safety_df = camp_safety_df[['place_id', 'insrnc_at', 'manage_num', 'extshr', 'firesensor', 'frprvtsand', 'frprvtwrpp']]
 
 
 safety_df.to_sql(name='safety', con=engine, if_exists='append', index=False)
@@ -355,7 +354,7 @@ cursor.execute(qry15)
 
 qry16 = ('''
 ALTER TABLE safety
-    ADD CONSTRAINT FK_safety_id_place_id FOREIGN KEY (id)
+    ADD CONSTRAINT FK_safety_id_place_id FOREIGN KEY (place_id)
         REFERENCES place (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ''') 
 cursor.execute(qry16)
@@ -365,10 +364,10 @@ SET foreign_key_checks = 1;
 ''')
 cursor.execute(qry17)
 
-### review_dataset
 
+### review_dataset
 # naver
-naver = pd.read_csv('../scraping/datas/v5_category_re.csv')
+naver = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/v5_category_re.csv')
 naver['user_info'] = naver['user_info'].str.replace("\n","")
 naver['user_info'] = naver['user_info'].str.replace(" ","")
 naver["user_review"] = naver['user_info'].str.split("리뷰",expand=True)[1].str.split("평균별점",expand=True)[0].str.split("사진",expand=True)[0]
@@ -377,6 +376,7 @@ naver["user_star"] = naver['user_info'].str.split("평균별점",expand=True)[1]
 naver['date'], naver['visit'] = naver["visit_info"].str.split(" ",1).str
 naver['visit_date'] = naver['date'].str[:10]
 naver['visit_count'] = naver['date'].str[10:] + naver['visit'].str[:2]
+naver['visit_count'] = naver['visit_count'].str.split('').str[1]
 naver['visit_reservation'] = naver['visit'].str[2:]
 naver = naver.drop(['user_info', 'visit_info', 'date', 'visit'],1)
 naver['platform'] = 1
@@ -393,22 +393,21 @@ naver = naver.rename(columns={'title' : 'place_name',
                             'user_star' : 'mean_star'})
 
 # kakao
-kakao = pd.read_csv('../scraping/datas/kakao_reviews.to_csv')
+kakao = pd.read_csv('/Users/sol/Desktop/dss/Crawling/data/kakao_camping_review_revised.csv')
 kakao = kakao.rename(columns={'kakaoMapUserId' : 'user_id', 'point' : 'star', 'likeCnt' : 'like_cnt', 
                         'photoCnt' : 'photo_cnt', 'username' : 'user_nickname'})
 kakao['platform'] = 0
 kakao_naver = pd.concat([naver, kakao], 0)
-review_data = data[['id', 'place_name']]
+review_data = data[['place_id', 'place_name']]
 review_data_df = pd.merge(review_data, kakao_naver, left_on='place_name', right_on='place_name', how="right")
 review_data_df = review_data_df.drop_duplicates()
 review_data_df = review_data_df.reset_index()
-review_data_df = review_data_df.rename(columns={'id': 'place_id', 'index' : 'id', 'userId' : 'user_id', })
-
+review_data_df = review_data_df.rename(columns={'index' : 'id', 'userId' : 'user_id', })
 ### review
 
 qry18 = ('''
 CREATE TABLE review(
-    id INT NOT NULL AUTO_INCREMENT, 
+    id INT PRIMARY KEY AUTO_INCREMENT,
     platform INT NOT NULL DEFAULT 0, 
     user_id VARCHAR(45), 
     place_id INT NOT NULL, 
@@ -417,17 +416,14 @@ CREATE TABLE review(
     date DATETIME, 
     cat_tag VARCHAR(45), 
     star FLOAT, 
-    contents TEXT, 
-    CONSTRAINT PK_review PRIMARY KEY (id)
+    contents TEXT 
 );
 ''')
 cursor.execute(qry18)
 
-review_df = review_data_df[['id', 'platform', 'user_id', 'place_id', 'like_cnt', 'photo_cnt', 'date', 'cat_tag', 
+review_df = review_data_df[['platform', 'user_id', 'place_id', 'like_cnt', 'photo_cnt', 'date', 'cat_tag', 
                             'star', 'contents']]
-
 review_df = review_df.dropna(subset = ['place_id'])
-
 review_df.to_sql(name='review', con=engine, if_exists='append', index=False)
 
 qry19 = ('''
@@ -448,26 +444,23 @@ SET foreign_key_checks = 1;
 cursor.execute(qry21)
 
 ### reviewer
-
 qry22 = ('''
 CREATE TABLE reviewer(
-    id             INT            NOT NULL        AUTO_INCREMENT, 
+    id             INT            NOT NULL       AUTO_INCREMENT, 
     platform       INT            NOT NULL       DEFAULT 0, 
     review_id      INT            NOT NULL       , 
     user_nickname  VARCHAR(45)    , 
     mean_star      FLOAT         , 
     visit_cnt      INT            , 
     review_cnt     INT            , 
-    CONSTRAINT PK_reviewer PRIMARY KEY (id, review_id)
+    CONSTRAINT PK_reviewer PRIMARY KEY (id)
 );
 ''')
 cursor.execute(qry22)
 
 reviewer = review_data_df[['id', 'platform', 'user_nickname', 'mean_star', 'visit_cnt', 'review_cnt']]
-reviewer = reviewer.reset_index()
-reviewer_df = reviewer.rename(columns={'id' : 'review_id', 'index' : 'id'})
+reviewer_df = reviewer.rename(columns={'id' : 'review_id'})
 reviewer_df['visit_cnt'] = reviewer_df['visit_cnt'].str.split('').str[1] # 나중에 정규표현식으로 수정
-
 reviewer_df.to_sql(name='reviewer', con=engine, if_exists='append', index=False)
 
 qry23 = ('''
@@ -488,12 +481,11 @@ SET foreign_key_checks = 1;
 cursor.execute(qry25)
 
 ### search
-
 qry26 = ('''
 CREATE TABLE search(
     id             INT           NOT NULL        AUTO_INCREMENT, 
-    content_id     INT           NOT NULL, 
-    place_name     VARCHAR(45)   NOT NULL, 
+    content_id     INT           NOT NULL        UNIQUE, 
+    place_name     TEXT   NOT NULL, 
     addr           TEXT   NOT NULL, 
     tag            TEXT                , 
     with_family_s  INT                 , 
@@ -528,7 +520,7 @@ CREATE TABLE search(
 cursor.execute(qry26)
 
 camping_data = data[data['place_num'] == 0]
-camping_data = data[['id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
+camping_data = data[['place_id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
 camping_data['tag'] = camping_data['tag'].fillna("")
 camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"]["tag"] + "#반려견"
 camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
@@ -557,7 +549,7 @@ main_df.index = camping_data_b.index
 last_df  = pd.concat([camping_data_b, main_df], 1)
 last_df[last_df > 1] = 1
 last_df['index']= last_df.index
-algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'id', right_on='index').drop("index", 1)
+algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
 algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
                                     '계곡옆' : 'valley_s',
                                     '깨끗한' : 'clean_s',
@@ -585,7 +577,7 @@ algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
                                     '쾌적/편리' : 'comfort_m',
                                     '함께' : 'together_m'})
 
-search_df = algo_search_df.drop(['animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
+search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
 search_df.to_sql(name='search', con=engine, if_exists='append', index=False)
 
 qry27 = ('''
@@ -600,20 +592,25 @@ ALTER TABLE search
 ''')
 cursor.execute(qry28)
 
-### congestion
-
 qry29 = ('''
-CREATE TABLE congestion(
-    id            INT         NOT NULL        AUTO_INCREMENT, 
-    sigungu_code  INT         NOT NULL        , 
-    base_ymd      DATETIME    NOT NULL      , 
-    created_date  DATETIME    NOT NULL    , 
-    congestion    FLOAT       NOT NULL    , 
-    content_id    INT         NOT NULL        , 
-    CONSTRAINT PK_congestion PRIMARY KEY (id, content_id)
-);
+SET foreign_key_checks = 1;
 ''')
 cursor.execute(qry29)
+
+### congestion
+
+qry30 = ('''
+CREATE TABLE congestion(
+    id            INT         NOT NULL        AUTO_INCREMENT, 
+    sigungu_code  INT         NOT NULL, 
+    base_ymd      DATETIME    NOT NULL, 
+    created_date  DATETIME    NOT NULL, 
+    congestion    FLOAT       NOT NULL, 
+    content_id    INT         NOT NULL        UNIQUE, 
+    CONSTRAINT PK_congestion PRIMARY KEY (id)
+);
+''')
+cursor.execute(qry30)
 
 visitor_api = pd.read_csv('locgo_visitor_api_info1.csv')
 visitor_api = visitor_api.rename(columns={'signguCode' : 'sigungu_code'})
@@ -649,10 +646,10 @@ congestion_df = congestion_df.dropna()
 
 congestion_df.to_sql(name='congestion', con=engine, if_exists='append', index=False)
 
-qry30 = ('''
+qry31 = ('''
 SET foreign_key_checks = 0;
 ''')
-cursor.execute(qry30)
+cursor.execute(qry31)
 
 qry31 = ('''
 ALTER TABLE congestion
@@ -661,8 +658,13 @@ ALTER TABLE congestion
 ''')
 cursor.execute(qry31)
 
+qry32 = ('''
+SET foreign_key_checks = 1;
+''')
+cursor.execute(qry32)
+
 # algorithm
-qry32 = ((('''
+qry40 = ((('''
 CREATE TABLE algorithm(
     id                INT            NOT NULL    AUTO_INCREMENT, 
     place_name        TEXT           NULL, 
@@ -676,7 +678,7 @@ CREATE TABLE algorithm(
     glampinner_fclty  INT            NULL, 
     caravinner_fclty  INT            NULL, 
     trler_acmpny      VARCHAR(45)    NULL, 
-    carav_acmpny      VARCHAR(45)        NULL, 
+    carav_acmpny      VARCHAR(45)    NULL, 
     toilet_cnt        INT            NULL, 
     swrm_cnt          INT            NULL, 
     wtrpl_cnt         INT            NULL, 
@@ -737,12 +739,10 @@ CREATE TABLE algorithm(
 );
 ''')))
 
-cursor.execute(qry32)
+cursor.execute(qry40)
 
 camping_data = data[data['place_num'] == 0]
-tmp = camping_data[['content_id', 'insrnc_at', 'trsagnt_no', 'mange', 'manage_num', 'sited_stnc', 'glampinner_fclty', 'caravinner_fclty', 'trler_acmpny', 
-                    'carav_acmpny', 'toilet_cnt', 'swrm_cnt', 'wtrpl_cnt', 'brazier', 'sbrs', 'sbrs_etc', 'posblfclty', 'extshr', 'frprvtwrpp', 'frprvtsand', 
-                    'firesensor',]]
+tmp = camping_data[['content_id', 'insrnc_at', 'trsagnt_no', 'mange', 'manage_num', 'sited_stnc', 'glampinner_fclty', 'caravinner_fclty', 'trler_acmpny', 'carav_acmpny', 'toilet_cnt', 'swrm_cnt', 'wtrpl_cnt', 'brazier', 'sbrs', 'sbrs_etc', 'posblfclty', 'extshr', 'frprvtwrpp', 'frprvtsand', 'firesensor',]]
 tmp_df = pd.merge(algo_search_df, tmp, how='left', on='content_id')
 def col_count(colname):
     tmp_df[f'{colname}'] = tmp_df[f'{colname}'].str.count(',') + 1
@@ -752,10 +752,8 @@ def col_count(colname):
 col_list = ['glampinner_fclty', 'caravinner_fclty', 'sbrs', 'sbrs_etc', 'posblfclty']
 for i in col_list:
     col_count(i)
-
 nv_data = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/v5_category_re.csv')
 kk_data = pd.read_csv('/Users/sol/Desktop/dss/Crawling/data/kakao_camping_review_revised.csv')
-
 nv_data['user_info'] = nv_data['user_info'].fillna(0)
 nv_data = nv_data[nv_data['user_info'] != 0]
 nv_data['user_info'] = nv_data['user_info'].apply(lambda x: x.split('\n')[-1])
@@ -774,7 +772,7 @@ nv_data['point'] = nv_data['point'].astype('float64')
 nv_data['avg_point'] = nv_data['avg_point'].astype('float64')
 
 reviews_df = pd.concat([nv_data, kk_data], 0)
-
+# 가중치 [ point / (point / avg_point) ] * 0.01 → RobustScaler 적용
 reviews_df['weights'] = reviews_df['point'] * (reviews_df['point'] / reviews_df['avg_point'])
 reviews_df = reviews_df.reset_index(drop=True)
 
@@ -786,6 +784,8 @@ rb_df = rb_df.rename(columns={0: 'weights2'})
 rb_df['weights2'] = rb_df['weights2'] * 0.01
 
 re_df = pd.concat([reviews_df, rb_df], 1)
+
+# final_point: point * (1+weights) → MinMaxScaler 적용 후 *5 (0~5 사이의 값)
 
 re_df['final_point'] = re_df['point'] * (1 + re_df['weights2'])
 
@@ -851,3 +851,25 @@ algo_df = algo_df.rename(columns={'id' : 'place_id',
                         '혼잡도' : 'congestion_r'})
 algo_df = algo_df.drop(['addr', 'tag', '여유있는', '재미있는', '친절한', 'activity_m', 'nature_m', 'fun_m', 'comfort_m', 'together_m', 'with_pet_s' ],1)
 algo_df.to_sql(name='algorithm', con=engine, if_exists='append', index=False)
+
+qry41 = ('''
+SET foreign_key_checks = 0;
+''')
+cursor.execute(qry41)
+
+qry42 = ('''
+ALTER TABLE algorithm
+    ADD CONSTRAINT FK_algorithm_place_id_place_id FOREIGN KEY (place_id)
+        REFERENCES place (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+''')
+cursor.execute(qry42)
+
+qry43 = ('''
+SET foreign_key_checks = 1;
+''')
+cursor.execute(qry43)
+
+
+
+
+
