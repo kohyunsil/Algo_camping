@@ -45,3 +45,9 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
+camping_modeling/clustering/.ipynb_checkpoints/
+camping_modeling/review_nlp/.ipynb_checkpoints/
+camping_server/keys/
+camping_server/scraping/chromedriver.exe
+datas/
+camping_modeling/algostar/.ipynb_checkpoints/
