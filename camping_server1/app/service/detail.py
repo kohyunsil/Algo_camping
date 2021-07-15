@@ -37,16 +37,16 @@ def get_detail(param):
 
             local_obj = get_local(place_info[0].sigungu_code)
             past_congestion_obj = get_past_congestion(place_info[0].content_id)
-            future_congestion_obj = get_future_congestion(place_info[0].sigungu_code)
-            future_date, future_congestion = json_default(future_congestion_obj)
+            # future_congestion_obj = get_future_congestion(place_info[0].sigungu_code)
+            # future_date, future_congestion = json_default(future_congestion_obj)
 
             params['place_info'] = place_info[0]
             params['avg_star'] = avg_star
             params['local_info'] = local_obj if local_obj is not None else None
 
             params['past_congestion'] = past_congestion_obj if past_congestion_obj is not None else None
-            params['future_date'] = future_date
-            params['future_congestion'] = future_congestion
+            # params['future_date'] = future_date
+            # params['future_congestion'] = future_congestion
 
             params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
 
@@ -88,7 +88,7 @@ def get_past_congestion(content_id):
 
         return query
 
-# 미래 혼잡도 예측
+# 미래 혼잡도
 def get_future_congestion(sigungu_code):
     if sigungu_code is not None:
         base = datetime.datetime.today().strftime('%Y-%m-%d 00:00:00')

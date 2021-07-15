@@ -8,7 +8,7 @@ from ..config import Config
 import datetime
 import app.service.algopoints as algopoints
 
-
+# 검색결과 리스트
 def get_searchlist(params):
     split_params = []
 

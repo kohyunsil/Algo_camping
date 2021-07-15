@@ -50,7 +50,6 @@ var SearchList = {
             })
         });
     },
-
     // 검색결과 리스트
     getList: function(){
         var param = document.location.href.split("?keywords=");
@@ -61,7 +60,6 @@ var SearchList = {
             res_num : '',
             place_info : '',
         }
-
         $.getJSON('/searchlist', params).done(function(response){
             if(response.code === 200){
                 $('.loading-bar').css({'visibility': 'hidden'});
@@ -123,7 +121,6 @@ var SearchList = {
                     '<br><br> \n' +
                 '</div> \n'
             );
-
             for (var j=0; j<MAX_TAG; j++){
                 if (res.place_info[i].tag[j] === undefined){
                     $('#tag'+ (i+1)).append(
