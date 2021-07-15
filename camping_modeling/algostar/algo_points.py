@@ -53,7 +53,7 @@ class AlgoPoints(cp.Cat5Points):
             # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
         else:
             algo_df = pd.read_csv(self.path + f"algo_df_{just_load_file}.csv", encoding='utf-8-sig', index_col=0)
-        return print(algo_df)
+        return algo_df
 
     def algo_log_scale(self):
 
@@ -64,4 +64,5 @@ class AlgoPoints(cp.Cat5Points):
         log_df2 = np.log1p(scale) * dec_max
 
         scaled_algo_df = pd.concat([data.iloc[:, :2], log_df2], 1)
-        return print(scaled_algo_df)
+        print(scaled_algo_df)
+        return scaled_algo_df
