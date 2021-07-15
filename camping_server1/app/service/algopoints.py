@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import warnings
-import app.config as config
+from app.config import Config
 import app.service.catpoints as cp
 
 warnings.simplefilter("ignore")
@@ -11,8 +11,8 @@ warnings.simplefilter("ignore")
 class AlgoPoints(cp.Cat5Points):
     def __init__(self):
         super().__init__()
-        self.path = config.Config.PATH
-        self.df = config.Config.ALGO_DF
+        self.path = Config.PATH
+        self.df = Config.ALGO_DF
 
     def polar_points(self, camp_id):
         comfort_point = self.comfort_point(camp_id)
@@ -26,8 +26,11 @@ class AlgoPoints(cp.Cat5Points):
     def algo_star(self, camp_id):
         total_point = sum(self.polar_points(camp_id))
         polar_score = self.polar_points(camp_id)
+        print(f'total: {total_point}')
+        print(f'score: {polar_score}')
 
         algo_star = np.round(total_point / 100, 1)
+        print(f'algo star:{algo_star}')
         return algo_star, polar_score
 
     def make_algo_df(self, just_load_file=True):
@@ -36,8 +39,8 @@ class AlgoPoints(cp.Cat5Points):
 
         if just_load_file:
             # 불러올 저장된 파일명을 기입해주세요.
-            algo_df = pd.read_csv(self.path + f"algo_df_0713.csv", encoding='utf-8-sig')
-
+            # algo_df = pd.read_csv(self.path + f"algo_df_0713.csv", encoding='utf-8-sig')
+            algo_df = pd.read_csv(self.path + f"algo_df_scale.csv", encoding='utf-8-sig')
         else:
             algo_df = self.df[['contentId', 'camp']]
             comfort, together, fun, healing, clean = [], [], [], [], []

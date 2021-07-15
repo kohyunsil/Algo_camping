@@ -3,11 +3,7 @@ from ..model import *
 from ..service import search
 from ..service import detail
 from ..service import user
-
-@app.route('/')
-@app.route('/main')
-def main_page():
-    return make_response(render_template('index.html'))
+from flask_jwt_extended import *
 
 # url param이 유효하면 이동, 유효하지 않으면 main으로 이동
 # 검색 결과 리스트
@@ -51,7 +47,7 @@ def detail_info():
 @app.route('/user/check', methods=['POST'])
 def check_email():
     values = dict(request.values)
-    return user.check_duplicate(values)
+    return user.is_duplicate(values)
 
 # 회원가입
 @app.route('/user/signup', methods=['POST'])
@@ -64,3 +60,14 @@ def save_userinfo():
 def login():
     values = dict(request.values)
     return user.signin(values)
+
+# 사용자 정보 확인
+@app.route('/user/detail', methods=['POST'])
+@jwt_required
+def user_detail():
+    pass
+
+# 로그아웃
+@app.route('/user/signout')
+def logout():
+    pass

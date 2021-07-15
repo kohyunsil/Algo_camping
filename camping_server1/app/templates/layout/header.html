@@ -9,10 +9,10 @@
                 <div class="row">
                     <form class="align-items-center">
                         <span>
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="default-menu" data-bs-toggle="dropdown" aria-expanded="false">
                              전체
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <ul class="dropdown-menu" id="area-menu">
                                 <li><a class="dropdown-item" href="#">서울</a></li>
                                 <li><a class="dropdown-item" href="#">경기</a></li>
                                 <li><a class="dropdown-item" href="#">인천</a></li>
@@ -40,13 +40,23 @@
             </div>
 
             <div class="flex-shrink-0 dropdown user-dropdown">
-                <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>
-                    <p class="mx-2 py-1 username">김알고님 안녕하세요</p>
-                </a>
-                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                    <li><a class="dropdown-item" href="#">로그아웃</a></li>
-                </ul>
+                {% if param %}
+                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>
+                        <p class="mx-2 py-1 username">{{ param.name }}님 안녕하세요</p>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" id="logout-menu">
+                        <li><a class="dropdown-item" id="logout-btn" href="/signout">로그아웃</a></li>
+                    </ul>
+                {% else %}
+                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>
+                        <p class="mx-2 py-1 username">로그인</p>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" id="login-menu">
+                        <li><a class="dropdown-item" id="login-btn" href="/signin">로그인</a></li>
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -55,8 +65,8 @@
     </div>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 <script src="/static/js/tagsinput.js"></script>
+<script src="/static/js/header.css"></script>

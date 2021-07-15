@@ -14,7 +14,7 @@ var SigninEvent = {
             if (param.email !== '' && param.password !== ''){
                 $.post('/user/signin', param).done(function(response){
                     if (response.code === 200){
-                        if (response.flag){
+                        if (response.access_token === ''){
                             alert('존재하지 않는 회원입니다. 이메일 혹은 패스워드를 확인해주세요.');
                         }else{
                             var url = '/';

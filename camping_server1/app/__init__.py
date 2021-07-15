@@ -1,11 +1,10 @@
 from flask import *
-import configparser
 from app.config import Config
 from flask_restx import Api
-from flask_sqlalchemy import SQLAlchemy
-
-import pymysql
+from flask_jwt_extended import *
+import os
 import warnings
+
 warnings.filterwarnings('ignore')
 
 blueprint = Blueprint('api', __name__)
@@ -16,7 +15,13 @@ api = Api(blueprint,
 
 app = Flask(__name__)
 # api = Api(app)
+app.secret_key = os.urandom(24)
 app.config.from_object(Config)
+app.config.update(
+    DEBUG=True,
+    JWT_SECRET_KEY=Config.JWT_SECRET_KEY
+)
 
+jwt = JWTManager(app)
 
 from app.view import routes, apis

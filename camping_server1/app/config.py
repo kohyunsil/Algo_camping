@@ -1,5 +1,5 @@
 import configparser
-from datetime import datetime
+import datetime
 import pandas as pd
 import pickle
 import os
@@ -9,10 +9,16 @@ abspath = os.path.abspath('data.ini')
 config.read(abspath)
 keys = config['SECRET_KEYS']
 
+
 class Config(object):
     TEMPLATE_AUTO_RELOAD = True
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
+
+    JWT_SECRET_KEY = keys['JWT_SECRET_KEY']
+    JWT_EXPIRATION_DELTA = datetime.timedelta(minutes=60)
+
     LIMIT = 1000
     READCOUNT = 4
     MODIFIED_DATE = 5
@@ -39,5 +45,5 @@ class Config(object):
         wd = pickle.load(wd)
         WEIGHTS_DF = pd.DataFrame(wd)
 
-    TODAY = datetime.today().strftime('%m%d')
-    NOW = datetime.today().strftime('%m%d_%X')
+    TODAY = datetime.datetime.today().strftime('%m%d')
+    NOW = datetime.datetime.today().strftime('%m%d_%X')

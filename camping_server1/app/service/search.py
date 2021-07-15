@@ -81,6 +81,7 @@ def get_searchlist(params):
         content_id.append(query.content_id)
         place_info.append(query)
 
+    print(f'requset content_id:{content_id}')
     # algo score info 얻기
     algo_stars, algo_scores = get_score(content_id)
 
@@ -160,7 +161,6 @@ def get_score(content_id):
             star, score = algo.algo_star(target_id)
             algostars.append(star)
             algoscores.append(score)
-
         return algostars, algoscores
     else:
         star, score = algo.algo_star(content_id)

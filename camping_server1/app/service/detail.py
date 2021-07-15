@@ -49,7 +49,7 @@ def get_detail(param):
             # params['future_congestion'] = future_congestion
 
             params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
-
+            print(params['algo_star'])
         params['code'] = 200
 
     return jsonify(params)

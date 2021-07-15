@@ -1,5 +1,5 @@
 import warnings
-import app.config as config
+from app.config import Config
 import app.service.calclogic as cl
 warnings.simplefilter("ignore", UserWarning)
 
@@ -7,9 +7,9 @@ warnings.simplefilter("ignore", UserWarning)
 class Cat5Points(cl.CalcLogic, cl.CalcWeights):
     def __init__(self):
         super().__init__()
-        self.path = config.Config.PATH
-        self.weights = config.Config.WEIGHTS_DF
-        self.df = config.Config.ALGO_DF
+        self.path = Config.PATH
+        self.weights = Config.WEIGHTS_DF
+        self.df = Config.ALGO_DF
 
     def comfort_point(self, camp_id, category='comfort'):
         # 1. 리뷰 point /5 * weights

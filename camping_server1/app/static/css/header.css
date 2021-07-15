@@ -8,6 +8,9 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
+body, table, div, p{
+    font-family: 'Roboto', sans-serif;
+}
 @font-face {
     font-family: 'Harlow Solid Italic';
     font-style: normal;

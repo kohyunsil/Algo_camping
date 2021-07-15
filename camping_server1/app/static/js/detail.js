@@ -24,6 +24,9 @@ var DetailInfo = {
     showPlaceInfo: function(res){
         var star = '';
 
+        if (res.avg_star === 0){
+            $('.visitor-text').css({'visibility': 'hidden'});
+        }
         $('.point').text(res.avg_star);
         $('#title').text(res.place_info.place_name);
 
