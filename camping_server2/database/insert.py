@@ -26,10 +26,10 @@ cursor = mydb.cursor(pymysql.cursors.DictCursor)
 
 ### dataset
 
-api = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/camp_api_info_210613.csv')
-festival = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/festival_210613.csv')
-tour = pd.read_csv('/Users/sol/git/Algo_camping/camping_server2/scraping/datas/tour_list_210612.csv')
-camp_details = pd.read_csv("/Users/sol/Desktop/dss/Crawling/camp_crawl_links.csv", encoding='utf-8-sig')
+api = pd.read_csv('../datas/camp_api_info_210613.csv')
+festival = pd.read_csv('../datas/festival_210613.csv')
+tour = pd.read_csv('../datas/tour_list_210612.csv')
+camp_details = pd.read_csv("../datas/camp_crawl_links.csv", encoding='utf-8-sig')
 
 api = api.drop(['Unnamed: 0', 'allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
@@ -604,24 +604,27 @@ cursor.execute(qry29)
 
 qry30 = ('''
 CREATE TABLE congestion(
-    id            INT         NOT NULL        AUTO_INCREMENT, 
+    id            INT         NOT NULL        AUTO_INCREMENT,
     sigungu_code  INT         NOT NULL, 
     base_ymd      DATETIME    NOT NULL, 
     created_date  DATETIME    NOT NULL, 
     congestion    FLOAT       NOT NULL, 
-    content_id    INT         NOT NULL        UNIQUE, 
+    content_id    INT         NOT NULL, 
     CONSTRAINT PK_congestion PRIMARY KEY (id)
 );
 ''')
 cursor.execute(qry30)
 
-visitor_api = pd.read_csv('locgo_visitor_api_info1.csv')
+visitor_api = pd.read_csv('../datas/locgo_visitor_api_info1.csv')
 visitor_api = visitor_api.rename(columns={'signguCode' : 'sigungu_code'})
+out = visitor_api['touDivCd'] == 2
+foreign = visitor_api['touDivCd'] == 3
+visitor_api = visitor_api[out | foreign]
 visitor_api_df = visitor_api.groupby(['sigungu_code', 'baseYmd']).sum()
 visitor_api_df = visitor_api_df.reset_index()
 camping_data = data[data['place_num'] == 0]
 visitor_api_merge = pd.merge(visitor_api_df, camping_data, how='left', on='sigungu_code')
-esti_api = pd.read_csv('/Users/sol/Desktop/dss/Crawling/tour_estiDeco_api_info.csv')
+esti_api = pd.read_csv('../datas/tour_estiDeco_api_info.csv')
 esti_api_df = pd.merge(esti_api, data, how='left', left_on='contentId', right_on='content_id')
 future = esti_api_df[['baseYmd', 'estiNum', 'content_id', 'sigungu_code']]
 future_df = future.groupby(['sigungu_code', 'baseYmd']).sum()
@@ -639,7 +642,7 @@ past_api = past_api.rename(columns={'baseYmd' : 'base_ymd',
 con_df = pd.concat([past_api,future_api])
 congestion_df = con_df.reset_index()
 congestion_df = congestion_df.drop(['index'],1)
-
+from datetime import date
 today = date.today()
 today.isoformat()
 congestion_df['created_date'] = today.isoformat()
@@ -649,22 +652,22 @@ congestion_df = congestion_df.dropna()
 
 congestion_df.to_sql(name='congestion', con=engine, if_exists='append', index=False)
 
-qry31 = ('''
-SET foreign_key_checks = 0;
-''')
-cursor.execute(qry31)
+# qry31 = ('''
+# SET foreign_key_checks = 0;
+# ''')
+# cursor.execute(qry31)
 
-qry31 = ('''
-ALTER TABLE congestion
-    ADD CONSTRAINT FK_congestion_sigungu_code_place_sigungu_code FOREIGN KEY (sigungu_code)
-        REFERENCES place (sigungu_code) ON DELETE RESTRICT ON UPDATE RESTRICT;
-''')
-cursor.execute(qry31)
+# qry31 = ('''
+# ALTER TABLE congestion
+#     ADD CONSTRAINT FK_congestion_sigungu_code_place_sigungu_code FOREIGN KEY (sigungu_code)
+#         REFERENCES place (sigungu_code) ON DELETE RESTRICT ON UPDATE RESTRICT;
+# ''')
+# cursor.execute(qry31)
 
-qry32 = ('''
-SET foreign_key_checks = 1;
-''')
-cursor.execute(qry32)
+# qry32 = ('''
+# SET foreign_key_checks = 1;
+# ''')
+# cursor.execute(qry32)
 
 # algorithm
 qry40 = ((('''
@@ -871,8 +874,3 @@ qry43 = ('''
 SET foreign_key_checks = 1;
 ''')
 cursor.execute(qry43)
-
-
-
-
-
