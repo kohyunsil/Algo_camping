@@ -3,7 +3,6 @@ from ..model import *
 from ..service import search
 from ..service import detail
 from ..service import user
-import json
 
 @app.route('/')
 @app.route('/main')
@@ -51,11 +50,17 @@ def detail_info():
 # 회원가입 중복 이메일 체크
 @app.route('/user/check', methods=['POST'])
 def check_email():
-    param = request.get_json()
-    return user.check_duplicate(param)
+    values = dict(request.values)
+    return user.check_duplicate(values)
 
 # 회원가입
 @app.route('/user/signup', methods=['POST'])
 def save_userinfo():
-    param = request.get_json()
-    return user.get_signup(param)
+    values = dict(request.values)
+    return user.signup(values)
+
+# 로그인
+@app.route('/user/signin', methods=['POST'])
+def login():
+    values = dict(request.values)
+    return user.signin(values)

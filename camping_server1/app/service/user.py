@@ -17,10 +17,11 @@ def check_duplicate(param):
     param['flag'] = flag if len(query) == 0 else not flag
     param['code'] = 200
     session_.close()
+
     return param
 
 # 회원가입
-def get_signup(param):
+def signup(param):
     email = param['email']
     password = param['password']
     name = param['name']
@@ -41,6 +42,7 @@ def get_signup(param):
         flag = False
     except:
         session_.rollback()
+        param['code'] = 500
         flag = True
     finally:
         session_.close()
@@ -48,3 +50,26 @@ def get_signup(param):
         param['code'] = 200
 
         return param
+
+# 로그인
+def signin(param):
+    email = param['email']
+    password = param['password']
+    param, flag = {}, False
+    '''
+    # select * from user where email = 'test@gmail.com' and password = '1234';
+    '''
+    try:
+        query = model_user.query.filter(and_(model_user.email == email, model_user.password == password)).all()
+        print(query, len(query))
+        if query is None:
+            flag = True
+    except:
+        param['code'] = 500
+    finally:
+        param['flag'] = flag
+        param['code'] = 200
+
+        return param
+
+
