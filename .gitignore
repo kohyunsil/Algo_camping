@@ -51,3 +51,4 @@ camping_server/keys/
 camping_server/scraping/chromedriver.exe
 datas/
 camping_modeling/algostar/.ipynb_checkpoints/
+camping_server1/data.ini
