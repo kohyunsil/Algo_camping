@@ -14,13 +14,17 @@ if __name__ == '__main__':
     # s1.make_cat_predictor('camp_description', 'full_text', 'labels')
     # s1.apply_cat_predictor('model2', 'kakao_review_sent', 'review')
 
-    # merge
+    # merge_preprocessing
+    # cm = cacm.CampMerge()
+    # cm.camp_api_data_merge()
     # rp = cacm.ReviewPre()
-    # rp.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
+    # rp.review_preprocessing()
+
+    # merge_result
     # merge = cacm.ReviewCamp()
     # merge.review_camp_merge()
 
 
-    # tag-merge
+    #tag-merge
     tag_df = tp.TagMerge()
-    tag_df.tag_merge('algo_df_scale')
+    tag_df.tag_merge()

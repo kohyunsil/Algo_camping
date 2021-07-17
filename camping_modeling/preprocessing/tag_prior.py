@@ -4,6 +4,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import camp_api_crawling_merge as cacm
+import config as config
 
 
 # 한글 폰트 설정
@@ -26,9 +27,15 @@ else:
 
 
 class TagMerge:
-    def camp_api_data_merge(self, apifile, crawl_file):
-        camp_api_data = pd.read_csv(f"../datas/{apifile}.csv", encoding='utf-8-sig')
-        camp_crawling_data = pd.read_csv(f"../datas/{crawl_file}.csv", encoding='utf-8-sig')
+    def __init__(self):
+        self.path = config.Config.PATH
+        self.api_data = config.Config.API_DATA
+        self.crawl_data = config.Config.CRAWL_DATA
+        self.algo_scale = config.Config.ALGO_SCALE
+
+    def camp_data_merge(self):
+        camp_api_data = self.api_data
+        camp_crawling_data = self.crawl_data
         datas = camp_crawling_data['link']
         data = [re.findall("\d+", data)[0] for data in datas]
         camp_crawling_data['url_num'] = data
@@ -76,33 +83,32 @@ class TagMerge:
 
     def review_data(self):
 
-        grm = cacm.ReviewPre()
-        re_df = grm.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
+        re_df = cacm.ReviewPre().review_preprocessing()
 
         ## 태그별 우선순위를 위한 preprocessing
-        tag_df = re_df.drop(['point', 'count', 'avg_point'], 1)
+        tag_df = re_df.drop(['point', 'count','Unnamed: 0','avg_point'],1)
         mm = MinMaxScaler()
-        mm_fit = mm.fit_transform(tag_df.iloc[:, 2:])
+        mm_fit = mm.fit_transform(tag_df.iloc[:,2:])
         tag_df['mm_point'] = mm_fit
-        tag_df = tag_df.drop('final_point', 1)
-        df = pd.pivot_table(tag_df, index='camp', columns='category')
+        tag_df = tag_df.drop('final_point',1)
+        df = pd.pivot_table(tag_df, index = 'camp', columns = 'category')
         df = df.fillna(0)
         df = df.reset_index()
-        tag_result = pd.concat([df["camp"], df["mm_point"]], 1)
+        tag_result = pd.concat([df["camp"] ,df["mm_point"]], 1 )
 
         camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
-                     '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
-                     '포시즌 캠핑장']
+                         '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
+                         '포시즌 캠핑장']
 
         for i in camp_name:
             tag_result = tag_result.query(f'camp != "{i}"')
 
         return tag_result
 
-    def tag_merge(self, filename):
-        algo_df = pd.read_csv(f'../datas/{filename}.csv')
-        algo_df = algo_df.iloc[:, 2:]
-        datas = self.camp_api_data_merge('camp_api_info_210619', 'camp_crawl_links')
+    def tag_merge(self):
+        algo_df = self.algo_scale
+        algo_df = algo_df[['comfort','together','fun','healing','clean']].reset_index(drop=True)
+        datas = self.camp_data_merge()
         review = self.review_data()
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
         merge_result = merge_result.fillna(0)

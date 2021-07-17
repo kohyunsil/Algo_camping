@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler, MaxAbsScaler
+import config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt
@@ -22,9 +23,16 @@ else:
 
 class CampMerge:
 
-    def camp_api_data_merge(self, apifile, crawl_file):
-        camp_api_data = pd.read_csv(f"../datas/{apifile}.csv", encoding='utf-8-sig')
-        camp_crawling_data = pd.read_csv(f"../datas/{crawl_file}.csv", encoding='utf-8-sig')
+    def __init__(self):
+        self.path = config.Config.PATH
+        self.api_data = config.Config.API_DATA
+        self.crawl_data = config.Config.CRAWL_DATA
+        self.nv_data = config.Config.NV_DATA
+        self.kk_data = config.Config.KK_DATA
+
+    def camp_api_data_merge(self):
+        camp_api_data = self.api_data
+        camp_crawling_data = self.crawl_data
         datas = camp_crawling_data['link']
         data =[re.findall("\d+",data)[0] for data in datas]
         camp_crawling_data['url_num'] = data
@@ -89,14 +97,13 @@ class CampMerge:
         return camp_algo_merge
 
 
-class ReviewPre:
+class ReviewPre(CampMerge):
 
-    def review_preprocessing(self, naver_review_file, kakao_review_file):
+    def review_preprocessing(self):
         """ 카카오 데이터는 네이버 카테고리 학습 후 반영"""
 
-        path = "../datas/"
-        nv_data = pd.read_csv(path + f'{naver_review_file}.csv')
-        kk_data = pd.read_csv(path + f'{kakao_review_file}.csv', index_col=0)
+        nv_data = self.nv_data
+        kk_data = self.kk_data
 
 
         # naver_review_data preprocessing
@@ -155,8 +162,8 @@ class ReviewCamp(ReviewPre):
 
     def review_camp_merge(self):
         cm = CampMerge()
-        api_data = cm.camp_api_data_merge('camp_api_info_210619', 'camp_crawl_links')
-        df = self.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
+        api_data = cm.camp_api_data_merge()
+        df = self.review_preprocessing()
         df = df[['camp', 'category', 'final_point']]
         df = pd.pivot_table(df, index='camp', columns='category')
         df = df.fillna(0)
