@@ -52,3 +52,13 @@ camping_server/scraping/chromedriver.exe
 datas/
 camping_modeling/algostar/.ipynb_checkpoints/
 camping_server1/data.ini
+
+camping_modeling/models/
+
+camping_modeling/nlp/.ipynb_checkpoints/
+
+camping_modeling/clustering/results/
+
+camping_modeling/preprocessing/.ipynb_checkpoints/
+
+*.xml
