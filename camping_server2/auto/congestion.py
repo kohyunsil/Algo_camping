@@ -102,6 +102,10 @@ class KoreaTourApi:
 
     # sigungucode로 merge
     def merge_past_data(self, cursor, engine, mydb, past_df):
+        # 현지인 제외
+        out = past_df['touDivCd'] == 2
+        foreign = past_df['touDivCd'] == 3
+        past_df = past_df[out | foreign]
         past_api = past_df[['baseYmd', 'signguCode', 'touNum']]
         past_api = past_api.astype({'touNum': 'float'}, {'signguCode': 'int'})
         past_api = past_api.groupby(['signguCode', 'baseYmd']).sum()
@@ -167,11 +171,11 @@ class KoreaTourApi:
         qry29 = ('''
         CREATE TABLE congestion(
             id            INT         NOT NULL        AUTO_INCREMENT, 
-            sigungu_code  INT         NOT NULL        , 
-            base_ymd      DATETIME    NOT NULL      , 
-            created_date  DATETIME    NOT NULL    , 
-            congestion    FLOAT       NOT NULL    , 
-            content_id    INT         NOT NULL        , 
+            sigungu_code  INT         NOT NULL, 
+            base_ymd      DATETIME    NOT NULL, 
+            created_date  DATETIME    NOT NULL, 
+            congestion    FLOAT       NOT NULL, 
+            content_id    INT         NOT NULL, 
             CONSTRAINT PK_congestion PRIMARY KEY (id)
         );
         ''')
@@ -182,10 +186,6 @@ class KoreaTourApi:
         # sql insert
         merge_df.to_sql(name='congestion', con=engine, if_exists='append', index=False)
 
-        qry30 = ('''
-            SET foreign_key_checks = 0;
-        ''')
-        cursor.execute(qry30)
 
 
 if __name__ == '__main__':
