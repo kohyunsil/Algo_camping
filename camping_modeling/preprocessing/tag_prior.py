@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
+import camp_api_crawling_merge as cacm
 
 
 # 한글 폰트 설정
@@ -73,58 +74,14 @@ class TagMerge:
 
         return camp_algo_merge
 
-    def review_data(self, nv_file, kk_file):
-        path = "../datas/"
-        nv_data = pd.read_csv(path + f'{nv_file}.csv')
-        kk_data = pd.read_csv(path + f'{kk_file}.csv', index_col=0)
+    def review_data(self):
 
-        nv_data['user_info'] = nv_data['user_info'].fillna(0)
-        nv_data = nv_data[nv_data['user_info'] != 0]
-        nv_data['user_info'] = nv_data['user_info'].apply(lambda x: x.split('\n')[-1])
-        nv_data['visit_info'] = nv_data['visit_info'].apply(lambda x: x.split('번째')[0][-1])
-        nv_data = nv_data[nv_data['star'] != 'star']
-
-        nv_data['star'] = nv_data['star'].astype('float64')
-        nv_data['user_info'] = nv_data['user_info'].astype('float64')
-        nv_data['visit_info'] = nv_data['visit_info'].astype('float64')
-        nv_data = nv_data.drop(['addr', 'base_addr', 'user_name', 'visit_info'], 1)
-        nv_data = nv_data.rename(
-            columns={'title': 'camp', 'highlight_review': 'review', 'star': 'point', 'user_info': 'avg_point'})
-
-        nv_data = nv_data[['camp', 'review', 'point', 'category', 'avg_point']]
-        nv_data['point'] = nv_data['point'].astype('float64')
-        nv_data['avg_point'] = nv_data['avg_point'].astype('float64')
-
-        reviews_df = pd.concat([nv_data, kk_data], 0)
-
-        # 가중치 [ point / (point / avg_point) ] * 0.01 → RobustScaler 적용
-        reviews_df['weights'] = reviews_df['point'] * (reviews_df['point'] / reviews_df['avg_point'])
-        reviews_df = reviews_df.reset_index(drop=True)
-
-        rb = RobustScaler()
-        rb_df = rb.fit_transform(reviews_df[['weights']])
-        rb_df = pd.DataFrame(rb_df)
-
-        rb_df = rb_df.rename(columns={0: 'weights2'})
-        rb_df['weights2'] = rb_df['weights2'] * 0.01
-
-        re_df = pd.concat([reviews_df, rb_df], 1)
-        re_df['final_point'] = re_df['point'] * (1 + re_df['weights2'])
-
-        mm = MinMaxScaler()
-        mm_df = mm.fit_transform(re_df[['final_point']])
-        mm_df = pd.DataFrame(mm_df)
-
-        re_df['final_point'] = mm_df * 5
-        re_df = re_df.drop(['weights', 'weights2'], 1)
-        re_df['final_point'] = round(re_df['final_point'], 1)
-
-        re_df2 = re_df.groupby(['camp', 'category']).mean().reset_index()
-        re_df3 = re_df.groupby(['camp', 'category']).size().reset_index(name='count')
-        re_df4 = pd.merge(re_df2, re_df3)
+        grm = cacm.ReviewPre()
+        re_df = grm.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
 
         ## 태그별 우선순위를 위한 preprocessing
-        tag_df = re_df4.drop(['point', 'count', 'avg_point'], 1)
+        tag_df = re_df.drop(['point', 'count', 'avg_point'], 1)
+        mm = MinMaxScaler()
         mm_fit = mm.fit_transform(tag_df.iloc[:, 2:])
         tag_df['mm_point'] = mm_fit
         tag_df = tag_df.drop('final_point', 1)
@@ -146,7 +103,7 @@ class TagMerge:
         algo_df = pd.read_csv(f'../datas/{filename}.csv')
         algo_df = algo_df.iloc[:, 2:]
         datas = self.camp_api_data_merge('camp_api_info_210619', 'camp_crawl_links')
-        review = self.review_data('v5_category_re', 'kakao_review_cat_revised')
+        review = self.review_data()
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
         merge_result = merge_result.fillna(0)
         merge_result = merge_result.drop(['만족도', '가격', '목적', '메뉴', '예약', '음식양', '입장', '혼잡도'], 1)

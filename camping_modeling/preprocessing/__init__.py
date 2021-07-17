@@ -15,10 +15,11 @@ if __name__ == '__main__':
     # s1.apply_cat_predictor('model2', 'kakao_review_sent', 'review')
 
     # merge
-    # c = cacm.CampMerge()
-    # grm = cacm.GocampReviewMerge()
-    # c.camp_api_data_merge('camp_api_info_210619', 'camp_crawl_links')
-    # grm.review_camp_merge('camp_algo_merge', 'v5_category_re', 'kakao_review_cat_revised')
+    # rp = cacm.ReviewPre()
+    # rp.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
+    # merge = cacm.ReviewCamp()
+    # merge.review_camp_merge()
+
 
     # tag-merge
     tag_df = tp.TagMerge()

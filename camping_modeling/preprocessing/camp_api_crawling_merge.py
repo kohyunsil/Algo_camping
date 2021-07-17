@@ -84,17 +84,17 @@ class CampMerge:
                      '아이들놀기좋은': '아이들 놀기 좋은', '자전거타기좋은': '자전거 타기 좋은', '별보기좋은': '별 보기 좋은',
                      '수영장있는': '수영장 있는', '물놀이하기좋은': '물놀이 하기 좋은', '그늘이많은': '그늘이 많은', '바다가보이는': '바다가 보이는'})
 
-        camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
+        # camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
+
+        return camp_algo_merge
 
 
+class ReviewPre:
 
-class GocampReviewMerge():
-
-    def review_camp_merge(self, api_data, naver_review_file, kakao_review_file):
+    def review_preprocessing(self, naver_review_file, kakao_review_file):
         """ 카카오 데이터는 네이버 카테고리 학습 후 반영"""
 
         path = "../datas/"
-        api_data = pd.read_csv(path + f'{api_data}.csv')
         nv_data = pd.read_csv(path + f'{naver_review_file}.csv')
         kk_data = pd.read_csv(path + f'{kakao_review_file}.csv', index_col=0)
 
@@ -148,7 +148,16 @@ class GocampReviewMerge():
         re_df3 = re_df.groupby(['camp', 'category']).size().reset_index(name='count')
         re_df4 = pd.merge(re_df2, re_df3)
 
-        df = re_df4[['camp', 'category', 'final_point']]
+        return re_df4
+
+
+class ReviewCamp(ReviewPre):
+
+    def review_camp_merge(self):
+        cm = CampMerge()
+        api_data = cm.camp_api_data_merge('camp_api_info_210619', 'camp_crawl_links')
+        df = self.review_preprocessing('v5_category_re', 'kakao_review_cat_revised')
+        df = df[['camp', 'category', 'final_point']]
         df = pd.pivot_table(df, index='camp', columns='category')
         df = df.fillna(0)
         df = df.reset_index()
@@ -177,4 +186,6 @@ class GocampReviewMerge():
         # algo_result.set_index('camp', inplace=True)
 
 
-        algo_result.to_csv('../datas/algo_merge_result.csv', encoding='utf-8-sig', index=False)
+        # algo_result.to_csv('../datas/algo_merge_result.csv', encoding='utf-8-sig', index=False)
+
+        return print(algo_result)
