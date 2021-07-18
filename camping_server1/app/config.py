@@ -20,6 +20,7 @@ class Config(object):
 
     LIMIT = 1000
     READCOUNT = 4
+    STAR = 6
     MODIFIED_DATE = 5
     TAGS = {'즐길거리': 'fun_m', '쾌적/편리': 'comfort_m', '함께': 'together', '자연/힐링': 'nature_m', '액티비티': 'activity_m',
             '생태교육': 'ecological_s', '둘레길': 'trail_s', '축제': 'festival_s', '문화유적': 'cultural_s',

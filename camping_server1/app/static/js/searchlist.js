@@ -7,12 +7,7 @@ var SearchList = {
         $('#btnradio-popular').click(function() {
             $.getJSON('/search/popular').done(function(response){
                 if(response.code === 200){
-                    $('#card-layout').empty();
-                    setTimeout(function(){
-                        $(window).lazyLoadXT();
-                    }, 0);
-                    SearchList.showSearchList(response);
-                    SearchList.showSwiperImg(response);
+                    SearchList.getSearchData(response);
                 }else{
                     alert(response.msg);
                 }
@@ -21,13 +16,7 @@ var SearchList = {
         $('#btnradio-update').click(function() {
                 $.getJSON('/search/recent').done(function (response) {
                     if(response.code === 200){
-                        $('#card-layout').empty();
-                        setTimeout(function(){
-                            $(window).lazyLoadXT();
-                        }, 0);
-
-                        SearchList.showSearchList(response);
-                        SearchList.showSwiperImg(response);
+                        SearchList.getSearchData(response);
                     }else{
                         alert(response.msg);
                     }
@@ -38,12 +27,7 @@ var SearchList = {
         $('#btnradio-readcount').click(function() {
             $.getJSON('/search/readcount').done(function(response){
                 if(response.code === 200){
-                    $('#card-layout').empty();
-                    setTimeout(function(){
-                        $(window).lazyLoadXT();
-                    }, 0);
-                    SearchList.showSearchList(response);
-                    SearchList.showSwiperImg(response);
+                    SearchList.getSearchData(response);
                 }else{
                     alert(response.msg);
                 }
@@ -81,7 +65,7 @@ var SearchList = {
         // }else{
             $.getJSON('/search/list', params).done(function(response){
                 if(response.code === 200){
-                    SearchList.doAfterSuccess(response);
+                    SearchList.getSearchData(response);
                 }else{
                     alert(response.msg);
                 }
@@ -191,8 +175,9 @@ var SearchList = {
             }
         }
     },
-    doAfterSuccess: function(response){
+    getSearchData: function(response){
         $('.loading-bar').css({'visibility': 'hidden'});
+        $('#card-layout').empty();
         setTimeout(function(){
             $(window).lazyLoadXT();
         }, 0);

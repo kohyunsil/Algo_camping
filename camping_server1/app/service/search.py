@@ -101,39 +101,47 @@ def get_searchlist(params):
 def get_matching_rate():
     pass
 
+# 인기순 정렬
+def get_popular_list(place_obj):
+    place_info = []
+
+    for obj in place_obj:
+        star, _ = get_score(obj.content_id)
+        arr = [obj.place_name, obj.content_id, obj.detail_image,
+               obj.tag, obj.readcount, str(obj.modified_date), star]
+
+        place_info.append(arr)
+
+    place_info.sort(key=itemgetter(Config.STAR), reverse=True) # star = 6
+
+    return jsonify(make_resobj(place_info))
+
 # 조회순 정렬
 def get_readcount_list(place_obj):
     place_info = []
 
-    for i in range(len(place_obj)):
-        arr = [place_obj[i].place_name, place_obj[i].content_id, place_obj[i].detail_image,
-               place_obj[i].tag, place_obj[i].readcount]
+    for obj in place_obj:
+        star, _ = get_score(obj.content_id)
+        arr = [obj.place_name, obj.content_id, obj.detail_image,
+               obj.tag, obj.readcount, str(obj.modified_date), star]
 
         place_info.append(arr)
 
     place_info.sort(key=itemgetter(Config.READCOUNT), reverse=True)  # readcount = 4
-    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount']
 
-    params, param_list = {}, []
-    for info in place_info:
-        param = {key: info[i] for i, key in enumerate(key_list)}
-        param_list.append(param)
-
-    params['code'] = 200
-    params['place_info'] = param_list
-
-    return jsonify(params)
+    return jsonify(make_resobj(place_info))
 
 # 등록순 정렬
 def get_modified_list(place_obj):
     place_info = []
 
-    for i in range(len(place_obj)):
-        if place_obj[i].modified_date is None:
-            place_obj[i].modified_date = str('2000-01-01 00:00:00')
+    for obj in place_obj:
+        star, _ = get_score(obj.content_id)
+        if obj.modified_date is None:
+            obj.modified_date = str('2000-01-01 00:00:00')
 
-        arr = [place_obj[i].place_name, place_obj[i].content_id, place_obj[i].detail_image,
-               place_obj[i].tag, place_obj[i].readcount, str(place_obj[i].modified_date)]
+        arr = [obj.place_name, obj.content_id, obj.detail_image,
+               obj.tag, obj.readcount, str(obj.modified_date), star]
 
         place_info.append(arr)
 
@@ -141,16 +149,7 @@ def get_modified_list(place_obj):
                         key=lambda x: datetime.datetime.strptime(x[Config.MODIFIED_DATE], '%Y-%m-%d %H:%M:%S'),
                         reverse=True)
 
-    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date']
-
-    params, param_list = {}, []
-    for info in place_info:
-        param = {key: info[i] for i, key in enumerate(key_list)}
-        param_list.append(param)
-
-    params['code'] = 200
-    params['place_info'] = param_list
-    return jsonify(params)
+    return jsonify(make_resobj(place_info))
 
 # 알고 점수 호출
 def get_score(content_id):
@@ -183,3 +182,19 @@ def get_algo_points(content_id):
 
     return algo_star, cat_points_list
 
+# 반환되는 객체 만들기
+def make_resobj(place_info):
+    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date', 'star']
+
+    params, param_list = {}, []
+    stars = []
+    for info in place_info:
+        param = {key: info[i] for i, key in enumerate(key_list)}
+        param_list.append(param)
+        stars.append(param['star'])
+
+    params['code'] = 200
+    params['place_info'] = param_list
+    params['algo_star'] = stars
+
+    return params

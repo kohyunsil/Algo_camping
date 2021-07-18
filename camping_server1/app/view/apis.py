@@ -35,7 +35,7 @@ def search_tags():
 def search_popular():
     # getter
     place_obj = dto.place
-    return search.get_readcount_list(place_obj)
+    return search.get_popular_list(place_obj)
 
 # 조회순 정렬
 @app.route('/search/readcount')
