@@ -2,29 +2,12 @@ import re
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import camp_api_crawling_merge as cacm
 import config as config
 
-
-# 한글 폰트 설정
-import matplotlib.pyplot as plt
-import platform
-from matplotlib import font_manager, rc
-import matplotlib.pyplot as plt
-plt.rcParams['axes.unicode_minus'] = False
-
-if platform.system() == 'Windows':
-    path = "c:/Windows/Fonts/malgun.ttf"
-    font_name = font_manager.FontProperties(fname=path).get_name()
-    rc('font', family=font_name)
-elif platform.system() == 'Darwin':
-    rc('font', family='AppleGothic')
-elif platform.system() == 'Linux':
-    rc('font', family='NanumBarunGothic')
-else:
-    print('Unknown system... sorry~')
-
+TODAY = datetime.today().strftime('%m%d')
 
 class TagMerge:
     def __init__(self):
@@ -86,19 +69,19 @@ class TagMerge:
         re_df = cacm.ReviewPre().review_preprocessing()
 
         ## 태그별 우선순위를 위한 preprocessing
-        tag_df = re_df.drop(['point', 'count','Unnamed: 0','avg_point'],1)
+        tag_df = re_df.drop(['point', 'count', 'Unnamed: 0', 'avg_point'], 1)
         mm = MinMaxScaler()
-        mm_fit = mm.fit_transform(tag_df.iloc[:,2:])
+        mm_fit = mm.fit_transform(tag_df.iloc[:, 2:])
         tag_df['mm_point'] = mm_fit
-        tag_df = tag_df.drop('final_point',1)
-        df = pd.pivot_table(tag_df, index = 'camp', columns = 'category')
+        tag_df = tag_df.drop('final_point', 1)
+        df = pd.pivot_table(tag_df, index='camp', columns='category')
         df = df.fillna(0)
         df = df.reset_index()
-        tag_result = pd.concat([df["camp"] ,df["mm_point"]], 1 )
+        tag_result = pd.concat([df["camp"], df["mm_point"]], 1)
 
         camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
-                         '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
-                         '포시즌 캠핑장']
+                    '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
+                    '포시즌 캠핑장']
 
         for i in camp_name:
             tag_result = tag_result.query(f'camp != "{i}"')
@@ -107,7 +90,7 @@ class TagMerge:
 
     def tag_merge(self):
         algo_df = self.algo_scale
-        algo_df = algo_df[['comfort','together','fun','healing','clean']].reset_index(drop=True)
+        algo_df = algo_df[['comfort', 'together', 'fun', 'healing', 'clean']].reset_index(drop=True)
         datas = self.camp_data_merge()
         review = self.review_data()
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
@@ -129,6 +112,6 @@ class TagMerge:
                      '음식/조식': 'food_r', '전망': 'view_r', '주차': 'parking_r', '즐길거리': 'exciting_r', '청결도': 'clean_r',
                      '편의/부대시설': 'conv_facility_r'})
         merge_result = pd.concat([merge_result, algo_df], 1)
-        # merge_result.to_csv('tag_prior.csv', encodings='utf-8-sig', index=False)
+        merge_result.to_csv(self.path + f'tag_prior_{TODAY}.csv', encoding='utf-8-sig', index=False)
 
         return print(merge_result)

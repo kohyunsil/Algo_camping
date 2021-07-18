@@ -15,7 +15,6 @@ class AlgoPoints(cp.Cat5Points):
         self.path = config.Config.PATH
         self.df = config.Config.ALGO_DF
 
-
     def polar_points(self, camp_id):
         comfort_point = self.comfort_point(camp_id)
         together_point = self.together_point(camp_id)

@@ -85,4 +85,4 @@ class TagPoints:
         for content_id in tqdm(self.df.index.tolist()):
             tag_prior_ls.append(self.tag_priority(content_id))
         tag_df['top5_tags'] = tag_prior_ls
-        tag_df.to_csv(self.path + "top5_tags.csv")
+        tag_df.to_csv(self.path + f"top5_tags_{config.Config.NOW}.csv")
