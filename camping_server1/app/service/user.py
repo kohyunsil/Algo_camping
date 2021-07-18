@@ -95,8 +95,6 @@ def signin(param):
                     user = session_.query(model_user).filter(model_user.email == email)[0]
                     user.access_token = access_token
 
-                    print(user.access_token)
-
                     session_.add(user)
                     session_.commit()
                 except:

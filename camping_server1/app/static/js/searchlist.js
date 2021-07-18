@@ -119,14 +119,17 @@ var SearchList = {
                 '</div> \n'
             );
             for (var j=0; j<MAX_TAG; j++){
-                if (res.place_info[i].tag[j] === undefined){
+                if (res.tag[i].length === 0){
                     $('#tag'+ (i+1)).append(
                         '<button type="button" class="btn btn-secondary btn-sm"' + 'style="visibility:hidden;"></button>'
                     );
                 }else{
+                    if (res.tag[i][j] === undefined){
+                        continue
+                    }
                     $('#tag'+ (i+1)).append(
                     '<button type="button" class="btn btn-secondary btn-sm btn-tag">\n' +
-                        res.place_info[i].tag[j] +
+                        res.tag[i][j] +
                     '</button>\n'
                 )}
             }

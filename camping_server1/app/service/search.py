@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from flask import *
 from operator import itemgetter
 from ..config import Config
+from ..service.tag_points import TagPoints
 import datetime
 import pandas as pd
 
@@ -56,23 +57,25 @@ def get_searchlist(params):
     '''
     Session = sessionmaker(bind=client)
     session_ = Session()
+    try:
+        if tag_query == '':
+            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
+                                                                       model_search.place_name.like(place_keyword))
+        else:
+            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
+                                                                       model_search.place_name.like(place_keyword) |
+                                                                       text(tag_query))
 
-    if tag_query == '':
-        sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                   model_search.place_name.like(place_keyword))
-    else:
-        sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                   model_search.place_name.like(place_keyword) |
-                                                                   text(tag_query))
-
-    main_query = session_.query(model_place).filter(
-        and_(model_place.place_num == 0, model_place.content_id.in_(sub_query))).order_by(
-        case(
-            (model_place.place_name.contains(place_keyword), 1),
-            (model_place.addr.contains(area), 2),
-            else_=3
-        )
-    ).limit(Config.LIMIT).all()
+        main_query = session_.query(model_place).filter(
+            and_(model_place.place_num == 0, model_place.content_id.in_(sub_query))).order_by(
+            case(
+                (model_place.place_name.contains(place_keyword), 1),
+                (model_place.addr.contains(area), 2),
+                else_=3
+            )
+        ).limit(Config.LIMIT).all()
+    finally:
+        session_.close()
 
     place_info, content_id = [], []
     for query in main_query:
@@ -81,9 +84,8 @@ def get_searchlist(params):
         content_id.append(query.content_id)
         place_info.append(query)
 
-    print(f'requset content_id:{content_id}')
-    # algo score info 얻기
     algo_stars, algo_scores = get_score(content_id)
+    tags = get_top3_tag(content_id)
 
     # setter
     dto.place = place_info
@@ -94,6 +96,7 @@ def get_searchlist(params):
     params['place_info'] = place_info
     params['algo_star'] = algo_stars
     params['algo_score'] = algo_scores
+    params['tag'] = tags
 
     return params
 
@@ -107,8 +110,10 @@ def get_popular_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
+        tag = get_top3_tag(obj.content_id)
+
         arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star]
+               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
 
         place_info.append(arr)
 
@@ -122,8 +127,10 @@ def get_readcount_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
+        tag = get_top3_tag(obj.content_id)
+
         arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star]
+               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
 
         place_info.append(arr)
 
@@ -137,11 +144,13 @@ def get_modified_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
+        tag = get_top3_tag(obj.content_id)
+
         if obj.modified_date is None:
             obj.modified_date = str('2000-01-01 00:00:00')
 
         arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star]
+               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
 
         place_info.append(arr)
 
@@ -162,9 +171,7 @@ def get_score(content_id):
             algoscores.append(score)
         return algostars, algoscores
     else:
-        star, score = get_algo_points(content_id)
-
-        return star, score
+        return get_algo_points(content_id)
 
 # 알고 별점, 알고 점수 계산
 def get_algo_points(content_id):
@@ -182,19 +189,34 @@ def get_algo_points(content_id):
 
     return algo_star, cat_points_list
 
+# top3 특성
+def get_top3_tag(content_id):
+    tags = []
+    tag = TagPoints()
+
+    if type(content_id) == list:
+        for target_id in content_id:
+            top3_tag = tag.tag_priority(target_id, rank=3)
+            tags.append(top3_tag)
+        return tags
+    else:
+        return tag.tag_priority(content_id, rank=3)
+
 # 반환되는 객체 만들기
 def make_resobj(place_info):
-    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date', 'star']
+    key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date', 'star', 'tag']
 
     params, param_list = {}, []
-    stars = []
+    stars, tags = [], []
     for info in place_info:
         param = {key: info[i] for i, key in enumerate(key_list)}
         param_list.append(param)
         stars.append(param['star'])
+        tags.append(param['tag'])
 
     params['code'] = 200
     params['place_info'] = param_list
     params['algo_star'] = stars
+    params['tag'] = tags
 
     return params

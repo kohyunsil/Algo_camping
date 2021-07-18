@@ -1,4 +1,5 @@
 import configparser
+import pandas as pd
 import datetime
 import os
 
@@ -33,4 +34,13 @@ class Config(object):
 
     # 모델링 관련 경로 및 파일 불러오기
     PATH = os.path.abspath('../datas')
+
     ALGO_POINTS = PATH + '/algo_df_scale.csv'
+    ALGO_DF = pd.read_csv(PATH + '/algo_merge_result.csv', encoding="utf-8-sig")
+    TAG_DF = pd.read_csv(PATH + '/tag_prior.csv')
+
+    # "weights & tag" dimension 파일 불러오기
+    DIMENSION = pd.read_excel(PATH + '/dimension_regression.xlsx')
+    DIMENSION = DIMENSION.loc[:, ~DIMENSION.columns.str.contains('^Unnamed')]
+    TAG_DM = DIMENSION[['category', 'colname', 'tagname', 'count']].copy()
+    TAG_DM.dropna(axis=0, inplace=True)
