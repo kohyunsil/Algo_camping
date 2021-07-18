@@ -9,7 +9,7 @@ class Config:
     ALGO_DF = pd.read_csv(PATH + "algo_merge_result.csv", encoding="utf-8-sig")
     TAG_DF = pd.read_csv(PATH + "tag_prior.csv")
     # "weights & tag" dimension 파일 불러오기
-    DIMENSION = pd.read_excel(PATH + "weights_regression_weights.xlsx")
+    DIMENSION = pd.read_excel(PATH + "dimension_regression.xlsx")
     DIMENSION = DIMENSION.loc[:, ~DIMENSION.columns.str.contains('^Unnamed')]
     WEIGHTS_DF = DIMENSION[['category', 'colname', 'weights']].copy()
     WEIGHTS_DF.dropna(axis=0, inplace=True)

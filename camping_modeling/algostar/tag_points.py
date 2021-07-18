@@ -36,7 +36,7 @@ class TagPoints:
         tag_dict = self.get_tag_dict()
         tag_point_df = pd.DataFrame(self.df['camp'])
 
-        for tagname in tqdm(np.unique(self.dm['tagname'])):
+        for tagname in np.unique(self.dm['tagname']):
             if not content_id:
                 for idx in self.df.index:
                     tag_point_df[tagname] = np.mean(self.df[tag_dict[tagname]].loc[idx])
@@ -57,20 +57,32 @@ class TagPoints:
 
     def tag_priority(self, content_id, rank=5):
         target_df = self.apply_cat_points(content_id)
-        tag_len = len(np.unique(target_df[content_id].iloc[:rank].tolist()))
-        # 동점자가 없다면 원래 포인트 상위 rank 개
-        if tag_len == rank:
-            target_df = target_df.sort_values(content_id, ascending=False)
+        target_df.dropna(axis=0, inplace=True)
+        uq_points = np.unique(target_df[content_id].iloc[:rank]).tolist()
+        uq_points.sort(reverse=True)
+        uq_tag_len = len(uq_points)
+
         # 동점자가 있다면 원래 포인트 cat_points 반영된 point 로 정렬 후 상위 rank 개
-        elif tag_len < rank:
-            target_df = target_df.sort_values('total_points', ascending=False)
-        #
-        # elif tag_len < rank:
-        #     target_df = target_df.sort_values('')
-        #     target_df =
+        if uq_tag_len < rank:
+            tag_prior_ls = []
+            for p in uq_points:
+                temp_df = target_df[target_df[content_id] == p].sort_values('total_points', ascending=False)
+                for t in temp_df.index:
+                    tag_prior_ls.append(t)
+            tag_prior_ls = tag_prior_ls[:rank]
 
+        # 동점자가 없다면 원래 포인트 상위 rank 개
+        else:
+            target_df = target_df.sort_values(content_id, ascending=False)
+            tag_prior_ls = target_df.iloc[:rank].index.tolist()
 
-        tag_prior_ls = target_df.iloc[:rank].index.tolist()
-        print(tag_prior_ls)
+        print(content_id, tag_prior_ls)
         return tag_prior_ls
 
+    def make_tag_prior_df(self):
+        tag_df = pd.DataFrame(self.df.index.tolist(), columns=['contentId'])
+        tag_prior_ls = []
+        for content_id in tqdm(self.df.index.tolist()):
+            tag_prior_ls.append(self.tag_priority(content_id))
+        tag_df['top5_tags'] = tag_prior_ls
+        tag_df.to_csv(self.path + "top5_tags.csv")
