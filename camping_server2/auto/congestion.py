@@ -103,8 +103,8 @@ class KoreaTourApi:
     # sigungucode로 merge
     def merge_past_data(self, cursor, engine, mydb, past_df):
         # 현지인 제외
-        out = past_df['touDivCd'] == 2
-        foreign = past_df['touDivCd'] == 3
+        out = past_df['touDivCd'] == '2'
+        foreign = past_df['touDivCd'] == '3'
         past_df = past_df[out | foreign]
         past_api = past_df[['baseYmd', 'signguCode', 'touNum']]
         past_api = past_api.astype({'touNum': 'float'}, {'signguCode': 'int'})
@@ -170,12 +170,12 @@ class KoreaTourApi:
         # sql create table
         qry29 = ('''
         CREATE TABLE congestion(
-            id            INT         NOT NULL        AUTO_INCREMENT, 
-            sigungu_code  INT         NOT NULL, 
-            base_ymd      DATETIME    NOT NULL, 
-            created_date  DATETIME    NOT NULL, 
-            congestion    FLOAT       NOT NULL, 
-            content_id    INT         NOT NULL, 
+            id            INT         NOT NULL        AUTO_INCREMENT,
+            sigungu_code  INT         NOT NULL,
+            base_ymd      DATETIME    NOT NULL,
+            created_date  DATETIME    NOT NULL,
+            congestion    FLOAT       NOT NULL,
+            content_id    INT         NOT NULL,
             CONSTRAINT PK_congestion PRIMARY KEY (id)
         );
         ''')
