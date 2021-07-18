@@ -51,6 +51,9 @@ class WeightsCalc:
         ## comfort review & gocamp
         comfort_review = size.drop(index=['맛', '메뉴', '분위기', '수영장', '아이 만족도', '음식/조식', '음식양', '전망', '즐길거리', '청결도'])
         comfort_review = pd.DataFrame(comfort_review['sum'].values, columns=['count'], index=comfort_review.index)
+        comfort_review = comfort_review.rename(index = {'가격':'price_r', '만족도':'satisfied_r', '메인시설':'main_r', '목적':'object_r', '부대/공용시설':'facility_r',
+                                                        '비품':'equipment_r', '서비스':'service_r', '시설물관리':'manage_r', '예약':'reservation_r', '와이파이':'wifi_r',
+                                                        '위치':'location_r', '입장':'enter_r', '주차':'parking_r', '편의/부대시설':'conv_facility_r', '혼잡도':'congestion_r' })
 
         comfort_camp = self.gocamp[['insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc', 'glampInnerFclty', 'caravInnerFclty',
                                     'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo', 'brazierCl', 'sbrsCl', 'sbrsEtc',
@@ -64,6 +67,7 @@ class WeightsCalc:
         for i in comfort_camp.columns:
             comfort_camp.loc[(comfort_camp[f'{i}'] != 0), f'{i}'] = 1
 
+
         ## together review & tag & camp
         to_review = size.loc[['아이 만족도', '만족도', '부대/공용시설', '즐길거리', '편의/부대시설']]
         to_review = pd.DataFrame(to_review['sum'].values, columns=['count'], index=to_review.index)
@@ -74,6 +78,10 @@ class WeightsCalc:
         to_camp[['animalCmgCl']] = to_camp[['animalCmgCl']].replace('가능', 1).replace('가능(소형견)', 1).replace('불가능',0).fillna(0).astype('int')
         for i in to_camp.columns:
             to_camp.loc[(to_camp[f'{i}'] != 0), f'{i}'] = 1
+        to_review = to_review.rename(index={'아이 만족도':'childlike_r', '만족도':'satisfied_r', '부대/공용시설':'facility_r', '즐길거리':'exciting_r', '편의/부대시설':'conv_facility_r' })
+        to_tag = to_tag.rename(index={'가족':'with_family_s', '커플':'with_couple_s', '아이들놀기좋은':'with_child_s'})
+
+
 
         ## FUN review & tag & camp
         fun_review = size.loc[['수영장', '즐길거리', '아이 만족도', '만족도']]
@@ -84,6 +92,9 @@ class WeightsCalc:
         fun_camp = self.gocamp[['sbrsEtc', 'posblFcltyCl']]
         for i in fun_camp.columns:
             fun_camp.loc[(fun_camp[f'{i}'] != 0), f'{i}'] = 1
+        fun_review = fun_review.rename(index={'수영장':'pool_r', '즐길거리':'exciting_r', '아이 만족도':'childlike_r', '만족도':'satisfied_r'})
+        fun_tag = fun_tag.rename(index={'생태교육':'ecological_s', '둘레길':'trail_s', '축제':'festival_s', '문화유적':'cultural_s', '자전거타기좋은':'bicycle_s',
+                                        '수영장있는':'pool_s', '익스트림':'extreme_s', '물놀이하기좋은':'waterplay_s'})
 
         ## HEARLING review & tag & camp
         healing_review = size.loc[['음식/조식', '전망', '분위기']]
@@ -96,6 +107,9 @@ class WeightsCalc:
         healing_camp = self.gocamp[['brazierCl']]
         for i in healing_camp.columns:
             healing_camp.loc[(healing_camp[f'{i}'] != 0), f'{i}'] = 1
+
+        healing_review = healing_review.rename(index={'음식/조식':'food_r', '전망':'view_r', '분위기':'atmos_r'})
+        healing_tag = healing_tag.rename(index={'계곡옆':'valley_s', '물맑은':'pure_water_s', '별보기좋은':'star_s', '힐링':'healing_s', '그늘이많은':'shade_s', '바다가보이는':'ocean_s'})
 
 
 
@@ -118,33 +132,43 @@ class WeightsCalc:
         result = w_df.weights
         return round(result, 1)
 
+
     def weights_calc(self):
+
         comfort_w = self.count_weights(comfort_review, (100/35) * 15)
         comfort_w2 = pd.DataFrame(self.camp_weights(comfort_camp, (100/35) * 20))
-        comfort_weights_sum = comfort_w.weights.sum() + comfort_w2.sum()
-        comfort_result_weights = pd.DataFrame(pd.concat([comfort_w.weights, comfort_w2.weights], 0))
+        # comfort_weights_sum = comfort_w.weights.sum() + comfort_w2.sum()
+        comfort_weights = pd.DataFrame(pd.concat([comfort_w.weights, comfort_w2.weights], 0)).reset_index().rename(columns={'index':'colname'})
+        comfort_weights['category'] = 'comfort'
 
         together_w = self.count_weights(to_review, (100/11) * 5)
         together_w2 = self.count_weights(to_tag, (100/11) * 3)
         together_w3 = self.camp_weights(to_camp, (100/11) * 3)
-        together_weights_sum = together_w.weights.sum() + together_w2.weights.sum() + together_w3.sum()
-        together_result_weights = pd.DataFrame(pd.concat([together_w.weights, together_w2.weights, together_w3], 0))
+        # together_weights_sum = together_w.weights.sum() + together_w2.weights.sum() + together_w3.sum()
+        together_weights = pd.DataFrame(pd.concat([together_w.weights, together_w2.weights, together_w3], 0)).reset_index().rename(columns={'index':'colname'})
+        together_weights['category'] = 'together'
 
         fun_w = self.count_weights(fun_review, (100/14)*4)
         fun_w2 = self.count_weights(fun_tag, (100/14)*8)
         fun_w3 = self.camp_weights(fun_camp, (100/14)*2)
         fun_weights_sum = fun_w.weights.sum() + fun_w2.weights.sum() + fun_w3.sum()
-        fun_result_weights = pd.DataFrame(pd.concat([fun_w.weights, fun_w2.weights, fun_w3], 0))
+        fun_weights = pd.DataFrame(pd.concat([fun_w.weights, fun_w2.weights, fun_w3], 0)).reset_index().rename(columns={'index':'colname'})
+        fun_weights['category'] = 'fun'
 
         healing_w = self.count_weights(healing_review, (100/10)*3)
         healing_w2 = self.count_weights(healing_tag, (100/10)*6)
         healing_w3 = self.camp_weights(healing_camp, (100/10)*1)
-        healing_weights_sum = healing_w.weights.sum() + healing_w2.weights.sum() + healing_w3.sum()
-        healing_result_weights = pd.DataFrame(pd.concat([healing_w.weights, healing_w2.weights, healing_w3], 0))
+        # healing_weights_sum = healing_w.weights.sum() + healing_w2.weights.sum() + healing_w3.sum()
+        healing_weights = pd.DataFrame(pd.concat([healing_w.weights, healing_w2.weights, healing_w3], 0)).reset_index().rename(columns={'index':'colname'})
+        healing_weights['category'] = 'healing'
+
+        clean_weights = pd.DataFrame({'category':['clean','clean'], 'colname':['clean_r','clean_s'], 'weights':[50,50]})
+
+        df = pd.concat([comfort_weights, together_weights, fun_weights, healing_weights, clean_weights], 0)
+        df = df[['category', 'colname', 'weights']].reset_index(drop=True)
 
 
-        ## polar 별 가중치 점수 확인
-        return print(healing_result_weights)
+        return print(df)
 
 
 
