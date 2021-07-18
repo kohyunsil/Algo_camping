@@ -50,7 +50,6 @@ var SearchList = {
             })
         });
     },
-
     // 검색결과 리스트
     getList: function(){
         var param = document.location.href.split("?keywords=");
@@ -61,21 +60,33 @@ var SearchList = {
             res_num : '',
             place_info : '',
         }
+        var access_token = SearchList.getCookie('access_token');
 
-        $.getJSON('/searchlist', params).done(function(response){
-            if(response.code === 200){
-                $('.loading-bar').css({'visibility': 'hidden'});
-                setTimeout(function(){
-                    $(window).lazyLoadXT();
-                }, 0);
-
-                SearchList.showSearchList(response);
-                SearchList.showSwiperImg(response);
-                SearchList.showAlgoStars(response);
-            }else{
-                alert(response.msg);
-            }
-        })
+        if (access_token !== undefined || typeof access_token !== 'undefined'){
+        //     $.ajax({
+        //         type : 'GET',
+        //         url : '/search/protected',
+        //         headers : {
+        //             Authorization : 'Bearer ' + access_token
+        //         },
+        //         data : params,
+        //         dataType : 'json',
+        //         success : function(response, status, xhr){
+        //             SearchList.doAfterSuccess(response);
+        //         },
+        //         error : function(xhr, status, error){
+        //             alert(error);
+        //         }
+        //     })
+        // }else{
+            $.getJSON('/search/list', params).done(function(response){
+                if(response.code === 200){
+                    SearchList.doAfterSuccess(response);
+                }else{
+                    alert(response.msg);
+                }
+            })
+        }
     },
     showAlgoStars: function(res){
         var star = '';
@@ -106,7 +117,7 @@ var SearchList = {
                         '<div class="swiper-container card mySwiper">\n' +
                             '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
                                 '<div class="swiper-slide">\n' +
-                                    '<img data-src="' + res.place_info[i].detail_image[0] + '" class="lazy-load card-img-fluid" alt="...">\n' +
+                                    '<img data-src="' + res.place_info[i].detail_image[0] + '" class="lazy-load card-img-fluid" alt="..."' + 'src="/static/imgs/error_logo.png" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' +'>\n' +
                                 '</div>\n' +
                             '</div>\n' +
                         '</div>\n' +
@@ -123,11 +134,10 @@ var SearchList = {
                     '<br><br> \n' +
                 '</div> \n'
             );
-
             for (var j=0; j<MAX_TAG; j++){
                 if (res.place_info[i].tag[j] === undefined){
                     $('#tag'+ (i+1)).append(
-                        '<button type="button" class="btn btn-secondary btn-sm"' + 'src="/static/imgs/error_logo.png" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' + 'style="visibility:hidden;"></button>'
+                        '<button type="button" class="btn btn-secondary btn-sm"' + 'style="visibility:hidden;"></button>'
                     );
                 }else{
                     $('#tag'+ (i+1)).append(
@@ -167,6 +177,29 @@ var SearchList = {
                 disableOnInteraction: false,
             },
         });
+    },
+    getCookie: function(name){
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x === name) {
+              return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
+    },
+    doAfterSuccess: function(response){
+        $('.loading-bar').css({'visibility': 'hidden'});
+        setTimeout(function(){
+            $(window).lazyLoadXT();
+        }, 0);
+
+        SearchList.showSearchList(response);
+        SearchList.showSwiperImg(response);
+        SearchList.showAlgoStars(response);
     }
 }
 SearchList.sortList()

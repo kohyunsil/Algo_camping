@@ -6,9 +6,9 @@ from flask import *
 from operator import itemgetter
 from ..config import Config
 import datetime
-import app.service.algopoints as algopoints
+import pandas as pd
 
-
+# 검색결과 리스트
 def get_searchlist(params):
     split_params = []
 
@@ -81,6 +81,7 @@ def get_searchlist(params):
         content_id.append(query.content_id)
         place_info.append(query)
 
+    print(f'requset content_id:{content_id}')
     # algo score info 얻기
     algo_stars, algo_scores = get_score(content_id)
 
@@ -96,6 +97,9 @@ def get_searchlist(params):
 
     return params
 
+# 유저-캠핑장 매칭도
+def get_matching_rate():
+    pass
 
 # 조회순 정렬
 def get_readcount_list(place_obj):
@@ -119,7 +123,6 @@ def get_readcount_list(place_obj):
     params['place_info'] = param_list
 
     return jsonify(params)
-
 
 # 등록순 정렬
 def get_modified_list(place_obj):
@@ -149,21 +152,34 @@ def get_modified_list(place_obj):
     params['place_info'] = param_list
     return jsonify(params)
 
-
 # 알고 점수 호출
 def get_score(content_id):
-    algo = algopoints.AlgoPoints()
     algostars, algoscores = [], []
 
     if type(content_id) == list:
         for target_id in content_id:
-            star, score = algo.algo_star(target_id)
+            star, score = get_algo_points(target_id)
             algostars.append(star)
             algoscores.append(score)
-
         return algostars, algoscores
     else:
-        star, score = algo.algo_star(content_id)
+        star, score = get_algo_points(content_id)
+
         return star, score
 
+# 알고 별점, 알고 점수 계산
+def get_algo_points(content_id):
+    algo_df = pd.read_csv(Config.ALGO_POINTS)
+
+    algo_df.set_index(['contentId', 'camp'], inplace=True)
+    comfort_point = float(algo_df.loc[content_id]['comfort'])
+    together_point = float(algo_df.loc[content_id]['together'])
+    fun_point = float(algo_df.loc[content_id]['fun'])
+    healing_point = float(algo_df.loc[content_id]['healing'])
+    clean_point = float(algo_df.loc[content_id]['clean'])
+
+    cat_points_list = [comfort_point, together_point, fun_point, healing_point, clean_point]
+    algo_star = round(sum(cat_points_list) / 100, 1)
+
+    return algo_star, cat_points_list
 

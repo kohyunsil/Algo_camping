@@ -30,7 +30,7 @@ body{
     height: 100%;
     width: 100%;
 }
-.btn-check,
+#check-btn,
 .btn-signin{
     background-color: #1f284a;
     color: white;
