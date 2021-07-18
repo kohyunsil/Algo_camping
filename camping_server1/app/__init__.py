@@ -19,7 +19,8 @@ app.secret_key = os.urandom(24)
 app.config.from_object(Config)
 app.config.update(
     DEBUG=True,
-    JWT_SECRET_KEY=Config.JWT_SECRET_KEY
+    JWT_SECRET_KEY=Config.JWT_SECRET_KEY,
+    JWT_EXPIRATION_DELTA=Config.JWT_EXPIRATION_DELTA,
 )
 
 jwt = JWTManager(app)

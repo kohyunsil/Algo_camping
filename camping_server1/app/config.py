@@ -1,7 +1,5 @@
 import configparser
 import datetime
-import pandas as pd
-import pickle
 import os
 
 config = configparser.ConfigParser()
@@ -17,7 +15,8 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
 
     JWT_SECRET_KEY = keys['JWT_SECRET_KEY']
-    JWT_EXPIRATION_DELTA = datetime.timedelta(minutes=60)
+    JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
+    SESSION_LIFETIME = datetime.timedelta(days=1)
 
     LIMIT = 1000
     READCOUNT = 4
@@ -33,17 +32,4 @@ class Config(object):
 
     # 모델링 관련 경로 및 파일 불러오기
     PATH = os.path.abspath('../datas')
-    ALGO_DF = pd.read_csv(PATH + '/algo_merge_result.csv', encoding='utf-8-sig')
-    WEIGHTS = pd.read_excel(PATH + '/cat_weights_revised.xlsx')
-
-    wdf = WEIGHTS[['category', 'colname', 'weights']]
-    weight_dict = wdf.to_dict('records')
-
-    with open(PATH + 'weight_dict.txt', 'wb') as wd:
-        pickle.dump(weight_dict, wd)
-    with open(PATH + 'weight_dict.txt', 'rb') as wd:
-        wd = pickle.load(wd)
-        WEIGHTS_DF = pd.DataFrame(wd)
-
-    TODAY = datetime.datetime.today().strftime('%m%d')
-    NOW = datetime.datetime.today().strftime('%m%d_%X')
+    ALGO_POINTS = PATH + '/algo_df_scale.csv'

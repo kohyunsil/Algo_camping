@@ -5,21 +5,33 @@ var DetailInfo = {
         var param = {
             content_id: decode_param
         }
-        $.getJSON('/detail/info', param).done(function(response){
-            if (response.code === 200){
-                $('.loading-bar').css({'visibility': 'hidden'});
-                $('.container').css({'visibility': 'visible'});
-                $('table').show();
+        var access_token = DetailInfo.getCookie('access_token');
 
-                console.log(response);
-                DetailInfo.showMap(response);
-                DetailInfo.showPlaceInfo(response);
-                DetailInfo.showHighCharts(response);
-                DetailInfo.showLocalList(response);
-            }else{
-                alert(response.msg);
-            }
-        })
+        if(access_token !== undefined || typeof access_token !== 'undefined'){
+        //     $.ajax({
+        //         type : 'GET',
+        //         url : '/detail/protected',
+        //         headers : {
+        //             Authorization : 'Bearer ' + access_token
+        //         },
+        //         data : param,
+        //         dataType : 'json',
+        //         success : function(response, status, xhr){
+        //             DetailInfo.doAfterSuccess(response);
+        //         },
+        //         error : function(xhr, status, error){
+        //             alert(error);
+        //         }
+        //     })
+        // }else{
+            $.getJSON('/detail/info', param).done(function(response){
+                if (response.code === 200){
+                    DetailInfo.doAfterSuccess(response);
+                }else{
+                    alert(response.msg);
+                }
+            })
+        }
     },
     showPlaceInfo: function(res){
         var star = '';
@@ -160,7 +172,8 @@ var DetailInfo = {
             yAxis: {
               gridLineInterpolation: 'polygon',
               lineWidth: 0,
-              min: 0
+              min: 0,
+              max: 100
             },
 
             legend: {
@@ -385,6 +398,29 @@ var DetailInfo = {
                 loadPrevNextAmount: 1,  // 미리 로드할 이미지 개수
             },
       });
+    },
+    getCookie: function(name){
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x === name) {
+              return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
+    },
+    doAfterSuccess: function(response){
+        $('.loading-bar').css({'visibility': 'hidden'});
+        $('.container').css({'visibility': 'visible'});
+        $('table').show();
+
+        DetailInfo.showMap(response);
+        DetailInfo.showPlaceInfo(response);
+        DetailInfo.showHighCharts(response);
+        DetailInfo.showLocalList(response);
     }
 }
 DetailInfo.getPlaceInfo();

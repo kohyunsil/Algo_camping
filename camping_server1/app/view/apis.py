@@ -1,13 +1,27 @@
-from flask import *
 from ..model import *
 from ..service import search
 from ..service import detail
 from ..service import user
-from flask_jwt_extended import *
+from app import *
+from functools import wraps
 
-# url param이 유효하면 이동, 유효하지 않으면 main으로 이동
+#@app.route('/main/protected')
+# @jwt_required()
+# def main_protected():
+#     current_user = get_jwt_identity()
+#     param = request.args.to_dict()
+#     print(f'current token exist: {current_user}')
+#
+#     if current_user is None:
+#         # 쿠키 토큰 만료
+#         user.delete_token(param)
+#         return render_template('index.html')
+#     else:
+#         # 토큰 존재
+#         return render_template('index.html', param=param)
+
 # 검색 결과 리스트
-@app.route('/searchlist')
+@app.route('/search/list')
 def search_tags():
     params = request.args.to_dict()
 
@@ -70,4 +84,5 @@ def user_detail():
 # 로그아웃
 @app.route('/user/signout')
 def logout():
-    pass
+    user.delete_token(session['name'])
+    return redirect(request.host_url, code=302)
