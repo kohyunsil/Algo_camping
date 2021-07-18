@@ -64,6 +64,11 @@ class TagPoints:
         # 동점자가 있다면 원래 포인트 cat_points 반영된 point 로 정렬 후 상위 rank 개
         elif tag_len < rank:
             target_df = target_df.sort_values('total_points', ascending=False)
+        #
+        # elif tag_len < rank:
+        #     target_df = target_df.sort_values('')
+        #     target_df =
+
 
         tag_prior_ls = target_df.iloc[:rank].index.tolist()
         print(tag_prior_ls)
