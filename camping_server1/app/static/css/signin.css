@@ -19,6 +19,7 @@ body{
     color: #1f284a;
     font-family: "Harlow Solid Italic";
     font-size: 2rem;
+    text-decoration: none;
 }
 .navbar-brand{
     text-align: center;
@@ -42,10 +43,25 @@ div.container.col-md-6.login > div.p-5.bg-light.col-md-auto.rounded-3.outer-2 > 
     color: #1f284a;
     font-size: 0.8rem;
 }
-.btn-signin,
-.btn-oauth{
+.btn-signin{
     background-color: #1f284a;
     color: white;
+}
+.btn-kakao{
+    background-color: #f7d600;
+    color: #1f284a;
+}
+.btn-naver{
+    background-color: #2DB400;
+    color: white;
+}
+.btn-kakao:hover{
+    background-color: #eccd00;
+    color: white;
+}
+.btn-naver:hover{
+    background-color: #2fb008;
+    color: #1f284a;
 }
 .btn-signin:hover,
 .btn-oauth:hover{

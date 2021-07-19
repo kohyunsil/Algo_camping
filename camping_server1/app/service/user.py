@@ -122,7 +122,6 @@ def signin(param):
 
 # 토큰 삭제
 def delete_token(param):
-    print(f'delete func is called :{param}')
     Session = sessionmaker(bind=client)
     session_ = Session()
 

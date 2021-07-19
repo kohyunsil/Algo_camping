@@ -7,7 +7,7 @@ var DetailInfo = {
         }
         var access_token = DetailInfo.getCookie('access_token');
 
-        if(access_token !== undefined || typeof access_token !== 'undefined'){
+        // if(access_token !== undefined || typeof access_token !== 'undefined'){
         //     $.ajax({
         //         type : 'GET',
         //         url : '/detail/protected',
@@ -31,7 +31,7 @@ var DetailInfo = {
                     alert(response.msg);
                 }
             })
-        }
+        // }
     },
     showPlaceInfo: function(res){
         var star = '';

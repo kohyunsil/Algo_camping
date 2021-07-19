@@ -26,15 +26,19 @@
             <div class="container-fluid">
                 <h2 class="border-bottom display-12 fw-bold py-2">Login</h2>
                 <br>
-                <!--- oauth login --->
-                <button type="submit" class="btn col-md-12 btn-oauth py-2">카카오 아이디로 로그인</button>
+                <div class="row">
+                    <button type="submit" class="btn col-md-12 btn-kakao py-2">카카오 아이디로 로그인</button>
+                </div>
+                <br>
+                <div class="row">
+                    <button type="submit" class="btn col-md-12 btn-naver py-2">네이버 아이디로 로그인</button>
+                </div>
                 <br>
                 <div class="row justify-content-md-center">
                     <p class="border-bottom col-md-4 pt-4"></p>
                     <span class="col-md-3 text-secondary text-or">또는</span>
                     <p class="border-bottom col-md-4 pt-4"></p>
                 </div>
-                <!--- --->
 
                 <div class="mb-3">
                     <label for="exampleDropdownFormEmail2" class="form-label">이메일</label>
@@ -51,5 +55,9 @@
     </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="/static/js/signin.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+    Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
+</script>
 </body>
 </html>

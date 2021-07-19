@@ -54,6 +54,7 @@ body > div.container-fluid.search-result > nav > a{
     border: none;
     font-size: 0.9rem;
     color: #424242;
+    margin-bottom: 0.2rem;
 }
 
 .btn-tag:hover,

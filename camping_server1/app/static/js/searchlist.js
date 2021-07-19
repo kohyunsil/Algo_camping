@@ -45,8 +45,7 @@ var SearchList = {
             place_info : '',
         }
         var access_token = SearchList.getCookie('access_token');
-
-        if (access_token !== undefined || typeof access_token !== 'undefined'){
+        // if (access_token !== undefined || typeof access_token !== 'undefined'){
         //     $.ajax({
         //         type : 'GET',
         //         url : '/search/protected',
@@ -70,7 +69,7 @@ var SearchList = {
                     alert(response.msg);
                 }
             })
-        }
+        // }
     },
     showAlgoStars: function(res){
         var star = '';
@@ -154,7 +153,7 @@ var SearchList = {
                 $('#swiper' + (i + 1)).append(
                     '<div class="swiper-slide">\n' +
                         '<img data-src="' + res.place_info[i].detail_image[k] + '"src="/static/imgs/error_logo.png" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' + 'class="lazy-load card-img-fluid" alt="...">\n' +
-                    '</div>\n'
+                    '</div>'
                 )
             }
         }

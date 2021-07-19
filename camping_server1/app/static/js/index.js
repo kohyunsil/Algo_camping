@@ -3,27 +3,59 @@ var items = []
 var SignoutEvent = {
     doSignout: function(){
         $('#logout-btn').on('click', function() {
-            SignoutEvent.deleteCookie('access_token');
-            var url = '/user/signout';
-            location.href = url;
+            // sns 로그인인 경우
+            if(SignoutEvent.getCookie('access_token') === undefined){
+                if (Kakao.Auth.getAccessToken()) {
+                  Kakao.API.request({
+                    url: '/v1/user/unlink',
+                    success: function (response) {
+                        var url = '/user/sns/signout';
+                        location.href = url;
+                    },
+                    fail: function (error) {
+                      console.log(error)
+                    },
+                  })
+                  Kakao.Auth.setAccessToken(undefined)
+                }
+            }else{
+                SignoutEvent.deleteCookie('access_token');
+                var url = '/user/signout';
+                location.href = url;
+            }
         })
     },
     deleteCookie: function(name) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+    },
+    getCookie: function(name){
+        var x, y;
+        var val = document.cookie.split(';');
+
+        try{
+            for (var i = 0; i < val.length; i++) {
+                x = val[i].substr(0, val[i].indexOf('='));
+                y = val[i].substr(val[i].indexOf('=') + 1);
+                x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+                if (x == name) {
+                  return unescape(y); // unescape로 디코딩 후 값 리턴
+                }
+            }
+        }catch (e){
+            return null
+        }
     }
 }
 
 var SearchTags = {
     getSearchTags: function(){
         var cnt = 0
-
         $('.outer-1').append(
             ' <div class="alert alert-warning alert-dismissible fade" id="alert-form" style="display:none;" role="alert">\n' +
                 '<strong>🙋🏻‍♀️</strong> 최대 3개의 태그까지 입력할 수 있습니다.\n' +
                 '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
             '</div>'
         );
-
         $('input:checkbox').on('change', function(){
             // 검색창에서 추가한 태그 개수 포함 처리
             if (cnt > 1){

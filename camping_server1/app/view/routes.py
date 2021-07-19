@@ -32,7 +32,6 @@ def main_page():
         return render_template("index.html", param=param)
     else:
         return render_template('index.html')
-
     # param = request.args.to_dict()
     # print(f'main page : {param}')
     # return render_template('index.html')

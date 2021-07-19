@@ -20,8 +20,6 @@ var SigninEvent = {
                             SigninEvent.setCookie('access_token', response.access_token, 1);
                             var access_token = SigninEvent.getCookie('access_token');
 
-                            var url = '/';
-                            location.href = url;
                             // $.ajax({
                             //     type : 'GET',
                             //     url : '/',
@@ -43,6 +41,40 @@ var SigninEvent = {
                     }
                 })
             }
+        })
+    },
+    kakaoSignIn: function(){
+        $('.btn-kakao').on('click', function(){
+            Kakao.Auth.login({
+                success: function(response){
+                    Kakao.API.request({
+                        url: '/v2/user/me',
+                        success: function(response){
+                            if (response.properties !== undefined){
+                                var param = {
+                                    id: response.id,
+                                    nickname: response.properties.nickname,
+                                    kakao_account: response.kakao_account
+                                }
+                                console.log(param);
+                                $.post('/user/sns/signin', param).done(function(response){
+                                    if (response.code === 200){
+                                        location.href = '/';
+                                    }
+                                })
+                            }else{
+                                alert('다시 시도해주세요.');
+                            }
+                        },
+                        fail: function(error){
+                            console.log(error);
+                        }
+                    })
+                },
+                fail: function(error){
+                    console.log(error);
+                }
+            })
         })
     },
     setCookie(name, value, days){
@@ -67,3 +99,4 @@ var SigninEvent = {
     }
 }
 SigninEvent.signIn();
+SigninEvent.kakaoSignIn();

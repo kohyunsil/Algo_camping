@@ -5,7 +5,7 @@ from ..service import user
 from app import *
 from functools import wraps
 
-#@app.route('/main/protected')
+# @app.route('/main/protected')
 # @jwt_required()
 # def main_protected():
 #     current_user = get_jwt_identity()
@@ -24,6 +24,7 @@ from functools import wraps
 @app.route('/search/list')
 def search_tags():
     params = request.args.to_dict()
+    print(params)
 
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
         return redirect('/main', code=302)
@@ -86,3 +87,20 @@ def user_detail():
 def logout():
     user.delete_token(session['name'])
     return redirect(request.host_url, code=302)
+
+# SNS 로그인
+@app.route('/user/sns/signin', methods=['POST'])
+def sns_login():
+    values = dict(request.values)
+    session['name'] = values['nickname']
+    session['platform'] = 'kakao'
+    session['id'] = values['id']
+    return jsonify({'code': 200})
+
+# SNS 로그아웃
+@app.route('/user/sns/signout')
+def sns_logout():
+    session.pop('name')
+    session.pop('platform')
+    session.pop('id')
+    return redirect('/', code=302)
