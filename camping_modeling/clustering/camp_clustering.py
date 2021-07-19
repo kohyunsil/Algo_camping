@@ -19,7 +19,8 @@ class CampCluster:
     def __init__(self):
         self.path = config.Config.PATH
         ag = ap.AlgoPoints()
-        algo_df = ag.make_algo_df(just_load_file="max")
+        # algo_df = ag.make_algo_df(just_load_file="0718")
+        algo_df = pd.read_csv(self.path+"tag_prior_0718.csv")
         self.algo_df = algo_df.loc[:, ~algo_df.columns.str.match("Unnamed")]
         self.nlp_df = pd.read_csv(self.path + "camp_description.csv")[['facltNm', 'labels']]
         self.nlp_df.drop_duplicates('facltNm', keep=False, inplace=True)
