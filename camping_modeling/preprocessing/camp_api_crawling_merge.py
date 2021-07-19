@@ -1,7 +1,10 @@
 import re
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler, MaxAbsScaler
-import config as config
+from sklearn.preprocessing import MinMaxScaler, RobustScaler
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+from preprocessing import config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt

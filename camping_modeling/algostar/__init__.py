@@ -32,7 +32,5 @@ if __name__ == '__main__':
     # wc.data_preprocessing()
     # wc.weights_calc()
 
-    # wrc_df = wrc.RegPreprocess()
-    # wrc_df.reg_preprocessing()
     wrc_df2 = wrc.RegDef()
     wrc_df2.polar_linear_reg()
