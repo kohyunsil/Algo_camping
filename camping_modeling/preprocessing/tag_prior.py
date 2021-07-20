@@ -14,7 +14,7 @@ class TagMerge:
         self.path = config.Config.PATH
         self.api_data = config.Config.API_DATA
         self.crawl_data = config.Config.CRAWL_DATA
-        self.algo_scale = config.Config.ALGO_SCALE
+        # self.algo_scale = config.Config.ALGO_SCALE
 
     def camp_data_merge(self):
         camp_api_data = self.api_data
@@ -89,7 +89,7 @@ class TagMerge:
         return tag_result
 
     def tag_merge(self):
-        algo_df = self.algo_scale
+        algo_df = config.Config.ALGO_DF #self.algo_scale
         algo_df = algo_df[['comfort', 'together', 'fun', 'healing', 'clean']].reset_index(drop=True)
         datas = self.camp_data_merge()
         review = self.review_data()

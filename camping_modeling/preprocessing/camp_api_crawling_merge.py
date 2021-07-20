@@ -4,7 +4,7 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import sys
 import os
 sys.path.append(os.path.dirname(__file__))
-from preprocessing import config as config
+import config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt

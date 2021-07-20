@@ -79,10 +79,12 @@ class TagPoints:
         print(content_id, tag_prior_ls)
         return tag_prior_ls
 
-    def make_tag_prior_df(self):
-        tag_df = pd.DataFrame(self.df.index.tolist(), columns=['contentId'])
-        tag_prior_ls = []
+    def make_tag_prior_df(self, rank):
+        tag_prior_dict = {}
         for content_id in tqdm(self.df.index.tolist()):
-            tag_prior_ls.append(self.tag_priority(content_id))
-        tag_df['top5_tags'] = tag_prior_ls
-        tag_df.to_csv(self.path + f"top5_tags_{config.Config.NOW}.csv")
+            tag_ls = self.tag_priority(content_id, rank=rank)
+            tag_prior_dict[content_id] = tag_ls
+
+        tag_df = pd.DataFrame(list(tag_prior_dict.items()), columns=['contentId', 'tags'])
+        tag_df.to_csv(self.path + f"top{rank}_tags_{config.Config.NOW}.csv")
+        return tag_df
