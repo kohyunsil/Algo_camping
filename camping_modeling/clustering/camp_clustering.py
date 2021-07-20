@@ -19,8 +19,8 @@ class CampCluster:
     def __init__(self):
         self.path = config.Config.PATH
         ag = ap.AlgoPoints()
-        # algo_df = ag.make_algo_df(just_load_file="0718")
-        algo_df = pd.read_csv(self.path+"tag_prior_0718.csv")
+        # algo_df = ag.make_algo_df(just_load_file="0719")
+        algo_df = config.Config.TAG_DF
         self.algo_df = algo_df.loc[:, ~algo_df.columns.str.match("Unnamed")]
         self.nlp_df = pd.read_csv(self.path + "camp_description.csv")[['facltNm', 'labels']]
         self.nlp_df.drop_duplicates('facltNm', keep=False, inplace=True)
@@ -88,13 +88,25 @@ class CampCluster:
         pv2 = pv1[1:]
         print("Dataframe Describe")
         print(pd.DataFrame(pv2.describe()))
-        # draw boxplot
+        # 클러스터 간 편차 탐색 boxplot
         sns.set(font_scale=2.5)
         fig, ax = plt.subplots(1, 2, figsize=(40, 15))
         sns.boxplot(data=pv1[columns[:-1]], ax=ax[0])
         sns.boxplot(data=pv2[columns[:-1]], ax=ax[1])
         ax[0].set_title("Category boxplot")
         ax[1].set_title("Category boxplot without outlier")
+        fig.show()
+
+        # 클러스터별 특성 탐색 boxplot
+        df2 = df[['cluster', 'comfort', 'together', 'fun', 'healing', 'clean']].copy()
+        df2.set_index('cluster', drop=True, inplace=True)
+        sns.set(font_scale=1.5)
+        c_ls = np.unique(df2.index).tolist()
+        fig, ax = plt.subplots(len(c_ls), 1, sharey=True, figsize=(30, 80))
+        for idx, c in enumerate(c_ls):
+            t_df = df2[df2.index == c]
+            sns.boxplot(data=t_df, ax=ax[idx])
+            ax[idx].set_title(f"Cluster {c}")
         fig.show()
 
         return pv1
