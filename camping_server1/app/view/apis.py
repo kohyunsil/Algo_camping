@@ -24,7 +24,6 @@ from functools import wraps
 @app.route('/search/list')
 def search_tags():
     params = request.args.to_dict()
-    print(params)
 
     if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
         return redirect('/main', code=302)
@@ -92,9 +91,17 @@ def logout():
 @app.route('/user/sns/signin', methods=['POST'])
 def sns_login():
     values = dict(request.values)
-    session['name'] = values['nickname']
-    session['platform'] = 'kakao'
-    session['id'] = values['id']
+    name = values['name']
+    try:
+        platform = 'kakao'
+        id = values['id'] # 고유 아이디
+    except:
+        platform = 'naver'
+        id = values['email'].split('@')[0] # 이메일로 고유 아이디 부여
+
+    session['name'] = name
+    session['platform'] = platform
+    session['id'] = id
     return jsonify({'code': 200})
 
 # SNS 로그아웃

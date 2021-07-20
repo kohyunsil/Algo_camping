@@ -31,7 +31,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <button type="submit" class="btn col-md-12 btn-naver py-2">네이버 아이디로 로그인</button>
+                    <button type="submit" class="btn col-md-12 btn-naver py-2" id="naverIdLogin_loginButton">네이버 아이디로 로그인</button>
                 </div>
                 <br>
                 <div class="row justify-content-md-center">
@@ -56,8 +56,18 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="/static/js/signin.js"></script>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
 <script>
     Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
+    var naverLogin = new naver.LoginWithNaverId(
+		{
+			clientId: "GvWWne4vMn3VAUr0DNrG",
+			callbackUrl: "http://127.0.0.1:5000/signin",
+			isPopup: false,
+			callbackHandle: true
+		}
+	);
+naverLogin.init();
 </script>
 </body>
 </html>
