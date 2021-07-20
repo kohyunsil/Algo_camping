@@ -79,15 +79,17 @@ class KoreaTourApi:
     # 지역 기반 관광지 검색
     def tourlistAPI(self, num):
 
-        item_list = ["addr1", "addr2", "areacode", "booktour", "cat1", "cat2", "cat3", "contentid", "contenttypeid",
+        item_list = ["addr1", "addr2", "areacode", "booktour", "cat1", "cat2", "cat3", "contentid", "contenttypeid", "createdtime",
                      "firstimage", "firstimage2", "mapx", "mapy", "mlevel", "readcount", "sigungucode", "tel", "title", "zipcode"]
         data = pd.DataFrame()
 
         for z in item_list:
             globals()["{}_list".format(z)] = []
 
+        # 정렬구분인 arange를 D(생성일순)으로 설정하여서 가장 최근 업데이트된 정보만 가져옴
+        # pageno인 num인자 설정 필요 
         for i in range(num):
-            url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey={}&contentTypeId=12&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=A&numOfRows=12&pageNo={}'.format(
+            url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey={}&contentTypeId=12&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=D&numOfRows=12&pageNo={}'.format(
                 self.secretKey, i + 1)
             req = requests.get(url)
             html = req.text
@@ -111,6 +113,7 @@ class KoreaTourApi:
             data = pd.concat([data, globals()["{}_df".format(k)]], 1)
 
         return data
+
         # data.to_csv('tour_list.csv', index=False, encoding='utf-8-sig')
 
     def tour_estiDecoAPI(self, startYmd, endYmd):
