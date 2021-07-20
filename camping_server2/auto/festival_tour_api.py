@@ -20,16 +20,12 @@ class FestivalTourApi:
         self.secretKey = " "
 
     # 축제 API
-    def festivalAPI(self, eventStartDate):
-        """
-        축제 검색 > 축제 시작일 설정
-        eventStartDate: YYYYMMDD 양식으로 기입 (ex: 20210601)
-        """
+    # 정렬구분인 arange를 D(생성일순)으로 설정하여서 가장 최근 업데이트된 정보만 가져옴
+    def festivalAPI(self):
         url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?'
-        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000&arrange=A&listYN=Y'
-        detail_param = f'&eventStartDate={eventStartDate}'
+        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000&arrange=D&listYN=Y'
 
-        request = Request(url + param + detail_param)
+        request = Request(url + param)
         request.get_method = lambda: 'GET'
         response = urlopen(request)
         rescode = response.getcode()
@@ -80,7 +76,7 @@ class FestivalTourApi:
             data = pd.concat([data, globals()["{}_df".format(k)]], 1)
 
         return data
-
+ 
     def update_date(self, data):
         # 자동화 실행 날기준으로 새롭게 업데이트된 정보만 가져옴
         diff_days = datetime.timedelta(days=14)
@@ -92,9 +88,9 @@ class FestivalTourApi:
         new_data = data[data['createdtime2'] >= last_day]
         new_data = new_data.drop(["createdtime"],1)
         new_data = new_data.rename(columns={'createdtime2' : 'createdtime'})
+    
         return new_data
-
-
+    
     # 축제 정보   
     def make_festival(self, data):
         festival = data.drop(['areacode', 'cat1', 'cat2', 'cat3', 'contenttypeid', 'mlevel'], 1)
@@ -111,6 +107,7 @@ class FestivalTourApi:
                                 'sigungucode' : 'sigungu_code',
                                 'title' : 'place_name'})
         festival['place_num'] = 1
+
         return festival  
 
     # 관광지 정보
@@ -127,7 +124,9 @@ class FestivalTourApi:
                             'sigungucode' : 'sigungu_code',
                             'title' : 'place_name'})
         tour['place_num'] = 2
+
         return tour
+
     # db cursor 생성
     def connect_sql(self, IP, DB, PW):
         engine = create_engine(f"mysql+mysqldb://root:{PW}@{IP}/{DB}")
@@ -146,10 +145,9 @@ class FestivalTourApi:
         return cursor, engine, mydb
 
     # db에 저장
-    def save_sql(self, cursor, engine, mydb, table):
+    def save_sql(self, cursor, engine, mydb, table, option):
         # sql append insert
-        table.to_sql(name='place', con=engine, if_exists='append', index=False)
-
+        table.to_sql(name='place', con=engine, if_exists=option, index=False)
 
 if __name__ == '__main__':
     IP = " "
@@ -158,10 +156,9 @@ if __name__ == '__main__':
 
     ft_api = FestivalTourApi()
     cursor, engine, db = ft_api.connect_sql(IP, DB, PW)
-
+    
     # 축제 API
-    eventStartDate = datetime.date.today().isoformat().replace("-","")
-    festival_api = ft_api.festivalAPI(eventStartDate)
+    festival_api = ft_api.festivalAPI()
     new_festival = ft_api.update_date(festival_api)
     update_festival = ft_api.make_festival(new_festival)
 
@@ -171,7 +168,7 @@ if __name__ == '__main__':
     update_tour = ft_api.make_tour(new_tour)
 
     # append insert
-    ft_api.save_sql(cursor, engine, db, update_festival)
-    ft_api.save_sql(cursor, engine, db, update_tour)
+    ft_api.save_sql(cursor, engine, db, update_festival, "append")
+    ft_api.save_sql(cursor, engine, db, update_tour, "append")
 
     db.close()
