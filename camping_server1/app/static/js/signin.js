@@ -55,13 +55,27 @@ var SigninEvent = {
                                 var param = {
                                     id: response.id,
                                     name: response.properties.nickname,
-                                    kakao_account: response.kakao_account
+                                    email: response.email,
+                                    profile_image: response.properties.thumbnail_image
                                 }
-                                $.post('/user/sns/signin', param).done(function(response){
-                                    if (response.code === 200){
-                                        location.href = '/';
-                                    }
-                                })
+                                if (param.kakao_account === undefined || typeof param.kakao_account === 'undefined'){
+                                    alert('이메일은 필수정보입니다. 정보제공을 동의해주세요.');
+                                    Kakao.Auth.login({
+                                        scope: 'account_email',
+                                        success: function(response){
+                                            param.email = response.email;
+                                            $.post('/user/sns/signin', param).done(function(response){
+                                                if (response.code === 200){
+                                                    location.href = '/';
+                                                    console.log(param);
+                                                }
+                                            })
+                                        },
+                                        fail: function(error){
+                                            console.log(error);
+                                        }
+                                    })
+                                }
                             }else{
                                 alert('다시 시도해주세요.');
                             }
@@ -82,13 +96,10 @@ var SigninEvent = {
             naverLogin.getLoginStatus(function (status) {
                 if (status){
                     var param = {
-                        email: naverLogin.user.getEmail(),
-                        name: naverLogin.user.nickname,
+                        email: naverLogin.user.email,
+                        name: naverLogin.user.name,
                         profile_image: naverLogin.user.profile_image,
-                        gender: naverLogin.user.gender,
-                        age: naverLogin.user.age
                     }
-                    console.log(param);
                     $('.btn-naver').on('click', function() {
                         $.post('/user/sns/signin', param).done(function (response) {
                             if (response.code === 200) {
@@ -99,13 +110,11 @@ var SigninEvent = {
                             }
                         })
                     })
-                    if(email == undefined || email == null) {
-                        alert("이메일은 필수정보입니다. 정보제공을 동의해주세요.");
+                    if(param.email === undefined || param.email == null) {
+                        alert('이메일은 필수정보입니다. 정보제공을 동의해주세요.');
                         naverLogin.reprompt();
                         return;
                     }
-                }else{
-                    console.log("callback 처리에 실패하였습니다.");
                 }
             });
         });

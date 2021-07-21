@@ -85,7 +85,7 @@ def get_searchlist(params):
         place_info.append(query)
 
     algo_stars, algo_scores = get_score(content_id)
-    tags = get_top3_tag(content_id)
+    tags = get_top_tag(content_id, 3)
 
     # setter
     dto.place = place_info
@@ -110,7 +110,7 @@ def get_popular_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
-        tag = get_top3_tag(obj.content_id)
+        tag = get_top_tag(obj.content_id, 3)
 
         arr = [obj.place_name, obj.content_id, obj.detail_image,
                obj.tag, obj.readcount, str(obj.modified_date), star, tag]
@@ -127,7 +127,7 @@ def get_readcount_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
-        tag = get_top3_tag(obj.content_id)
+        tag = get_top_tag(obj.content_id, 3)
 
         arr = [obj.place_name, obj.content_id, obj.detail_image,
                obj.tag, obj.readcount, str(obj.modified_date), star, tag]
@@ -144,7 +144,7 @@ def get_modified_list(place_obj):
 
     for obj in place_obj:
         star, _ = get_score(obj.content_id)
-        tag = get_top3_tag(obj.content_id)
+        tag = get_top_tag(obj.content_id, 3)
 
         if obj.modified_date is None:
             obj.modified_date = str('2000-01-01 00:00:00')
@@ -189,18 +189,18 @@ def get_algo_points(content_id):
 
     return algo_star, cat_points_list
 
-# top3 특성
-def get_top3_tag(content_id):
+# top3,5 특성
+def get_top_tag(content_id, num):
     tags = []
     tag = TagPoints()
 
     if type(content_id) == list:
         for target_id in content_id:
-            top3_tag = tag.tag_priority(target_id, rank=3)
+            top3_tag = tag.tag_priority(target_id, rank=num)
             tags.append(top3_tag)
         return tags
     else:
-        return tag.tag_priority(content_id, rank=3)
+        return tag.tag_priority(content_id, rank=num)
 
 # 반환되는 객체 만들기
 def make_resobj(place_info):

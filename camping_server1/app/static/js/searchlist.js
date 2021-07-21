@@ -105,8 +105,9 @@ var SearchList = {
                             '</div>\n' +
                         '</div>\n' +
                         '<div class="card-body">\n' +
-                            '<a class="h5 card-title fw-bolder" href="#">'+ res.place_info[i].place_name +'</a>\n' +
-                            '<p class="card-text">95% 일치</p>\n' +
+                            '<div id="item-title' + (i+1) + '">\n'+
+                                '<a class="h5 card-title fw-bolder" href="#">'+ res.place_info[i].place_name +'</a>\n' +
+                            '</div><br>\n' +
                             '<div class="col justify-content-md-center tags" id="tag' + (i+1) + '">\n' +
                             '</div>&nbsp;\n' +
                             '<p class="algo-text">\n' +
@@ -131,6 +132,14 @@ var SearchList = {
                         res.tag[i][j] +
                     '</button>\n'
                 )}
+            }
+        }
+        // 로그인 o인 경우 매칭도 노출
+        if (SearchList.getCookie('access_token') !== undefined){
+            for (var i=0; i<res.place_info.length; i++){
+                $('#item-title'+ (i+1)).append(
+                    '<p class="card-text">95% 일치</p>'
+                )
             }
         }
         // 장소 클릭

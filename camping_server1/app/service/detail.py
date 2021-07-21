@@ -2,7 +2,7 @@ from ..model.review_dao import ReviewDAO as model_review
 from ..model.congestion_dao import CongestionDAO as model_congestion
 from ..model.place_dao import PlaceDAO as model_place
 from ..model import *
-from ..service.search import get_score
+from ..service.search import get_score, get_top_tag
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from ..config import Config
@@ -49,9 +49,13 @@ def get_detail(param):
             # params['future_congestion'] = future_congestion
 
             params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
-            print(params['algo_star'])
-        params['code'] = 200
+            params['tag'] = get_top_tag(int(req_contentid), 5)
 
+            try:
+                params['user_name'] = session['name']
+            except KeyError:
+                params['user_name'] = '사용자'
+        params['code'] = 200
     return jsonify(params)
 
 # 관광지, 축제 정보

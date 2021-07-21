@@ -139,6 +139,34 @@ var DetailInfo = {
             var ymd_date = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
             daterange.push(ymd_date);
         }
+
+        var tag = [];
+        var colors = ['#49917d', '#e7cb01', '#c4c4c4'];
+        const SIZE = [1300, 900, 600, 300, 100]
+
+        for (var i=0; i<res.tag.length; i++){
+            var bubbleinfo = {
+                name: res.tag[i],
+                value: SIZE[i],
+                color: colors[0]
+            }
+            if (i === 0){
+               bubbleinfo.color = colors[1];
+            }
+            if (i === res.tag.length - 1){
+                bubbleinfo.color = colors[2];
+            }
+            tag.push(bubbleinfo);
+        }
+
+        if(DetailInfo.getCookie('access_token') === undefined){
+            var title = res.place_info.place_name + '에 대한 분석결과입니다.';
+            var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
+        }else{
+            var title = res.user_name + '님과 95% 일치합니다.';
+            var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
+        }
+
         // spider web (polar) chart
         Highcharts.chart('polar-container', {
             chart: {
@@ -146,9 +174,8 @@ var DetailInfo = {
               type: 'line',
               backgroundColor: 'rgba(0,0,0,0)'
             },
-
             title: {
-              text: '김알고님과 95% 일치합니다.'
+              text: title
             },
 
             credits:{
@@ -156,17 +183,23 @@ var DetailInfo = {
             },
 
             subtitle: {
-              text: '김알고님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.'
+              text: subtitle
             },
 
             pane: {
-              size: '70%'
+              size: '73%'
             },
 
             xAxis: {
               categories: ['COMFORT', 'CLEAN', 'HEALING', 'FUN', 'TOGETHER'],
               tickmarkPlacement: 'on',
-              lineWidth: 0
+              lineWidth: 0,
+              labels: {
+                  style: {
+                      color: '#1f284a',
+                      fontWeight: 'normal'
+                  }
+              }
             },
 
             yAxis: {
@@ -179,13 +212,14 @@ var DetailInfo = {
             legend: {
               align: 'right',
               verticalAlign: 'middle',
-              layout: 'vertical'
+              layout: 'horizontal'
             },
 
             series: [{
                 name: res.place_info.place_name,
                 data: res.algo_score,
-                pointPlacement: 'on'
+                pointPlacement: 'on',
+                color: '#4f9f88'
             }],
             //{
             //   name: '사용자',
@@ -202,7 +236,7 @@ var DetailInfo = {
                   legend: {
                     align: 'center',
                     verticalAlign: 'bottom',
-                    layout: 'horizontal'
+                    layout: 'vertical'
                   },
                   pane: {
                     size: '70%'
@@ -215,7 +249,7 @@ var DetailInfo = {
         // line chart
         Highcharts.chart('line-container', {
           chart: {
-            backgroundColor: 'rgba(0,0,0,0)'
+            backgroundColor: 'rgba(0,0,0,0)',
           },
 
           credits:{
@@ -234,7 +268,7 @@ var DetailInfo = {
               label: {
                 connectorAllowed: false
               },
-              pointStart: 2000
+              pointStart: 0,
             }
           },
           yAxis: {
@@ -259,13 +293,13 @@ var DetailInfo = {
               label: {
                 connectorAllowed: false
               },
-              date: daterange
+              date: daterange,
             }]
           },
-
           series: [{
             name: '지난' + res.past_congestion.length + '일 간 방문객 수',
-            data: congestion
+            data: congestion,
+            color: '#4f9f88'
           }
           // , {
           //   name: '지난 1주일 간 방문율',
@@ -293,7 +327,7 @@ var DetailInfo = {
         Highcharts.chart('bubble-container', {
           chart: {
             type: 'packedbubble',
-            backgroundColor: 'rgba(0,0,0,0)'
+            backgroundColor: 'rgba(0,0,0,0)',
           },
 
           credits:{
@@ -303,10 +337,12 @@ var DetailInfo = {
           title: {
             text: res.place_info.place_name + '의 주요태그'
           },
+
           tooltip: {
             useHTML: true,
-            pointFormat: '<b>{point.name}:</b> {point.value}m CO<sub>2</sub>'
+            pointFormat: '<b>{point.name}:</b> {point.value}'
           },
+
           plotOptions: {
             packedbubble: {
               minSize: '20%',
@@ -326,7 +362,7 @@ var DetailInfo = {
                   value: 10 // visible filter
                 },
                 style: {
-                  color: 'black',
+                  color: '#1f284a',
                   textOutline: 'none',
                   fontWeight: 'normal'
                 }
@@ -334,34 +370,22 @@ var DetailInfo = {
             }
           },
           series: [{
-            name: '상위 5개 카테고리',
-            data: [{
-                name: '분위기 좋은',
-                value: 767.1
-              }, {
-                name: '친절한',
-                value: 600.7
-              },{
-                name: '별보기 좋은',
-                value: 367.1
-              },
-              {
-                name: '벌레가 없는',
-                value: 100.7
-            },
-            {
-                name: '근교',
-                value: 200.1
-            }]
+            name: res.place_info.place_name + '의 상위 5개 태그',
+            data: tag,
+            marker: {
+                lineWidth: 1,
+                lineColor: 'rgba(0,0,0,0)',
+            }
           }]
         });
     },
     showLocalList: function(res){
+        var user = '';
         $('.mySwiper2').empty();
         $('.mySwiper2').append(
             '<div class="col">\n' +
                 '<span>\n' +
-                    '<h5 class="text-center"><span class="h5 user-name">김알고님</span>\n' +
+                    '<h5 class="text-center"><span class="h5 user-name"></span>\n' +
                         '<span class="h5 fw-bold festival-addr" style="color: #49917D">' + res.place_info.addr.split(' ')[1] + '</span> 인근 축제/관광지는 어떠세요?\n' +
                     '</h5>\n' +
                 '</span>\n' +
@@ -369,6 +393,14 @@ var DetailInfo = {
             '<div class="swiper-wrapper" id="swiper-local">\n' +
             '</div>'
         );
+        // 사용자 이름 노출
+        if(DetailInfo.getCookie('access_token') === undefined){
+            user = '사용자님';
+        }else{
+            user = res.user_name;
+        }
+        $('.user-name').text(user);
+
         for(var i=0; i<res.local_info.length; i++){
             if (res.local_info[i] === null){
                 continue
@@ -395,7 +427,7 @@ var DetailInfo = {
             },
             lazy:{
                 loadPrevNext: true,
-                loadPrevNextAmount: 1,  // 미리 로드할 이미지 개수
+                loadPrevNextAmount: 1,
             },
       });
     },
@@ -421,6 +453,13 @@ var DetailInfo = {
         DetailInfo.showPlaceInfo(response);
         DetailInfo.showHighCharts(response);
         DetailInfo.showLocalList(response);
+    },
+    // linechart 리사이징
+    redrawLineCharts: function(){
+        var width = $('#line-chart-container').css('width');
+        // $('#line-chart-container').css('width', '680px');
+        $('#line-chart-container').css('width', '43rem');
     }
 }
 DetailInfo.getPlaceInfo();
+DetailInfo.redrawLineCharts();

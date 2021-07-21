@@ -139,5 +139,3 @@ SignoutEvent.doSignout();
 SearchTags.getSearchTags();
 SearchTags.getKeywords();
 SearchTags.doSearchTags();
-
-
