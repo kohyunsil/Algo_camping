@@ -20,7 +20,6 @@
             </div>
         </nav>
     </div>
-
     <div class="container col-md-5 login">
         <div class="row justify-content-md-center"></div>
             <div class="p-5 bg-light col-md-auto rounded-3 outer-2">
@@ -31,22 +30,24 @@
                         <div class="mb-2">
                             <label for="exampleDropdownFormEmail2" class="form-label">이메일</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="email@example.com" aria-describedby="button-addon2">
-                                <button class="btn col-md-2 btn-check" type="button" id="button-addon2">확인</button>
+                                <input type="text" class="form-control" id="email-form" placeholder="email@example.com" arial-label="" aria-describedby="button-addon2">
+                                <button class="btn col-md-2" type="button" id="check-btn">확인</button>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="exampleDropdownFormPassword2" class="form-label">패스워드</label>
-                        <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password">
+                        <input type="password" class="form-control" id="password-form" placeholder="Password">
                     </div>
                     <div class="mb-3">
                         <label for="exampleDropdownFormPassword2" class="form-label">이름</label>
-                        <input type="text" class="form-control" id="exampleDropdownFormPassword2" placeholder="Name">
+                        <input type="text" class="form-control" id="name-form" placeholder="Name">
                     </div>
-                    <button type="submit" class="btn col-md-2 btn-signin py-2">Sign up</button><br>
+                    <button type="button" class="btn col-md-2 btn-signin py-2" id="signin-btn">OK</button><br>
                 </div><br>
             </div><br>
         </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup.js"></script>
 </body>
 </html>

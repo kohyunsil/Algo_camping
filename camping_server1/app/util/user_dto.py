@@ -6,4 +6,3 @@ class UserDTO:
         'user_name': fields.String(required=False),
         'email': fields.String(required=False),
     })
-

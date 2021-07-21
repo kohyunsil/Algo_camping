@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
     <link rel="stylesheet" type="text/css" href="/static/css/searchlist.css">
     <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
 </head>
@@ -18,12 +17,10 @@
         {% include "./layout/header.html" %}
     </div>
 
-    <div class="row">
-        <div class="loading spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
+    <div class="position-absolute top-50 start-50 loading-bar">
+        <div class="loading spinner-border text-white" role="status"></div>
+        <p class="text-white loading-text">Loading..</p>
     </div>
-
 
     <div class="container-fluid search-result">
         <nav class="navbar navbar-light">

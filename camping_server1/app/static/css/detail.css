@@ -12,6 +12,13 @@
 .algo-star{
     color: #49917D;
 }
+.detail-score{
+    color: #2b2b2b;
+    font-size: 1rem;
+}
+.loading-text{
+    margin-left: -8px;
+}
 /*table*/
 table td,
 table th{

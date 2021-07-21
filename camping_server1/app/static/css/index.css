@@ -1,6 +1,7 @@
 /*main page*/
-.h3{
+.intro-text{
     text-align: center;
+    font-family: Roboto, sans-serif;
 }
 div.container-fluid.text-white.pt-5 > div.row.tags > div > button:hover,
 div.container-fluid.text-white.pt-5 > div.row.tags > div > button:focus,

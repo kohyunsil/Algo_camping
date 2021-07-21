@@ -1,7 +1,7 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 
-class PlaceDTO(object):
 
+class PlaceDTO(object):
     @hybrid_property
     def place(self):
         return self.place_obj
@@ -9,5 +9,3 @@ class PlaceDTO(object):
     @place.setter
     def place(self, place_obj):
         self.place_obj = place_obj
-
-
