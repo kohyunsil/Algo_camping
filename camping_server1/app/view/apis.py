@@ -34,22 +34,25 @@ def search_tags():
 @app.route('/search/popular')
 def search_popular():
     # getter
-    place_obj = dto.place
-    return search.get_popular_list(place_obj)
+    place_obj = place_dto.place
+    algo_obj = modeling_dto.modeling
+    return search.get_popular_list(place_obj, algo_obj)
 
 # 조회순 정렬
 @app.route('/search/readcount')
 def search_readcount():
     # getter
-    place_obj = dto.place
-    return search.get_readcount_list(place_obj)
+    place_obj = place_dto.place
+    algo_obj = modeling_dto.modeling
+    return search.get_readcount_list(place_obj, algo_obj)
 
 # 등록순 정렬
 @app.route('/search/recent')
 def search_recent():
     # getter
-    place_obj = dto.place
-    return search.get_modified_list(place_obj)
+    place_obj = place_dto.place
+    algo_obj = modeling_dto.modeling
+    return search.get_modified_list(place_obj, algo_obj)
 
 # 상세 페이지
 @app.route('/detail/info')

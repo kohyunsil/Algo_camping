@@ -1,12 +1,11 @@
-from flask_restx import Namespace, fields
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
-class ModelingDTO:
-    api = Namespace('modeling', description='relating to algorithm tag')
-    modeling = api.model('api', {
-        'place_name': fields.String(required=False),
-        'content_id': fields.Integer(required=False),
-        'addr': fields.String(required=False),
-        'cat': fields.String(required=False),
-        'weight': fields.Integer(required=False)
-    })
+class ModelingDTO(object):
+    @hybrid_property
+    def modeling(self):
+        return self.algo_info
+
+    @modeling.setter
+    def modeling(self, algo_info):
+        self.algo_info = algo_info

@@ -88,7 +88,8 @@ def get_searchlist(params):
     tags = get_top_tag(content_id, 3)
 
     # setter
-    dto.place = place_info
+    place_dto.place = place_info
+    modeling_dto.modeling = {'algo_stars': algo_stars, 'tags': tags}
 
     params['code'] = 200
     params['keywords'] = ', '.join(split_params)
@@ -105,12 +106,12 @@ def get_matching_rate():
     pass
 
 # 인기순 정렬
-def get_popular_list(place_obj):
+def get_popular_list(place_obj, algo_obj):
     place_info = []
 
-    for obj in place_obj:
-        star, _ = get_score(obj.content_id)
-        tag = get_top_tag(obj.content_id, 3)
+    for i, obj in enumerate(place_obj):
+        star = algo_obj['algo_stars'][i]
+        tag = algo_obj['tags'][i]
 
         arr = [obj.place_name, obj.content_id, obj.detail_image,
                obj.tag, obj.readcount, str(obj.modified_date), star, tag]
@@ -122,12 +123,12 @@ def get_popular_list(place_obj):
     return jsonify(make_resobj(place_info))
 
 # 조회순 정렬
-def get_readcount_list(place_obj):
+def get_readcount_list(place_obj, algo_obj):
     place_info = []
 
-    for obj in place_obj:
-        star, _ = get_score(obj.content_id)
-        tag = get_top_tag(obj.content_id, 3)
+    for i, obj in enumerate(place_obj):
+        star = algo_obj['algo_stars'][i]
+        tag = algo_obj['tags'][i]
 
         arr = [obj.place_name, obj.content_id, obj.detail_image,
                obj.tag, obj.readcount, str(obj.modified_date), star, tag]
@@ -139,12 +140,12 @@ def get_readcount_list(place_obj):
     return jsonify(make_resobj(place_info))
 
 # 등록순 정렬
-def get_modified_list(place_obj):
+def get_modified_list(place_obj, algo_obj):
     place_info = []
 
-    for obj in place_obj:
-        star, _ = get_score(obj.content_id)
-        tag = get_top_tag(obj.content_id, 3)
+    for i, obj in enumerate(place_obj):
+        star = algo_obj['algo_stars'][i]
+        tag = algo_obj['tags'][i]
 
         if obj.modified_date is None:
             obj.modified_date = str('2000-01-01 00:00:00')

@@ -9,5 +9,3 @@ class PlaceDTO(object):
     @place.setter
     def place(self, place_obj):
         self.place_obj = place_obj
-
-
