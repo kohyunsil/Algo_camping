@@ -25,4 +25,5 @@ app.config.update(
 
 jwt = JWTManager(app)
 
-from app.view import routes, apis
+from app.view import routes
+from app.controller import *

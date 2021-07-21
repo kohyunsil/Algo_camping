@@ -8,6 +8,7 @@ async-generator==1.10
 attrs==20.3.0
 Automat==20.2.0
 backcall==0.2.0
+bcrypt==3.2.0
 beautifulsoup4 @ file:///home/linux1/recipes/ci/beautifulsoup4_1610988766420/work
 bleach==3.3.0
 bokeh @ file:///opt/concourse/worker/volumes/live/5a312fdd-9516-439e-63a9-67fcf2e3dee8/volume/bokeh_1617827440191/work
@@ -41,6 +42,7 @@ fake-useragent==0.1.11
 fbprophet @ file:///Users/runner/miniforge3/conda-bld/fbprophet_1599365544983/work
 Fiona==1.8.19
 Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
+Flask-JWT-Extended==4.2.3
 Flask-MongoAlchemy==0.7.2
 flask-restx==0.4.0
 Flask-SQLAlchemy==2.5.1
@@ -155,6 +157,7 @@ pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
 PyDispatcher==2.0.5
 PyGetWindow==0.0.9
 Pygments==2.8.1
+PyJWT==2.1.0
 PyMeeus @ file:///home/conda/feedstock_root/build_artifacts/pymeeus_1615809745702/work
 pymongo==2.8.1
 PyMsgBox==1.0.9
