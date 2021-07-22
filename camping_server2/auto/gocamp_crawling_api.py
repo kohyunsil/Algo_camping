@@ -8,6 +8,7 @@ from pandas.io.json import json_normalize
 import pandas as pd
 import re
 import datetime
+# from datetime import datetime
 import pymysql
 from sqlalchemy import create_engine
 
@@ -22,64 +23,6 @@ class Gocamp:
 
     def __init__(self):
         self.secretKey = "1lQh1AXwuKpBPamJ8M10NbN0c0hg%2Beex7NUu6k5HgjiP%2FupWExgtLRbmjRV7XLAEMf5l0j%2FH5um7uy4Z0cErXg%3D%3D"
-   
-    # gocamp crawling
-    def fetch_link_list(self):
-        print("👉 Start fetch camp list")
-        response = requests.get(self.url)
-        dom = BeautifulSoup(response.content, "html.parser")
-        items = dom.select("#cont_inner > div > div.camp_search_list > ul > li")
-
-        rows = []
-
-        for item in items:
-            new_row = {
-                "title": item.select_one("h2 > a").text,
-                "description": item.select_one(".camp_stt").text,
-                "address": item.select_one(".addr").text,
-                # "contact": item.select_one("ul > li.call_num"),
-                # "facility": item.select_one('i > span'),
-                "view": item.select_one('div > div > p > span.item_t03').text,
-                "link": "https://www.gocamping.or.kr" + item.select_one("div > a").get("href"),
-                "tags": "",
-                # "info": "",
-                # "etc": "",
-                "img_url": "",
-                # "price": ""
-            }
-            rows.append(new_row)
-
-        list_df = pd.DataFrame(rows)
-        return list_df
-
-    def fetch_link_details(self, list_df):
-        list_df = list_df[:10]
-        df = list_df.fillna('')
-        for idx in tqdm(df.index):
-            link = df.loc[idx, 'link']
-            response = requests.get(link)
-            dom = BeautifulSoup(response.text, "html.parser")
-            # info = dom.select_one("table > tbody").text.strip()
-            # info = info.replace("\t", " ").replace("\n", " ")
-            # etc_info = dom.select_one("#table_type03 > div > table > tbody").text.strip()
-            # etc_info = etc_info.replace("\t", " ").replace("\n", " ")
-            imgs = dom.select('#contents > div > div.layout > div > div > div > a > img')
-            #
-            for img in imgs:
-                df.loc[idx,"img_url"] = df.loc[idx,"img_url"] + str(img["src"]) + ","
-            
-            try:
-                tags = dom.select_one("div.camp_tag > ul.tag_list").text.strip().replace("\n", " ")
-            except:
-                pass
-            # pay_link = "https://www.gocamping.or.kr" + dom.select_one('#c_guide > a').get("href")
-
-            df["tags"][idx] = tags
-        #     # self.df["info"][idx] = info
-        #     # self.df["etc"][idx] = etc_info
-            # df["img_url"][idx] = img_url
-        df["img_url"].str.split(",", expand=True)
-        return df
     
     # gocamp API
     def gocampingAPI(self):
@@ -99,7 +42,50 @@ class Gocamp:
 
             camp_api_df = json_normalize(rDD['response']['body']['items']['item'])
             return camp_api_df
+    
+    # gocamp crawling    
+    def detail_page(self, content_id):
+        base_url = f"https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no={content_id}&viewType=read01&listOrdrTrget=last_updusr_pnttm"
+        response = requests.get(base_url)
+        dom = BeautifulSoup(response.content, 'html.parser')
+
+        param = {'title': '', 'tags': '', 'address': '', 'img_url': ''}
+
+        param['title'] = dom.select_one('#sub_title_wrap2 > div.layout > div.s_title2 > p.camp_name').text.strip().split('\n')[0]
+        param['tags'] = dom.select_one('div.camp_tag > ul.tag_list').text.strip().replace('\n', ' ')
+        param['address'] = dom.select_one('#cont_inner > div.sub_layout.layout > article > header > div > div.cont_tb > table > tbody > tr:nth-of-type(1) > td').text
+
+        imgs = dom.select('#contents > div > div.layout > div > div > div > a > img')
+        img_list = []
+        for img in imgs:
+            img_list.append(img['src'])
+        param['img_url'] = img_list
+
+        return param
+
+    
+    # readcount를 가져오기 위한 검색결과 페이지 정보 가져오기
+    def search_page(self, place_name):
+        base_url = f"https://www.gocamping.or.kr/bsite/camp/info/list.do?searchKrwd={place_name}"
+        response = requests.get(base_url)
+        dom = BeautifulSoup(response.content, 'html.parser')
         
+        param = {'title': '', 'address': '', 'readcount': ''}
+        
+        search_list = dom.select("#cont_inner > div > div.camp_search_list > ul > li")
+        try:
+            place_name = search_list[0].select_one("h2 > a").text.split('] ')[1]
+            addr = search_list[0].select_one(".addr").text
+            read_count = search_list[0].select_one('div > div > p > span.item_t03').text
+        except:
+            place_name, addr, read_count = '', '', ''
+        
+        param['title'] = place_name
+        param['address'] = addr
+        param['readcount'] = read_count
+        
+        return param
+    
     def update_date(self, data):
         # 자동화 실행 날기준으로 새롭게 업데이트된 정보만 가져옴
         diff_days = datetime.timedelta(days=7)
@@ -179,12 +165,37 @@ class Gocamp:
         camp['place_num'] = 0 
         return camp
 
-    def make_camp_crawling(self, data) :
-        camp_details = data.rename(columns={'view' : 'readcount'})
+    def make_camp_crawling(self, new_data) :
+        content_id = list(new_data['contentId'])
+        content_id = list(map(int, content_id))
+        place_name = list(new_data['facltNm'])
+
+        details = []
+        search = []
+        
+        # gocamp crawling
+        # 상세 페이지 place_name, addr, tag, detail_image 크롤링 (content_id 기준)
+        for c_id in content_id:
+            new_details = gocamp.detail_page(c_id)
+            details.append(new_details)
+        
+        data_details = pd.DataFrame(details)
+
+        # 검색 페이지 place_name, addr, read_count 크롤링 (place_name 기준)    
+        for name in place_name:
+            new_search = gocamp.search_page(name.replace(' ', ''))
+            search.append(new_search)
+        data_search = pd.DataFrame.from_dict(search)
+        data_search = data_search.drop(['title'],1)
+
+        # merge
+        camp_details = pd.merge(data_details, data_search, how='left', on='address')
+        camp_details['img_url'] = camp_details['img_url'].apply(pd.Series)
+        camp_details['url_num'] = content_id
+        camp_details['url_num'] = camp_details['url_num'].astype(str)
+        
         camp_details['readcount'] = camp_details['readcount'].str.split(' ').str[1]
-        datas = camp_details['link']
-        data = [re.findall("\d+",data)[0] for data in datas]
-        camp_details['url_num'] = data
+        
         return camp_details
 
     def merge_data(self, camp, camp_details):
@@ -283,6 +294,138 @@ class Sigungucode:
         df.drop(['doNm', 'sigunguNm', 'sigunguNm2', 'sigunguNm3'], axis=1, inplace=True)
 
         return df
+        
+    
+# merge_data 넣고 그다음에 다시 가져와서 id값으로 place_id 만들어야함
+class PlaceSubTable():
+    def place_table(self,camp_df):
+        place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 
+                'first_image','tel', 'addr2', 'thema_envrn', 'tour_era', 
+                'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount', 
+                'content_id', 'industry', 'oper_date', 'oper_pd',]]
+        place_df = place_df.rename(columns={'place_id' : 'id'})
+        return place_df
+    
+    # convenience table
+    def convenience_table(self, camp_df):
+        convenience_df = camp_df[['place_id','sited_stnc', 'brazier', 'site_bottom1', 'site_bottom2', 'site_bottom3', 
+                                            'site_bottom4', 'site_bottom5', 'swrm_cnt', 'toilet_cnt', 'wtrpl_cnt', 'sbrs', 'sbrs_etc', 
+                                            'eqpmn_lend']]
+        return convenience_df
+    
+    # operation table
+    def operation_table(self, camp_df):
+        operation_df = camp_df[['place_id', 'mange', 'manage_sttus', 'prmisn_date', 'faclt_div', 'trsagnt_no', 
+                                        'mgc_div', 'bizrno']]
+        return operation_df
+    
+    # variety table
+    def variety_table(self, camp_df):
+        variety_df = camp_df[['place_id', 'glamp_site', 'gnrl_site', 'indvdlcarav_site', 'carav_site', 'auto_site', 
+                                    'carav_acmpny', 'trler_acmpny', 'lct', 'animal_cmg', 'clturevent_at', 
+                                    'exprnprogrm_at', 'clturevent', 'posblfclty', 'posblfclty_etc', 'glampinner_fclty', 
+                                    'caravinner_fclty', 'exprnprogrm']]
+        return variety_df
+    
+    # safety table
+    def safety_table(self, camp_df):
+        safety_df = camp_df[['place_id', 'insrnc_at', 'manage_num', 'extshr', 'firesensor', 'frprvtsand', 'frprvtwrpp']]
+        return safety_df
+
+
+# class AlgorithmTable():
+#     def __init__(self):
+#         self.category = {'재미있는' : '즐길거리',
+#             '온수 잘 나오는' : '쾌적/편리',
+#             '아이들 놀기 좋은' : '함께',
+#             '생태교육' : '즐길거리',
+#             '가족' : '함께',
+#             '친절한' : '쾌적/편리',
+#             '여유있는' : '자연/힐링',
+#             '깨끗한' : '쾌적/편리',
+#             '계곡 옆' : '자연/힐링',
+#             '물놀이 하기 좋은' : '액티비티',
+#             '물맑은' : '자연/힐링',
+#             '둘레길' : '즐길거리',
+#             '별보기 좋은' : '자연/힐링',
+#             '힐링' : '자연/힐링',
+#             '커플' : '함께',
+#             '차 대기 편한' : '쾌적/편리',
+#             '사이트 간격이 넓은' : '쾌적/편리',
+#             '축제' : '즐길거리',
+#             '문화유적' : '즐길거리',
+#             '자전거 타기 좋은' : '액티비티',
+#             '그늘이 많은' : '자연/힐링',
+#             '수영장 있는' : '액티비티',
+#             '바다가 보이는' : '자연/힐링',
+#             '익스트림' : '액티비티',
+#             '반려견' : '함께'}
+
+#     def tag_stack(self, camp_df):
+#         camping_data = camp_df[['place_id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
+#         camping_data['tag'] = camping_data['tag'].fillna("")
+#         camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"]["tag"] + "#반려견"
+#         camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
+
+#         lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
+#         lookup['sub_cat'] = lookup['sub_cat'].str.replace(" ","")
+#         lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+#         lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+#         camping_data['tag'] = [t[:] if type(t) == str else "" for t in camping_data['tag']]
+
+#         for kw in ['#봄 ', '#여름 ', '#가을', '#가을 ', '#겨울', '봄 ', '여름 ', '가을 ', '겨울',]:
+#             camping_data['tag'] = [t.replace(kw, "") if type(t) == str else "" for t in camping_data['tag']]
+
+#         camping_data["tag"] = camping_data["tag"].str.replace(" ", "")
+#         camping_data_a = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
+#         camping_data_b = pd.get_dummies(camping_data_a.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+
+#         main_df = pd.DataFrame()
+        
+#         for i in range(len(camping_data_b)):
+#             main_df = pd.concat([pd.DataFrame(camping_data_b.values[i] * lookup["main_cat"].T), main_df], 1)
+
+#         main_df = main_df.T.reset_index(drop=True)
+#         main_df = pd.get_dummies(main_df.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+#         main_df = main_df.iloc[:,1:]
+#         main_df.index = camping_data_b.index
+#         last_df  = pd.concat([camping_data_b, main_df], 1)
+#         last_df[last_df > 1] = 1
+#         last_df['index']= last_df.index
+#         algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
+#         algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
+#                                             '계곡옆' : 'valley_s',
+#                                             '깨끗한' : 'clean_s',
+#                                             '둘레길' : 'trail_s',
+#                                             '문화유적' : 'cultural_s',
+#                                             '물놀이하기좋은' : 'waterplay_s',
+#                                             '물맑은' : 'pure_water_s',
+#                                             '바다가보이는' : 'ocean_s',
+#                                             '반려견' : 'with_pet_s',
+#                                             '별보기좋은' : 'star_s',
+#                                             '사이트간격이넓은' : 'spacious_s',
+#                                             '생태교육' : 'ecological_s',
+#                                             '수영장있는' : 'pool_s',
+#                                             '아이들놀기좋은' : 'with_child_s',
+#                                             '온수잘나오는' : 'hot_water_s',
+#                                             '익스트림' : 'extreme_s',
+#                                             '자전거타기좋은' : 'bicycle_s',
+#                                             '차대기편한' : 'parking_s',
+#                                             '축제' : 'festival_s',
+#                                             '커플' : 'with_couple_s', 
+#                                             '힐링' : 'healing_s',
+#                                             '액티비티' : 'activity_m',
+#                                             '자연/힐링' : 'nature_m',
+#                                             '즐길거리' : 'fun_m',
+#                                             '쾌적/편리' : 'comfort_m',
+#                                             '함께' : 'together_m'})
+        
+#         return algo_search_df
+
+#     def search_table(self, algo_search_df): 
+#         search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
+#         return search_df
+
 
 class Query:   
     # db cursor 생성
@@ -309,24 +452,23 @@ class Query:
 
 if __name__ == '__main__':
     IP = "34.136.89.21"
-    DB = "test2"
+    DB = "camping"
     PW = "dss"
 
     gocamp = Gocamp()
     sgg = Sigungucode()
+    sub = PlaceSubTable()
+#     algo = AlgorithmTable()
     sql = Query()
     cursor, engine, db = sql.connect_sql(IP, DB, PW)
     
-    # gocamp crawling
-    list_df = gocamp.fetch_link_list()
-    df = gocamp.fetch_link_details(list_df)
-    camp_details = gocamp.make_camp_crawling(df)
-    
     # gocamp API
     df = gocamp.gocampingAPI()
-    new_df = gocamp.update_date(df)
+    new_data = gocamp.update_date(df)
+    camp_details = gocamp.make_camp_crawling(new_data) 
+    
     # sigungucode
-    camp_api_df = sgg.make_sigungucode(new_df)
+    camp_api_df = sgg.make_sigungucode(new_data)
     camp = gocamp.make_camp_api(camp_api_df)
     
     # crawling and API files merge for the details
@@ -335,3 +477,5 @@ if __name__ == '__main__':
     # camp info append insert to place table
     place_df = sub.place_table(camp_df)
     sql.save_sql(cursor, engine, db,  place_df, "place", "append")
+
+    db.close()
