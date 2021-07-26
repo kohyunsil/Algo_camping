@@ -201,15 +201,33 @@ class Gocamp:
     def merge_data(self, camp, camp_details):
         merge_data = pd.merge(camp, camp_details, how='right', left_on='content_id', right_on='url_num')
         merge_data = merge_data.drop(['title', 'address'], 1)
-        camp_df = merge_data.dropna(subset = ['addr'])
-        camp_df = camp_df.reset_index().reset_index()
-        camp_df = camp_df.drop(['index'],1)
-        camp_df = camp_df.rename(columns={'level_0' : 'place_id', 
+        merge_data = merge_data.dropna(subset = ['addr'])
+        merge_data = merge_data.reset_index().reset_index()
+        merge_data = merge_data.drop(['index'],1)
+        merge_data = merge_data.rename(columns={'level_0' : 'place_id', 
                                     'img_url' : 'detail_image', 
                                     'tags' : 'tag',
                                     'view' : 'readcount', 
                                     })
-        camp_df
+        merge_data
+        return merge_data
+    
+    def fetch_place(self, cursor):
+        cursor.execute('SELECT * FROM place')
+        place_query = cursor.fetchall()
+        fetch_df = pd.DataFrame(data=place_query)
+        return fetch_df
+    
+    # 'place_id' 만들기 위한 merge
+    def make_camp_df(self, fetch_df, merge_data):
+        camp_df = pd.concat([fetch_df, merge_data],0)
+        camp_df = camp_df.reset_index()
+        camp_df = camp_df.drop(['place_id'], 1)
+        camp_df['id'] = camp_df.index
+        camp_df = camp_df.rename(columns = {'id': 'place_id'})
+        camp_df = camp_df[['place_id','content_id']]
+        merge_data = merge_data.drop(['place_id'],1)
+        camp_df = pd.merge(merge_data, camp_df, how='left', on='content_id')
         return camp_df
 
 class Sigungucode:
@@ -305,7 +323,7 @@ class PlaceSubTable():
                 'content_id', 'industry', 'oper_date', 'oper_pd',]]
         place_df = place_df.rename(columns={'place_id' : 'id'})
         return place_df
-    
+        
     # convenience table
     def convenience_table(self, camp_df):
         convenience_df = camp_df[['place_id','sited_stnc', 'brazier', 'site_bottom1', 'site_bottom2', 'site_bottom3', 
@@ -331,101 +349,99 @@ class PlaceSubTable():
     def safety_table(self, camp_df):
         safety_df = camp_df[['place_id', 'insrnc_at', 'manage_num', 'extshr', 'firesensor', 'frprvtsand', 'frprvtwrpp']]
         return safety_df
+    
+class AlgorithmTable():
+    def __init__(self):
+        self.category = {'재미있는' : '즐길거리',
+            '온수 잘 나오는' : '쾌적/편리',
+            '아이들 놀기 좋은' : '함께',
+            '생태교육' : '즐길거리',
+            '가족' : '함께',
+            '친절한' : '쾌적/편리',
+            '여유있는' : '자연/힐링',
+            '깨끗한' : '쾌적/편리',
+            '계곡 옆' : '자연/힐링',
+            '물놀이 하기 좋은' : '액티비티',
+            '물맑은' : '자연/힐링',
+            '둘레길' : '즐길거리',
+            '별보기 좋은' : '자연/힐링',
+            '힐링' : '자연/힐링',
+            '커플' : '함께',
+            '차 대기 편한' : '쾌적/편리',
+            '사이트 간격이 넓은' : '쾌적/편리',
+            '축제' : '즐길거리',
+            '문화유적' : '즐길거리',
+            '자전거 타기 좋은' : '액티비티',
+            '그늘이 많은' : '자연/힐링',
+            '수영장 있는' : '액티비티',
+            '바다가 보이는' : '자연/힐링',
+            '익스트림' : '액티비티',
+            '반려견' : '함께'}
 
+    def tag_stack(self, camp_df):
+        camping_data = camp_df[['place_id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
+        camping_data['tag'] = camping_data['tag'].fillna("")
+        camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"]["tag"] + "#반려견"
+        camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
 
-# class AlgorithmTable():
-#     def __init__(self):
-#         self.category = {'재미있는' : '즐길거리',
-#             '온수 잘 나오는' : '쾌적/편리',
-#             '아이들 놀기 좋은' : '함께',
-#             '생태교육' : '즐길거리',
-#             '가족' : '함께',
-#             '친절한' : '쾌적/편리',
-#             '여유있는' : '자연/힐링',
-#             '깨끗한' : '쾌적/편리',
-#             '계곡 옆' : '자연/힐링',
-#             '물놀이 하기 좋은' : '액티비티',
-#             '물맑은' : '자연/힐링',
-#             '둘레길' : '즐길거리',
-#             '별보기 좋은' : '자연/힐링',
-#             '힐링' : '자연/힐링',
-#             '커플' : '함께',
-#             '차 대기 편한' : '쾌적/편리',
-#             '사이트 간격이 넓은' : '쾌적/편리',
-#             '축제' : '즐길거리',
-#             '문화유적' : '즐길거리',
-#             '자전거 타기 좋은' : '액티비티',
-#             '그늘이 많은' : '자연/힐링',
-#             '수영장 있는' : '액티비티',
-#             '바다가 보이는' : '자연/힐링',
-#             '익스트림' : '액티비티',
-#             '반려견' : '함께'}
+        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
+        lookup['sub_cat'] = lookup['sub_cat'].str.replace(" ","")
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+        camping_data['tag'] = [t[:] if type(t) == str else "" for t in camping_data['tag']]
 
-#     def tag_stack(self, camp_df):
-#         camping_data = camp_df[['place_id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
-#         camping_data['tag'] = camping_data['tag'].fillna("")
-#         camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"]["tag"] + "#반려견"
-#         camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
+        for kw in ['#봄 ', '#여름 ', '#가을', '#가을 ', '#겨울', '봄 ', '여름 ', '가을 ', '겨울',]:
+            camping_data['tag'] = [t.replace(kw, "") if type(t) == str else "" for t in camping_data['tag']]
 
-#         lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
-#         lookup['sub_cat'] = lookup['sub_cat'].str.replace(" ","")
-#         lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
-#         lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
-#         camping_data['tag'] = [t[:] if type(t) == str else "" for t in camping_data['tag']]
+        camping_data["tag"] = camping_data["tag"].str.replace(" ", "")
+        camping_data_a = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
+        camping_data_b = pd.get_dummies(camping_data_a.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
 
-#         for kw in ['#봄 ', '#여름 ', '#가을', '#가을 ', '#겨울', '봄 ', '여름 ', '가을 ', '겨울',]:
-#             camping_data['tag'] = [t.replace(kw, "") if type(t) == str else "" for t in camping_data['tag']]
-
-#         camping_data["tag"] = camping_data["tag"].str.replace(" ", "")
-#         camping_data_a = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
-#         camping_data_b = pd.get_dummies(camping_data_a.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
-
-#         main_df = pd.DataFrame()
+        main_df = pd.DataFrame()
         
-#         for i in range(len(camping_data_b)):
-#             main_df = pd.concat([pd.DataFrame(camping_data_b.values[i] * lookup["main_cat"].T), main_df], 1)
+        for i in range(len(camping_data_b)):
+            main_df = pd.concat([pd.DataFrame(camping_data_b.values[i] * lookup["main_cat"].T), main_df], 1)
 
-#         main_df = main_df.T.reset_index(drop=True)
-#         main_df = pd.get_dummies(main_df.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
-#         main_df = main_df.iloc[:,1:]
-#         main_df.index = camping_data_b.index
-#         last_df  = pd.concat([camping_data_b, main_df], 1)
-#         last_df[last_df > 1] = 1
-#         last_df['index']= last_df.index
-#         algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
-#         algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
-#                                             '계곡옆' : 'valley_s',
-#                                             '깨끗한' : 'clean_s',
-#                                             '둘레길' : 'trail_s',
-#                                             '문화유적' : 'cultural_s',
-#                                             '물놀이하기좋은' : 'waterplay_s',
-#                                             '물맑은' : 'pure_water_s',
-#                                             '바다가보이는' : 'ocean_s',
-#                                             '반려견' : 'with_pet_s',
-#                                             '별보기좋은' : 'star_s',
-#                                             '사이트간격이넓은' : 'spacious_s',
-#                                             '생태교육' : 'ecological_s',
-#                                             '수영장있는' : 'pool_s',
-#                                             '아이들놀기좋은' : 'with_child_s',
-#                                             '온수잘나오는' : 'hot_water_s',
-#                                             '익스트림' : 'extreme_s',
-#                                             '자전거타기좋은' : 'bicycle_s',
-#                                             '차대기편한' : 'parking_s',
-#                                             '축제' : 'festival_s',
-#                                             '커플' : 'with_couple_s', 
-#                                             '힐링' : 'healing_s',
-#                                             '액티비티' : 'activity_m',
-#                                             '자연/힐링' : 'nature_m',
-#                                             '즐길거리' : 'fun_m',
-#                                             '쾌적/편리' : 'comfort_m',
-#                                             '함께' : 'together_m'})
+        main_df = main_df.T.reset_index(drop=True)
+        main_df = pd.get_dummies(main_df.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+        main_df = main_df.iloc[:,1:]
+        main_df.index = camping_data_b.index
+        last_df  = pd.concat([camping_data_b, main_df], 1)
+        last_df[last_df > 1] = 1
+        last_df['index']= last_df.index
+        algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
+        algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
+                                            '계곡옆' : 'valley_s',
+                                            '깨끗한' : 'clean_s',
+                                            '둘레길' : 'trail_s',
+                                            '문화유적' : 'cultural_s',
+                                            '물놀이하기좋은' : 'waterplay_s',
+                                            '물맑은' : 'pure_water_s',
+                                            '바다가보이는' : 'ocean_s',
+                                            '반려견' : 'with_pet_s',
+                                            '별보기좋은' : 'star_s',
+                                            '사이트간격이넓은' : 'spacious_s',
+                                            '생태교육' : 'ecological_s',
+                                            '수영장있는' : 'pool_s',
+                                            '아이들놀기좋은' : 'with_child_s',
+                                            '온수잘나오는' : 'hot_water_s',
+                                            '익스트림' : 'extreme_s',
+                                            '자전거타기좋은' : 'bicycle_s',
+                                            '차대기편한' : 'parking_s',
+                                            '축제' : 'festival_s',
+                                            '커플' : 'with_couple_s', 
+                                            '힐링' : 'healing_s',
+                                            '액티비티' : 'activity_m',
+                                            '자연/힐링' : 'nature_m',
+                                            '즐길거리' : 'fun_m',
+                                            '쾌적/편리' : 'comfort_m',
+                                            '함께' : 'together_m'})
         
-#         return algo_search_df
+        return algo_search_df
 
-#     def search_table(self, algo_search_df): 
-#         search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
-#         return search_df
-
+    def search_table(self, algo_search_df): 
+        search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
+        return search_df
 
 class Query:   
     # db cursor 생성
@@ -452,7 +468,7 @@ class Query:
 
 if __name__ == '__main__':
     IP = "34.136.89.21"
-    DB = "camping"
+    DB = "test2"
     PW = "dss"
 
     gocamp = Gocamp()
@@ -472,10 +488,36 @@ if __name__ == '__main__':
     camp = gocamp.make_camp_api(camp_api_df)
     
     # crawling and API files merge for the details
-    camp_df = gocamp.merge_data(camp, camp_details)
+    merge_data = gocamp.merge_data(camp, camp_details)
+    fetch_df = gocamp.fetch_place(cursor)
+    camp_df = gocamp.make_camp_df(fetch_df, merge_data)
+
     
-    # camp info append insert to place table
+#     # algorithm
+#     algo_search_df = algo.tag_stack(camp_df)
+    
+    # place table insert
     place_df = sub.place_table(camp_df)
     sql.save_sql(cursor, engine, db,  place_df, "place", "append")
+    
+    # convenience table insert 
+    convenience_df = sub.convenience_table(camp_df)
+    sql.save_sql(cursor, engine, db,  convenience_df, "convenience", "append")
+
+    # operation table insert
+    operation_df = sub.operation_table(camp_df)
+    sql.save_sql(cursor, engine, db,  operation_df, "operation", "append")
+    
+    # variety table insert
+    variety_df = sub.variety_table(camp_df)
+    sql.save_sql(cursor, engine, db,  variety_df, "variety", "append")
+    
+    # safety table insert
+    safety_df = sub.safety_table(camp_df)
+    sql.save_sql(cursor, engine, db,  safety_df, "safety", "append")
+    
+#     search_df = search_table(algo_search_df)
+#     sql.save_sql(cursor, engine, db,  search_df, "search", "append")
+    
 
     db.close()
