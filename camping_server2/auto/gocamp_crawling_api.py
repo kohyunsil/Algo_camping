@@ -22,7 +22,7 @@ class Gocamp:
     url = base_url + path + query
 
     def __init__(self):
-        self.secretKey = "1lQh1AXwuKpBPamJ8M10NbN0c0hg%2Beex7NUu6k5HgjiP%2FupWExgtLRbmjRV7XLAEMf5l0j%2FH5um7uy4Z0cErXg%3D%3D"
+        self.secretKey = " "
     
     # gocamp API
     def gocampingAPI(self):
@@ -467,9 +467,9 @@ class Query:
 
 
 if __name__ == '__main__':
-    IP = "34.136.89.21"
-    DB = "test2"
-    PW = "dss"
+    IP = " "
+    DB = " "
+    PW = " "
 
     gocamp = Gocamp()
     sgg = Sigungucode()
