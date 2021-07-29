@@ -40,6 +40,7 @@ class CongestionInsert:
                         'content_id_y' : 'content_id'})
         return future_api
 
+    # 과거 미래 concat
     def congestion_table(self, past_api, future_api):
         con_df = pd.concat([past_api,future_api])
         congestion_df = con_df.reset_index()
