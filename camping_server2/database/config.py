@@ -17,6 +17,7 @@ class Config:
     MAIN_CAT = pd.read_csv(PATH + 'algo_df_max.csv',index_col=0)
     SIGUNGU = pd.read_csv(PATH + 'sigungucode.csv')
 
+    # 소분류 대분류 카테고리
     CATEGORY = {'재미있는' : '즐길거리',
             '온수 잘 나오는' : '쾌적/편리',
             '아이들 놀기 좋은' : '함께',

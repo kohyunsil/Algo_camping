@@ -9,6 +9,7 @@ class ReviewInsert:
         self.kakao = config.Config.KAKAO
         self.camp=config.Config.CAMP
 
+    # 네이버 리뷰 전처리
     def naver_review(self):
         naver = self.naver
         naver['user_info'] = naver['user_info'].str.replace("\n","")
@@ -36,6 +37,7 @@ class ReviewInsert:
                                     'user_star' : 'mean_star'})
         return naver
 
+    # 카카오 리뷰 전처리
     def kakao_review(self):
         kakao = self.kakao
         kakao['platform'] = 0
@@ -43,6 +45,7 @@ class ReviewInsert:
                                 'photoCnt' : 'photo_cnt', 'username' : 'user_nickname'})
         return kakao
     
+    # 네이버와 카카오 리뷰 concat
     def review_dataset(self, camp_df):
         naver = self.naver_review()
         kakao = self.kakao_review()
@@ -54,12 +57,14 @@ class ReviewInsert:
         review_data_df = review_data_df.rename(columns={'index' : 'id', 'userId' : 'user_id', })
         return review_data_df
 
+    # review table
     def review_table(self, review_data_df):
         review_df = review_data_df[['platform', 'user_id', 'place_id', 'like_cnt', 'photo_cnt', 'date', 'cat_tag', 
                             'star', 'contents']]
         review_df = review_df.dropna(subset = ['place_id'])
         return review_df
 
+    # reviewer table
     def reviewer_table(self, review_data_df):
         reviewer = review_data_df[['id', 'platform', 'user_nickname', 'mean_star', 'visit_cnt', 'review_cnt']]
         reviewer_df = reviewer.rename(columns={'id' : 'review_id'})

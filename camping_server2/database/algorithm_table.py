@@ -96,14 +96,14 @@ class AlgoInsert:
         drop_tmp_df = is_tmp_df.drop(['glampinner_fclty', 'caravinner_fclty', 'sbrs', 'sbrs_etc', 'posblfclty'],1)
 
         count_tmp_df = is_tmp_df[['glampinner_fclty', 'caravinner_fclty', 'sbrs', 'sbrs_etc', 'posblfclty']]
-        count_tmp_df = count_tmp_df.str.count(',') + 1
+        count_tmp_df = count_tmp_df.apply(lambda x: x.str.count(',') + 1)
         count_tmp_df = count_tmp_df.fillna(0)
         count_tmp_df = count_tmp_df.astype('int')
 
         count_df = pd.concat([drop_tmp_df, count_tmp_df])
         return count_df
 
-    # reivew 전처리
+    # reivew 알고리즘용 전처리
     def review_concat(self):
         nv_data = self.naver
         kk_data = self.kakao

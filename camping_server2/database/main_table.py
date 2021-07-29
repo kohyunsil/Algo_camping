@@ -129,6 +129,7 @@ class MainInsert:
         camp_df = data[data['place_num'] == 0]
         return data, camp_df
 
+    # place table
     def place_table(self, data):
         place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 'event_start_date', 
                         'event_end_date', 'first_image', 'second_image', 'tel', 'addr2', 'thema_envrn', 'tour_era', 
@@ -137,26 +138,33 @@ class MainInsert:
         place_df = place_df.rename(columns={'place_id' : 'id'})
         return place_df
 
+    # convenience table
     def convenience_table(self, camp_df):
         convenience_df = camp_df[['place_id','sited_stnc', 'brazier', 'site_bottom1', 'site_bottom2', 'site_bottom3', 
                                             'site_bottom4', 'site_bottom5', 'swrm_cnt', 'toilet_cnt', 'wtrpl_cnt', 'sbrs', 'sbrs_etc', 
                                             'eqpmn_lend']]
         return convenience_df
 
+    # operation table
     def operation_table(self, camp_df):
         operation_df = camp_df[['place_id', 'mange', 'manage_sttus', 'prmisn_date', 'faclt_div', 'trsagnt_no', 
                                         'mgc_div', 'bizrno']]
         return operation_df
+    
+    # variety table
     def variety_table(self, camp_df):
         variety_df = camp_df[['place_id', 'glamp_site', 'gnrl_site', 'indvdlcarav_site', 'carav_site', 'auto_site', 
                                     'carav_acmpny', 'trler_acmpny', 'lct', 'animal_cmg', 'clturevent_at', 
                                     'exprnprogrm_at', 'clturevent', 'posblfclty', 'posblfclty_etc', 'glampinner_fclty', 
                                     'caravinner_fclty', 'exprnprogrm']]
         return variety_df
+    
+    # dafety table
     def safety_table(self, camp_df):
         safety_df = camp_df[['place_id', 'insrnc_at', 'manage_num', 'extshr', 'firesensor', 'frprvtsand', 'frprvtwrpp']]
         return safety_df
     
+    # sigungu table
     def sigungu_table(self):
         sigungu_df = self.sigungu
         return sigungu_df

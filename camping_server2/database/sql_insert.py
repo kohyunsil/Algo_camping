@@ -4,6 +4,7 @@ pymysql.install_as_MySQLdb()
 import MySQLdb
 
 class Create():
+    # db 서버 연결
     def connect_sql(self, IP, DB, PW):
         engine = create_engine(f"mysql+mysqldb://root:{PW}@{IP}/{DB}")
         conn = engine.connect()
@@ -23,6 +24,7 @@ class Create():
     def save_sql(self, cursor, engine, db, data, table, option):
         data.to_sql(name=table, con=engine, if_exists=option, index=False)
 
+    # 테이블 create
     def create_place(self, cursor):
         qry_place = ('''
         CREATE TABLE place(
@@ -84,13 +86,13 @@ class Create():
         CREATE TABLE operation(
             id                INT            NOT NULL    PRIMARY KEY    AUTO_INCREMENT, 
             place_id          INT            NOT NULL, 
-            mange             VARCHAR(45), 
-            manage_sttus      VARCHAR(45), 
-            prmisn_date       DATETIME, 
-            faclt_div         VARCHAR(45), 
-            trsagnt_no        VARCHAR(45), 
-            mgc_div           VARCHAR(45), 
-            bizrno            VARCHAR(45) 
+            mange             VARCHAR(45)    NULL,   
+            manage_sttus      VARCHAR(45)    NULL, 
+            prmisn_date       DATETIME       NULL, 
+            faclt_div         VARCHAR(45)    NULL, 
+            trsagnt_no        VARCHAR(45)    NULL, 
+            mgc_div           VARCHAR(45)    NULL, 
+            bizrno            VARCHAR(45)    NULL 
         );
         ''')
         cursor.execute(qry_operation)
@@ -100,23 +102,23 @@ class Create():
         CREATE TABLE variety(
             id                INT            NOT NULL    PRIMARY KEY    AUTO_INCREMENT, 
             place_id          INT            NOT NULL,
-            glamp_site        INT, 
-            gnrl_site         INT, 
-            indvdlcarav_site  INT, 
-            carav_site        INT,
-            auto_site         INT, 
-            carav_acmpny      VARCHAR(45), 
-            trler_acmpny      VARCHAR(45), 
-            lct               VARCHAR(45), 
-            animal_cmg        VARCHAR(45), 
-            clturevent_at     TEXT, 
-            exprnprogrm_at    TEXT, 
-            clturevent        TEXT, 
-            posblfclty        TEXT, 
-            posblfclty_etc    TEXT, 
-            glampinner_fclty  VARCHAR(45), 
-            caravinner_fclty  VARCHAR(45), 
-            exprnprogrm       TEXT           
+            glamp_site        INT            NULL, 
+            gnrl_site         INT            NULL, 
+            indvdlcarav_site  INT            NULL, 
+            carav_site        INT            NULL,
+            auto_site         INT            NULL, 
+            carav_acmpny      VARCHAR(45)    NULL, 
+            trler_acmpny      VARCHAR(45)    NULL, 
+            lct               VARCHAR(45)    NULL, 
+            animal_cmg        VARCHAR(45)    NULL, 
+            clturevent_at     TEXT           NULL, 
+            exprnprogrm_at    TEXT           NULL, 
+            clturevent        TEXT           NULL, 
+            posblfclty        TEXT           NULL, 
+            posblfclty_etc    TEXT           NULL, 
+            glampinner_fclty  VARCHAR(45)    NULL, 
+            caravinner_fclty  VARCHAR(45)    NULL, 
+            exprnprogrm       TEXT           NULL        
         );
         ''')
         cursor.execute(qry_variety)
@@ -126,12 +128,12 @@ class Create():
         CREATE TABLE safety(
             id                INT            NOT NULL   PRIMARY KEY     AUTO_INCREMENT, 
             place_id          INT            NOT NULL, 
-            insrnc_at         VARCHAR(45), 
-            manage_num        INT, 
-            extshr            INT, 
-            firesensor        INT, 
-            frprvtsand        INT, 
-            frprvtwrpp        INT
+            insrnc_at         VARCHAR(45)    NULL, 
+            manage_num        INT            NULL, 
+            extshr            INT            NULL, 
+            firesensor        INT            NULL, 
+            frprvtsand        INT            NULL, 
+            frprvtwrpp        INT            NULL
         );
         ''')
         cursor.execute(qry_safety)
@@ -339,13 +341,16 @@ class Create():
         ''')
         cursor.execute(qry_sigungu)
 
+# 제한키 fk 설정
 class Constraint():
+    # 제한키 설정 체크 중지
     def fk_check_zero (self, cursor):
         qry_check_zero = ('''
         SET foreign_key_checks = 0;
         ''')
         cursor.execute(qry_check_zero)
     
+    # 제한키 설정 체크 시작
     def fk_check_one (self, cursor):
         qry_check_one = ('''
         SET foreign_key_checks = 1;
