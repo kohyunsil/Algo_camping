@@ -85,21 +85,42 @@ class Gocamp:
         param['readcount'] = read_count
         
         return param
-    
-    def update_date(self, data):
-        # 자동화 실행 날기준으로 새롭게 업데이트된 정보만 가져옴
-        diff_days = datetime.timedelta(days=7)
-        today = datetime.date.today()
-        last_day = today - diff_days
-        last_day = last_day.isoformat().replace("-","")
 
-        data['createdtime'] = data['createdtime'].str.replace("-","")
-        data['createdtime2'] = data['createdtime'].apply(lambda x: x[:8])
-        new_data = data[data['createdtime2'] >= last_day]
-        new_data = new_data.drop(["createdtime"],1)
-        new_data = new_data.rename(columns={'createdtime2' : 'createdtime'})
-        return new_data
-    
+    # gocamp crawling 코드 실행 및 하나의 데이터로 merge
+    def make_camp_crawling(self, new_data) :
+        content_id = list(new_data['contentId'])
+        content_id = list(map(int, content_id))
+        place_name = list(new_data['facltNm'])
+
+        details = []
+        search = []
+        
+        # gocamp crawling
+        # 상세 페이지 place_name, addr, tag, detail_image 크롤링 (content_id 기준)
+        for c_id in content_id:
+            new_details = gocamp.detail_page(c_id)
+            details.append(new_details)
+        
+        data_details = pd.DataFrame(details)
+
+        # 검색 페이지 place_name, addr, read_count 크롤링 (place_name 기준)    
+        for name in place_name:
+            new_search = gocamp.search_page(name.replace(' ', ''))
+            search.append(new_search)
+        data_search = pd.DataFrame.from_dict(search)
+        data_search = data_search.drop(['title'],1)
+
+        # merge
+        camp_details = pd.merge(data_details, data_search, how='left', on='address')
+        camp_details['img_url'] = camp_details['img_url'].apply(pd.Series)
+        camp_details['url_num'] = content_id
+        camp_details['url_num'] = camp_details['url_num'].astype(str)
+        
+        camp_details['readcount'] = camp_details['readcount'].str.split(' ').str[1]
+        
+        return camp_details
+
+    # gocamp API 전처리
     def make_camp_api(self, camp_api_df):
         camp = camp_api_df.drop(['allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
@@ -165,39 +186,22 @@ class Gocamp:
         camp['place_num'] = 0 
         return camp
 
-    def make_camp_crawling(self, new_data) :
-        content_id = list(new_data['contentId'])
-        content_id = list(map(int, content_id))
-        place_name = list(new_data['facltNm'])
+    # 자동화 실행 날기준으로 새롭게 업데이트된 정보만 가져옴
+    def update_date(self, data):
+        # 7일 기준
+        diff_days = datetime.timedelta(days=7)
+        today = datetime.date.today()
+        last_day = today - diff_days
+        last_day = last_day.isoformat().replace("-","")
 
-        details = []
-        search = []
-        
-        # gocamp crawling
-        # 상세 페이지 place_name, addr, tag, detail_image 크롤링 (content_id 기준)
-        for c_id in content_id:
-            new_details = gocamp.detail_page(c_id)
-            details.append(new_details)
-        
-        data_details = pd.DataFrame(details)
-
-        # 검색 페이지 place_name, addr, read_count 크롤링 (place_name 기준)    
-        for name in place_name:
-            new_search = gocamp.search_page(name.replace(' ', ''))
-            search.append(new_search)
-        data_search = pd.DataFrame.from_dict(search)
-        data_search = data_search.drop(['title'],1)
-
-        # merge
-        camp_details = pd.merge(data_details, data_search, how='left', on='address')
-        camp_details['img_url'] = camp_details['img_url'].apply(pd.Series)
-        camp_details['url_num'] = content_id
-        camp_details['url_num'] = camp_details['url_num'].astype(str)
-        
-        camp_details['readcount'] = camp_details['readcount'].str.split(' ').str[1]
-        
-        return camp_details
-
+        data['createdtime'] = data['createdtime'].str.replace("-","")
+        data['createdtime2'] = data['createdtime'].apply(lambda x: x[:8])
+        new_data = data[data['createdtime2'] >= last_day]
+        new_data = new_data.drop(["createdtime"],1)
+        new_data = new_data.rename(columns={'createdtime2' : 'createdtime'})
+        return new_data
+    
+    # gocamp API 와 gocamp crawling merge
     def merge_data(self, camp, camp_details):
         merge_data = pd.merge(camp, camp_details, how='right', left_on='content_id', right_on='url_num')
         merge_data = merge_data.drop(['title', 'address'], 1)
@@ -212,6 +216,7 @@ class Gocamp:
         merge_data
         return merge_data
     
+    # DB에 저장되어 있는 Place 테이블 가져오기
     def fetch_place(self, cursor):
         cursor.execute('SELECT * FROM place')
         place_query = cursor.fetchall()
@@ -229,6 +234,7 @@ class Gocamp:
         merge_data = merge_data.drop(['place_id'],1)
         camp_df = pd.merge(merge_data, camp_df, how='left', on='content_id')
         return camp_df
+
 
 class Sigungucode:
     def __init__(self):
@@ -314,8 +320,8 @@ class Sigungucode:
         return df
         
     
-# merge_data 넣고 그다음에 다시 가져와서 id값으로 place_id 만들어야함
 class PlaceSubTable():
+    # place table
     def place_table(self,camp_df):
         place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 
                 'first_image','tel', 'addr2', 'thema_envrn', 'tour_era', 
@@ -377,36 +383,49 @@ class AlgorithmTable():
             '바다가 보이는' : '자연/힐링',
             '익스트림' : '액티비티',
             '반려견' : '함께'}
-
-    def tag_stack(self, camp_df):
+    
+    # 태그 컬럼 전처리
+    def make_tag(self, camp_df):
         camping_data = camp_df[['place_id', 'content_id', 'place_name', 'addr', 'tag', 'animal_cmg']]
         camping_data['tag'] = camping_data['tag'].fillna("")
+        # 반려견 출입 가능 유무 컬럼으로 반려견 태그 만들기
         camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"]["tag"] + "#반려견"
         camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
 
-        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
-        lookup['sub_cat'] = lookup['sub_cat'].str.replace(" ","")
-        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
-        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+        # 태그 내에서 봄,여름,가을,겨울 제외
         camping_data['tag'] = [t[:] if type(t) == str else "" for t in camping_data['tag']]
-
         for kw in ['#봄 ', '#여름 ', '#가을', '#가을 ', '#겨울', '봄 ', '여름 ', '가을 ', '겨울',]:
             camping_data['tag'] = [t.replace(kw, "") if type(t) == str else "" for t in camping_data['tag']]
-
+        return camping_data
+    
+    # 소분류 one hot encoding
+    def subcat(self, camping_data):
         camping_data["tag"] = camping_data["tag"].str.replace(" ", "")
-        camping_data_a = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
-        camping_data_b = pd.get_dummies(camping_data_a.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+        subcat = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
+        sub_df = pd.get_dummies(subcat.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+        return sub_df
+     
+    # 대분류 one hot encoding 
+    def maincat(self, sub_df):
+        # 대분류 불러오기
+        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
 
         main_df = pd.DataFrame()
-        
-        for i in range(len(camping_data_b)):
-            main_df = pd.concat([pd.DataFrame(camping_data_b.values[i] * lookup["main_cat"].T), main_df], 1)
-
+        for i in range(len(sub_df)):
+            main_df = pd.concat([pd.DataFrame(sub_df.values[i] * lookup["main_cat"].T), main_df], 1)
         main_df = main_df.T.reset_index(drop=True)
         main_df = pd.get_dummies(main_df.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
         main_df = main_df.iloc[:,1:]
-        main_df.index = camping_data_b.index
-        last_df  = pd.concat([camping_data_b, main_df], 1)
+        main_df.index = sub_df.index
+        return main_df
+    
+    # 소분류와 대분류 one hot encoding concat
+    def make_algo_search(self, camp_df):
+        camping_data = self.make_tag(camp_df)
+        sub_df = self.subcat(camping_data)
+        main_df = self.maincat(sub_df)
+        last_df  = pd.concat([sub_df, main_df], 1)
         last_df[last_df > 1] = 1
         last_df['index']= last_df.index
         algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
@@ -474,7 +493,7 @@ if __name__ == '__main__':
     gocamp = Gocamp()
     sgg = Sigungucode()
     sub = PlaceSubTable()
-#     algo = AlgorithmTable()
+    algo = AlgorithmTable()
     sql = Query()
     cursor, engine, db = sql.connect_sql(IP, DB, PW)
     
@@ -492,9 +511,8 @@ if __name__ == '__main__':
     fetch_df = gocamp.fetch_place(cursor)
     camp_df = gocamp.make_camp_df(fetch_df, merge_data)
 
-    
-#     # algorithm
-#     algo_search_df = algo.tag_stack(camp_df)
+    # algorithm one hot encoding dataset
+    algo_search_df = algo.make_algo_search(camp_df)
     
     # place table insert
     place_df = sub.place_table(camp_df)
@@ -516,8 +534,9 @@ if __name__ == '__main__':
     safety_df = sub.safety_table(camp_df)
     sql.save_sql(cursor, engine, db,  safety_df, "safety", "append")
     
-#     search_df = search_table(algo_search_df)
-#     sql.save_sql(cursor, engine, db,  search_df, "search", "append")
+    # search table insert
+    search_df = algo.search_table(algo_search_df)
+    sql.save_sql(cursor, engine, db,  search_df, "search", "append")
     
 
     db.close()
