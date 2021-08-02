@@ -1,11 +1,11 @@
-from ..model.review_dao import ReviewDAO as model_review
-from ..model.congestion_dao import CongestionDAO as model_congestion
-from ..model.place_dao import PlaceDAO as model_place
-from ..model import *
+from app.main.model.review_dao import ReviewDAO as model_review
+from app.main.model.congestion_dao import CongestionDAO as model_congestion
+from app.main.model.place_dao import PlaceDAO as model_place
+from app.main.model import *
 from ..service.search import get_score, get_top_tag
 from sqlalchemy.orm import sessionmaker
 from flask import *
-from ..config import Config
+from app.config import Config
 import datetime
 
 # 상세 정보
@@ -28,7 +28,8 @@ def get_detail(param):
             place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
             id = place_info[0].id
 
-            review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(model_review.place_id == id).all()
+            review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(
+                model_review.place_id == id).all()
 
             if review_query[0][0] is None:
                 avg_star = 0
@@ -56,6 +57,7 @@ def get_detail(param):
             except KeyError:
                 params['user_name'] = '사용자'
         params['code'] = 200
+
     return jsonify(params)
 
 # 관광지, 축제 정보
@@ -88,7 +90,7 @@ def get_past_congestion(content_id):
         # order by base_ymd;
         '''
         query = model_congestion.query.filter(model_congestion.base_ymd.between(past, base) + 1,
-                                                 model_congestion.content_id == int(content_id)).all()
+                                              model_congestion.content_id == int(content_id)).all()
 
         return query
 
@@ -105,7 +107,8 @@ def get_future_congestion(sigungu_code):
         # select base_ymd, avg(congestion) as congestion from congestion where base_ymd 
         between date('현재일') and date('미래일') and sigungu_code = 시군구코드 group by base_ymd;
         '''
-        query = session_.query(model_congestion.base_ymd, func.avg(model_congestion.congestion).label('congestion')).filter(
+        query = session_.query(model_congestion.base_ymd,
+                               func.avg(model_congestion.congestion).label('congestion')).filter(
             model_congestion.base_ymd.between(base, future), model_congestion.sigungu_code == int(sigungu_code)
         ).group_by(model_congestion.base_ymd).all()
 

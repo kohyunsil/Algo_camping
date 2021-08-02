@@ -9,17 +9,24 @@ config.read(abspath)
 keys = config['SECRET_KEYS']
 
 
+class DBConfig(object):
+    DEBUG = False
+    TESTING = False
+    CSRF_ENABLED = True
+    SECRET_KEY = 'super secret key'
+    SQLALCHEMY_DATABASE_URI = (
+        'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
+    )
+
+
 class Config(object):
     TEMPLATE_AUTO_RELOAD = True
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
 
     JWT_SECRET_KEY = keys['JWT_SECRET_KEY']
     JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
     SESSION_LIFETIME = datetime.timedelta(days=1)
 
-    LIMIT = 1000
+    LIMIT = 50
     READCOUNT = 4
     STAR = 6
     MODIFIED_DATE = 5

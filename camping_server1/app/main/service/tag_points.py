@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import warnings
-from ..config import Config
+from app.config import Config
 
 warnings.simplefilter("ignore")
 
@@ -54,24 +54,28 @@ class TagPoints:
         return target_df
 
     def tag_priority(self, content_id, rank=5):
-        target_df = self.apply_cat_points(content_id)
-        target_df.dropna(axis=0, inplace=True)
-        uq_points = np.unique(target_df[content_id].iloc[:rank]).tolist()
-        uq_points.sort(reverse=True)
-        uq_tag_len = len(uq_points)
+        try:
+            target_df = self.apply_cat_points(content_id)
+            target_df.dropna(axis=0, inplace=True)
+            uq_points = np.unique(target_df[content_id].iloc[:rank]).tolist()
+            uq_points.sort(reverse=True)
+            uq_tag_len = len(uq_points)
 
-        # 동점자가 있다면 원래 포인트 cat_points 반영된 point 로 정렬 후 상위 rank 개
-        if uq_tag_len < rank:
-            tag_prior_ls = []
-            for p in uq_points:
-                temp_df = target_df[target_df[content_id] == p].sort_values('total_points', ascending=False)
-                for t in temp_df.index:
-                    tag_prior_ls.append(t)
-            tag_prior_ls = tag_prior_ls[:rank]
+            # 동점자가 있다면 원래 포인트 cat_points 반영된 point 로 정렬 후 상위 rank 개
+            if uq_tag_len < rank:
+                tag_prior_ls = []
+                for p in uq_points:
+                    temp_df = target_df[target_df[content_id] == p].sort_values('total_points', ascending=False)
+                    for t in temp_df.index:
+                        tag_prior_ls.append(t)
+                tag_prior_ls = tag_prior_ls[:rank]
 
-        # 동점자가 없다면 원래 포인트 상위 rank 개
-        else:
-            target_df = target_df.sort_values(content_id, ascending=False)
-            tag_prior_ls = target_df.iloc[:rank].index.tolist()
+            # 동점자가 없다면 원래 포인트 상위 rank 개
+            else:
+                target_df = target_df.sort_values(content_id, ascending=False)
+                tag_prior_ls = target_df.iloc[:rank].index.tolist()
+        except:
+            # content_id에 대한 별점, 점수 산출 불가인 경우
+            return []
 
         return tag_prior_ls

@@ -1,5 +1,6 @@
 from flask_restx import Namespace, fields
 
+
 class UserDTO:
     api = Namespace('user', description='relating to user')
     user = api.model('user', {

@@ -5,7 +5,6 @@ from ..model import db
 
 @dataclass
 class SearchDAO(db.Model):
-
     __tablename__ = 'search'
     __table_args__ = {'extend_existing': True, 'mysql_collate': 'utf8_general_ci'}
 
@@ -42,7 +41,8 @@ class SearchDAO(db.Model):
     pool_s = Column(db.Integer, primary_key=False)
     extreme_s = Column(db.Integer, primary_key=False)
 
-    def __init__(self, place_name, content_id, addr, tag, fun_m, comfort_m, together_m, nature_m, activity_m, ecological_s,
+    def __init__(self, place_name, content_id, addr, tag, fun_m, comfort_m, together_m, nature_m, activity_m,
+                 ecological_s,
                  trail_s, festival_s, cultural_s, hot_water_s, clean_s, parking_s, spacious_s,
                  with_child_s, with_family_s, with_couple_s, with_pet_s, valley_s, pure_water_s, star_s, healing_s,
                  waterplay_s, bicycle_s, pool_s, extreme_s):
@@ -77,5 +77,3 @@ class SearchDAO(db.Model):
         self.bicycle_s = bicycle_s
         self.pool_s = pool_s
         self.extreme_s = extreme_s
-
-db.create_all()

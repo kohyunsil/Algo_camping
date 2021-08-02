@@ -1,16 +1,17 @@
-from app.config import Config
+from app.config import DBConfig
 import pymysql
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from ..util import place_dto, modeling_dto
-from app import app
+from flask_migrate import Migrate
 
 # SQLAlchemy
-db = SQLAlchemy(app)
+migrate = Migrate()
+db = SQLAlchemy()
 pymysql.install_as_MySQLdb()
 
-client = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
 Base = declarative_base(client)
 
 # place dto

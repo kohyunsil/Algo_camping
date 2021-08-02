@@ -1,11 +1,12 @@
-from ..model.user_dao import UserDAO as model_user
+from app.main.model.user_dao import UserDAO as model_user
 from sqlalchemy.orm import sessionmaker
-from ..model import *
+from app.main.model import *
 import datetime
 from flask_jwt_extended import *
 import bcrypt
 from flask import *
 from app.config import Config
+
 
 # 로그인 여부 확인
 def is_signin():
@@ -22,6 +23,7 @@ def is_duplicate(param):
     '''
     # select email from user where email = 'param['email']';
     '''
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
     query = session_.query(model_user).filter(model_user.email == email).all()
@@ -43,6 +45,7 @@ def signup(param):
     '''
     # insert into user (email, name, password, access_token, created_date, modified_date) values (이메일, 패스워드, 이름);
     '''
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
     created_date = datetime.datetime.today().strftime('%Y-%m-%d')
@@ -83,6 +86,7 @@ def signin(param):
                 email = query[0].email
                 name = query[0].name
 
+                client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
                 # 토큰 발급 & 저장
                 Session = sessionmaker(bind=client)
                 session_ = Session()
@@ -122,6 +126,7 @@ def signin(param):
 
 # 토큰 삭제
 def delete_token(param):
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
 

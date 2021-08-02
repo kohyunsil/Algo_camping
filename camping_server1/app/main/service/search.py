@@ -1,10 +1,10 @@
-from ..model.place_dao import PlaceDAO as model_place
-from ..model.search_dao import SearchDAO as model_search
-from ..model import *
+from app.main.model.place_dao import PlaceDAO as model_place
+from app.main.model.search_dao import SearchDAO as model_search
+from app.main.model import *
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from operator import itemgetter
-from ..config import Config
+from app.config import Config
 from ..service.tag_points import TagPoints
 import datetime
 import pandas as pd
@@ -110,6 +110,9 @@ def get_popular_list(place_obj, algo_obj):
     place_info = []
 
     for i, obj in enumerate(place_obj):
+        # content_id에 대한 별점, 점수 산출 불가인 경우
+        if algo_obj['algo_stars'][i] == '':
+            algo_obj['algo_stars'][i] = 0.0
         star = algo_obj['algo_stars'][i]
         tag = algo_obj['tags'][i]
 
@@ -117,8 +120,7 @@ def get_popular_list(place_obj, algo_obj):
                obj.tag, obj.readcount, str(obj.modified_date), star, tag]
 
         place_info.append(arr)
-
-    place_info.sort(key=itemgetter(Config.STAR), reverse=True) # star = 6
+    place_info.sort(key=itemgetter(Config.STAR), reverse=True)  # star = 6
 
     return jsonify(make_resobj(place_info))
 
@@ -177,17 +179,19 @@ def get_score(content_id):
 # 알고 별점, 알고 점수 계산
 def get_algo_points(content_id):
     algo_df = pd.read_csv(Config.ALGO_POINTS)
+    try:
+        algo_df.set_index(['contentId', 'camp'], inplace=True)
+        comfort_point = float(algo_df.loc[content_id]['comfort'])
+        together_point = float(algo_df.loc[content_id]['together'])
+        fun_point = float(algo_df.loc[content_id]['fun'])
+        healing_point = float(algo_df.loc[content_id]['healing'])
+        clean_point = float(algo_df.loc[content_id]['clean'])
 
-    algo_df.set_index(['contentId', 'camp'], inplace=True)
-    comfort_point = float(algo_df.loc[content_id]['comfort'])
-    together_point = float(algo_df.loc[content_id]['together'])
-    fun_point = float(algo_df.loc[content_id]['fun'])
-    healing_point = float(algo_df.loc[content_id]['healing'])
-    clean_point = float(algo_df.loc[content_id]['clean'])
-
-    cat_points_list = [comfort_point, together_point, fun_point, healing_point, clean_point]
-    algo_star = round(sum(cat_points_list) / 100, 1)
-
+        cat_points_list = [comfort_point, together_point, fun_point, healing_point, clean_point]
+        algo_star = round(sum(cat_points_list) / 100, 1)
+    except:
+        # content_id에 대한 별점, 점수 산출 불가인 경우
+        return '', []
     return algo_star, cat_points_list
 
 # top3,5 특성

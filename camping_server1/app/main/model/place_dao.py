@@ -7,7 +7,8 @@ from ..model import db
 class PlaceDAO(db.Model):
 
     __tablename__ = 'place'
-    __table_args__ = {'extend_existing': True, 'mysql_collate': 'utf8_general_ci'}
+    __table_args__ = {'extend_existing': True}
+
     id: int
     place_num: int
     place_name: str
@@ -39,8 +40,8 @@ class PlaceDAO(db.Model):
     addr = Column(db.String(50), primary_key=False)
     lat = Column(db.Float, primary_key=False)
     lng = Column(db.Float, primary_key=False)
-    event_start_date = Column(db.DateTime)
-    event_end_date = Column(db.DateTime)
+    event_start_date = Column(db.String)
+    event_end_date = Column(db.String)
     first_image = Column(db.String, primary_key=False)
     second_image = Column(db.String, primary_key=False)
     detail_image = Column(db.String, primary_key=False)
@@ -79,5 +80,3 @@ class PlaceDAO(db.Model):
         self.oper_date = oper_date
         self.oper_pd = oper_pd
         self.modified_date = modified_date
-
-db.create_all()

@@ -5,9 +5,8 @@ from ..model import db
 
 @dataclass
 class ReviewDAO(db.Model):
-
     __tablename__ = 'review'
-    __table_args__ = {'extend_existing': True, 'mysql_collate': 'utf8_general_ci'}
+
     id: int
     place_id: int
     star: float
@@ -19,5 +18,3 @@ class ReviewDAO(db.Model):
     def __init__(self, place_id, star):
         self.place_id = place_id
         self.star = star
-
-db.create_all()

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column
 from ..model import db
 
 
@@ -22,5 +22,3 @@ class UserDAO(db.Model):
         self.access_token = access_token
         self.created_date = created_date
         self.modified_date = modified_date
-
-db.create_all()

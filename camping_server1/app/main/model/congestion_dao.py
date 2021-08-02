@@ -7,6 +7,7 @@ from ..model import db
 class CongestionDAO(db.Model):
     __tablename__ = 'congestion'
     __table_args__ = {'extend_existing': True, 'mysql_collate': 'utf8_general_ci'}
+
     id: int
     sigungu_code: int
     base_ymd: str
@@ -24,5 +25,3 @@ class CongestionDAO(db.Model):
         self.base_ymd = base_ymd
         self.congestion = congestion
         self.content_id = content_id
-
-db.create_all()
