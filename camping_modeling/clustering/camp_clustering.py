@@ -11,14 +11,13 @@ sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import algostar.config as config
-import algostar.calc_logic as cl
 import algostar.algo_points as ap
 
 
 class CampCluster:
     def __init__(self):
         self.path = config.Config.PATH
-        # ag = ap.AlgoPoints()
+        ag = ap.AlgoPoints()
         # algo_df = ag.make_algo_df(just_load_file="0719")
         algo_df = config.Config.TAG_DF
         self.algo_df = algo_df.loc[:, ~algo_df.columns.str.match("Unnamed")]
