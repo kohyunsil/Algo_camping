@@ -48,12 +48,13 @@ def get_searchlist(params):
             tag_query += ' = 1 or '
 
     '''
-    # select * from place where place_num = 0 and content_id in(
-    # select content_id from search where addr like '%지역%' or place_name like '%캠핑장명%' or (태그=1 or 태그=1)) order by (case 
-    # when place_name like '%캠핑장명%' then 1
-    # when addr like '%지역%' then 2
-    # else 3
-    # end);
+    # SELECT * FROM place WHERE place_num = 0 AND content_id IN(
+    # SELECT content_id FROM search WHERE addr LIKE '%지역%' OR place_name LIKE '%캠핑장명%' OR (태그1=1 OR 태그2=1)) ORDER BY (CASE 
+    # WHEN place_name LIKE '%캠핑장명%' AND  addr LIKE '%전체%' THEN 1
+    # WHEN place_name LIKE '%캠핑장명%' OR addr LIKE '%전체%' THEN 2
+    # WHEN addr LIKE '%지역%' THEN 3
+    # ELSE 4
+    # END) LIMIT 100;
     '''
     Session = sessionmaker(bind=client)
     session_ = Session()
@@ -69,11 +70,13 @@ def get_searchlist(params):
         main_query = session_.query(model_place).filter(
             and_(model_place.place_num == 0, model_place.content_id.in_(sub_query))).order_by(
             case(
-                (model_place.place_name.contains(place_keyword), 1),
-                (model_place.addr.contains(area), 2),
-                else_=3
+                (and_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 1),
+                (or_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 2),
+                (model_place.addr.contains(area), 3),
+                else_=4
             )
         ).limit(Config.LIMIT).all()
+
     finally:
         session_.close()
 
