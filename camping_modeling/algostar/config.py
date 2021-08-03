@@ -26,4 +26,4 @@ class Config:
     #     WEIGHTS_DF = pd.DataFrame(wd)
 
     TODAY = datetime.today().strftime('%m%d')
-    NOW = datetime.today().strftime('%m%d_%X')
+    NOW = datetime.today().strftime('%m%d_%H%M%S')
