@@ -15,15 +15,6 @@ class Config:
     WEIGHTS_DF.dropna(axis=0, inplace=True)
     TAG_DM = DIMENSION[['category', 'colname', 'tagname', 'count']].copy()
     TAG_DM.dropna(axis=0, inplace=True)
-
-    # /* weights - pkl 파일로 만들기*/
-    # wdf = DIMENSION[['category', 'colname', 'weights']]
-    # weight_dict = wdf.to_dict('records')
-    # with open(PATH + 'weight_dict.txt', 'wb') as wd:
-    #     pickle.dump(weight_dict, wd)
-    # with open(PATH + 'weight_dict.txt', 'rb') as wd:
-    #     wd = pickle.load(wd)
-    #     WEIGHTS_DF = pd.DataFrame(wd)
-
+    # 파일 버전 저장용 datetime
     TODAY = datetime.today().strftime('%m%d')
-    NOW = datetime.today().strftime('%m%d_%X')
+    NOW = datetime.today().strftime('%m%d_%H%M%S')
