@@ -1,11 +1,20 @@
-import pandas as pd
-from datetime import datetime
+import os
 import pickle
+import pandas as pd
+import configparser
+from datetime import datetime
+
+config = configparser.RawConfigParser()
+abspath = os.path.abspath('../keys/data.ini')
+config.read(abspath)
+keys = config['API_KEYS']
+
 
 class Config:
     # 경로 및 파일 불러오기
     PATH = "../../datas/"
     MODEL_PATH = "../models"
+    PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
     ALGO_DF = pd.read_csv(PATH + "algo_merge_result.csv", encoding="utf-8-sig")
     TAG_DF = pd.read_csv(PATH + "tag_prior_0720.csv", encoding="utf-8-sig")
     # "weights & tag" dimension 파일 불러오기

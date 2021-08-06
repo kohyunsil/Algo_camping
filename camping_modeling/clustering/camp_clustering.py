@@ -1,7 +1,12 @@
+import re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from tqdm import tqdm
+from konlpy.tag import Okt
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+from nltk.tokenize import word_tokenize
 import hdbscan
 from sklearn.manifold import TSNE
 import sys
@@ -10,6 +15,7 @@ import os
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+
 import algostar.config as config
 import algostar.algo_points as ap
 
@@ -31,7 +37,7 @@ class CampCluster:
         merge_df["labels"] = [str(int(r)) if np.isnan(r) == False else r for r in merge_df["labels"]]
         merge_df = pd.get_dummies(merge_df, columns=['labels'], dummy_na=True)
         merge_df.set_index(['camp', 'contentId'], inplace=True)
-        if over_avg == True:
+        if over_avg:
             merge_df['total'] = merge_df[['comfort', 'together', 'fun', 'healing', 'clean']].sum(axis=1)
             merge_df = merge_df[merge_df['total'] >= merge_df['total'].mean()]
             merge_df.drop('total', axis=1, inplace=True)
@@ -39,19 +45,24 @@ class CampCluster:
             pass
         return merge_df
 
-    def tsne_dm_reduction(self, over_avg=False):
+    def tsne_dm_reduction(self, data='camp', over_avg=False):
         tsne = TSNE()
-        df = self.preprocessing(over_avg)
+        if data == 'camp':
+            df = self.preprocessing(over_avg)
+        else:
+            df = data
         tsne_fit = tsne.fit_transform(df)
-        tsne_df = pd.DataFrame(tsne_fit, index=df.index, columns=['x', 'y'])
+        try:
+            tsne_df = pd.DataFrame(tsne_fit, index=df.index, columns=['x', 'y'])
+        except:
+            tsne_df = pd.DataFrame(tsne_fit, columns=['x', 'y'])
         return tsne_df
 
-    def hdbscan_clustering(self, min_cluster_size=5, tsne=True, over_avg=False):
-        # 차원 축소 여부 결정
-        if tsne:
-            fit_data = self.tsne_dm_reduction(over_avg)
-        else:
-            fit_data = self.preprocessing(over_avg)
+    def hdbscan_clustering(self, target_data, min_cluster_size=5, over_avg=False):
+        if target_data == 'camp':
+            fit_data = self.tsne_dm_reduction('camp', over_avg)
+        elif type(target_data) != 'str':
+            fit_data = target_data
 
         # 모델 객체 생성
         clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, min_samples=1, gen_min_span_tree=True,
@@ -66,10 +77,9 @@ class CampCluster:
         df["y"] = fit_data['y'].tolist()
         print(f"Cluster labels: {len(np.unique(df['cluster']))} 개")
         print(f"original data length: {len(df)} / clustering data length: {len(pred_hds)}")
-        # print("아웃라이어 스코어: ", clusterer.outlier_scores_)
         print(df.groupby('cluster')['cluster'].count())
         print("Condensed tree plot")
-        clusterer.condensed_tree_.plot(select_clusters=True) #, selection_palette=sns.color_palette())
+        clusterer.condensed_tree_.plot(select_clusters=True)  # , selection_palette=sns.color_palette())
         plt.show()
         self.draw_scatter(df)
         return df
@@ -85,6 +95,7 @@ class CampCluster:
         ax2.scatter(df2['x'], df2['y'], c=df2["cluster"], s=300, cmap="tab20", alpha=0.6)
         ax2.set_title("HDBSCAN without Outlier", fontsize=30)
         fig.show()
+        return fig
 
     def cluster_eda(self, df):
         columns = ['comfort', 'together', 'fun', 'healing', 'clean', 'x']
@@ -119,5 +130,5 @@ class CampCluster:
 
     def export_result(self, df):
         path = "results/"
-        df.to_csv(path+f"clustering_result_{config.Config.NOW}.csv", encoding='utf-8-sig')
+        df.to_csv(path + f"clustering_result_{config.Config.NOW}.csv", encoding='utf-8-sig')
         print("Report has Saved!")

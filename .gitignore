@@ -62,3 +62,7 @@ camping_modeling/clustering/results/
 camping_modeling/preprocessing/.ipynb_checkpoints/
 
 *.xml
+
+camping_modeling/reports/nlp/.ipynb_checkpoints/
+
+camping_modeling/keys/
