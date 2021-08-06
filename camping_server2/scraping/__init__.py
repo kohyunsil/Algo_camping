@@ -1,6 +1,7 @@
 import kakao_reviews as kr
 import naverv4_blog as nv4
 import gocamp_crawl as gc
+import gocamp_link_crawl as gl
 import datetime
 from camping_server2.bot import slackbot
 import camping_server2.config as config
@@ -72,8 +73,8 @@ def get_nv5_result(camping_list, camping_addrs):
         slackbot.IncomingWebhook.send_msg(f'crawling completed ! result line num : {len(highlight_reviews)}')
 
 if __name__ == '__main__':
-    camping_list, camping_addrs = target_list()
-    get_nv5_result(camping_list[:], camping_addrs[:])
+    # camping_list, camping_addrs = target_list()
+    # get_nv5_result(camping_list[:], camping_addrs[:])
 
     # s = kr.Scraping()
     # s.get_search(target_list())
@@ -86,6 +87,10 @@ if __name__ == '__main__':
     # crawler.fetch_camp_list()
     # crawler.fetch_camp_details()
     # result = crawler.df
+
+    camp_link = gl.CampLink()
+    camp_link.fetch_link_list()
+    camp_link.fetch_link_details()
 
     # ogcamp = oc.OgcampScraping()
     # ogcamp.get_data()
