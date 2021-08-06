@@ -16,26 +16,29 @@ sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 
+import nlp_clustering as nc
 import algostar.config as config
 import algostar.algo_points as ap
 
 
-class CampCluster:
+class CampCluster(nc.NlpCluster):
     def __init__(self):
         self.path = config.Config.PATH
-        ag = ap.AlgoPoints()
+        # ag = ap.AlgoPoints()
+        nlp = nc.NlpCluster()
         # algo_df = ag.make_algo_df(just_load_file="0719")
         algo_df = config.Config.TAG_DF
         self.algo_df = algo_df.loc[:, ~algo_df.columns.str.match("Unnamed")]
-        self.nlp_df = pd.read_csv(self.path + "camp_description.csv")[['facltNm', 'labels']]
-        self.nlp_df.drop_duplicates('facltNm', keep=False, inplace=True)
+        # self.nlp_df = pd.read_csv(self.path + "camp_description.csv")[['facltNm', 'labels']]
+        nlp_df = nlp.nlp_clustering(vec='tfidf', min_cluster_size=30)[['contentId', 'cluster']]
+        self.nlp_df = nlp_df.astype('int')
+        self.nlp_df.drop_duplicates('contentId', keep=False, inplace=True)
 
     def preprocessing(self, over_avg=False):
         """over_avg = True 일 경우, cat_points의 합계가 mean 이상인 약 상위 50%의 캠핑장만 대상으로 함 """
-        merge_df = pd.merge(self.algo_df, self.nlp_df, how="left", left_on="camp", right_on="facltNm")
-        merge_df.drop('facltNm', axis=1, inplace=True)
-        merge_df["labels"] = [str(int(r)) if np.isnan(r) == False else r for r in merge_df["labels"]]
-        merge_df = pd.get_dummies(merge_df, columns=['labels'], dummy_na=True)
+        merge_df = pd.merge(self.algo_df, self.nlp_df, how="left", left_on="contentId", right_on="contentId")
+        merge_df["cluster"] = [str(int(r)) if np.isnan(r) == False else r for r in merge_df["cluster"]]
+        merge_df = pd.get_dummies(merge_df, columns=['cluster'], dummy_na=True)
         merge_df.set_index(['camp', 'contentId'], inplace=True)
         if over_avg:
             merge_df['total'] = merge_df[['comfort', 'together', 'fun', 'healing', 'clean']].sum(axis=1)
@@ -45,23 +48,10 @@ class CampCluster:
             pass
         return merge_df
 
-    def tsne_dm_reduction(self, data='camp', over_avg=False):
-        tsne = TSNE()
-        if data == 'camp':
-            df = self.preprocessing(over_avg)
-        else:
-            df = data
-        tsne_fit = tsne.fit_transform(df)
-        try:
-            tsne_df = pd.DataFrame(tsne_fit, index=df.index, columns=['x', 'y'])
-        except:
-            tsne_df = pd.DataFrame(tsne_fit, columns=['x', 'y'])
-        return tsne_df
-
-    def hdbscan_clustering(self, target_data, min_cluster_size=5, over_avg=False):
+    def hdbscan_clustering(self, target_data='camp', min_cluster_size=5, over_avg=False):
         if target_data == 'camp':
             fit_data = self.tsne_dm_reduction('camp', over_avg)
-        elif type(target_data) != 'str':
+        else:
             fit_data = target_data
 
         # 모델 객체 생성
@@ -75,7 +65,7 @@ class CampCluster:
         df["cluster"] = pred_hds
         df["x"] = fit_data['x'].tolist()
         df["y"] = fit_data['y'].tolist()
-        print(f"Cluster labels: {len(np.unique(df['cluster']))} 개")
+        print(f"Cluster 개수: {len(np.unique(df['cluster']))} 개")
         print(f"original data length: {len(df)} / clustering data length: {len(pred_hds)}")
         print(df.groupby('cluster')['cluster'].count())
         print("Condensed tree plot")
@@ -83,19 +73,6 @@ class CampCluster:
         plt.show()
         self.draw_scatter(df)
         return df
-
-    def draw_scatter(self, df):
-        df2 = df.copy()
-        df2.drop(df[df['cluster'] == -1].index, inplace=True)
-        fig, ax = plt.subplots(2, 1, figsize=(40, 40))
-        ax1 = fig.add_subplot(2, 1, 1)
-        ax2 = fig.add_subplot(2, 1, 2)
-        ax1.scatter(df['x'], df['y'], c=df["cluster"], s=300, cmap="tab20", alpha=0.6)
-        ax1.set_title("HDBSCAN", fontsize=30)
-        ax2.scatter(df2['x'], df2['y'], c=df2["cluster"], s=300, cmap="tab20", alpha=0.6)
-        ax2.set_title("HDBSCAN without Outlier", fontsize=30)
-        fig.show()
-        return fig
 
     def cluster_eda(self, df):
         columns = ['comfort', 'together', 'fun', 'healing', 'clean', 'x']

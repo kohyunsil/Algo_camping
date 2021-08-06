@@ -1,3 +1,4 @@
+import algostar.config as config
 import re
 import pandas as pd
 import numpy as np
@@ -16,18 +17,13 @@ import json
 from pandas.io.json import json_normalize
 import sys
 import os
-
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 
-import algostar.config as config
-import camp_clustering as cc
 
-
-class NlpCluster(cc.CampCluster):
+class NlpCluster():
     def __init__(self):
-        super().__init__()
         self.path = config.Config.PATH
         self.secretKey = config.Config.PUBLIC_API_KEY
 
@@ -129,7 +125,33 @@ class NlpCluster(cc.CampCluster):
         print(tfv)
         return tfv, o_data
 
-    def nlp_clustering(self, vec='tfidf', min_cluster_size=50):
+    def tsne_dm_reduction(self, data='camp', over_avg=False):
+        tsne = TSNE()
+        if data == 'camp':
+            df = self.preprocessing(over_avg)
+        else:
+            df = data
+        tsne_fit = tsne.fit_transform(df)
+        try:
+            tsne_df = pd.DataFrame(tsne_fit, index=df.index, columns=['x', 'y'])
+        except:
+            tsne_df = pd.DataFrame(tsne_fit, columns=['x', 'y'])
+        return tsne_df
+
+    def draw_scatter(self, df):
+        df2 = df.copy()
+        df2.drop(df[df['cluster'] == -1].index, inplace=True)
+        fig, ax = plt.subplots(2, 1, figsize=(40, 40))
+        ax1 = fig.add_subplot(2, 1, 1)
+        ax2 = fig.add_subplot(2, 1, 2)
+        ax1.scatter(df['x'], df['y'], c=df["cluster"], s=300, cmap="tab20", alpha=0.6)
+        ax1.set_title("HDBSCAN", fontsize=30)
+        ax2.scatter(df2['x'], df2['y'], c=df2["cluster"], s=300, cmap="tab20", alpha=0.6)
+        ax2.set_title("HDBSCAN without Outlier", fontsize=30)
+        fig.show()
+        return fig
+
+    def nlp_clustering(self, vec='tfidf', min_cluster_size=30):
         if vec == 'd2v':
             vector, o_data = self.doc2vec()
         elif vec == 'tfidf':
