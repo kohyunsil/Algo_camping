@@ -1,8 +1,8 @@
 import re
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
-
-import config as config
+# import config as config
+import preprocessing.config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt

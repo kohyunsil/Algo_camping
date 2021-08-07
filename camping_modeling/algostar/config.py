@@ -27,3 +27,7 @@ class Config:
     # 파일 버전 저장용 datetime
     TODAY = datetime.today().strftime('%m%d')
     NOW = datetime.today().strftime('%m%d_%H%M%S')
+
+    # weights 계산파일
+    NV_DATA = pd.read_csv(PATH + "v5_category_re.csv", encoding='utf-8-sig')
+    KAKAO = pd.read_csv(PATH + "kk_cat_predict_0805_181611.csv", encoding='utf-8-sig')
