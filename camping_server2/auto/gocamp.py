@@ -327,9 +327,9 @@ class Query:
 
 
 if __name__ == '__main__':
-    IP = "34.136.89.21"
-    DB = "camping"
-    PW = "dss"
+    IP = " "
+    DB = " "
+    PW = " "
 
     gocamp = Gocamp()
     sgg = Sigungucode()
