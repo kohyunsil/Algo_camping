@@ -58,15 +58,10 @@ if __name__ == '__main__':
     count_df = algo.make_count_df(camp_df, algo_search_df)
     algo_result = algo.merge_dataset()
 
-    search_df = algo.search_table(algo_search_df)
-    create.create_search(cursor)
-    create.save_sql(cursor, engine, db, search_df, 'search', 'append')
-    constraint.fk_search(cursor)
-
-    algo_df = algo.algorithm_table(count_df, algo_result)
-    create.create_algorithm(cursor)
+    algo_df = algo.feature_table(count_df, algo_result)
+    create.create_feature(cursor)
     create.save_sql(cursor, engine, db, algo_df, 'algorithm', 'append')
-    constraint.fk_algorithm(cursor)
+    constraint.fk_feature(cursor)
 
     dimension_df = algo.dimension_table()
     create.create_dimension(cursor)
@@ -74,10 +69,10 @@ if __name__ == '__main__':
 
     result_df = algo.maincat_table()
     create.create_result(cursor)
-    create.save_sql(cursor, engine, db, result_df, 'result_df', 'append')
+    create.save_sql(cursor, engine, db, result_df, 'result', 'append')
     constraint.fk_main_cat(cursor)
 
-    sigungu_df= main.sigungu_table()
+    sigungu_df = main.sigungu_table()
     create.create_sigungu(cursor)
     create.save_sql(cursor, engine, db, sigungu_df, 'sigungucode', 'append')
 

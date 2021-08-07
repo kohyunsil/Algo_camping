@@ -1,7 +1,7 @@
 import pandas as pd
 
 class Config:
-    PATH = "../datas/"
+    PATH = "../../datas/"
     CAMP = pd.read_csv(PATH + "camp_api_info_210613.csv", index_col=0)
     FESTIVAL = pd.read_csv(PATH + "festival_210613.csv", index_col=0)
     TOUR = pd.read_csv(PATH + "tour_list_210612.csv", index_col=0)
@@ -10,8 +10,8 @@ class Config:
     NAVER = pd.read_csv(PATH + 'v5_category_re.csv')
     KAKAO = pd.read_csv(PATH + 'kakao_camping_review_revised.csv')
 
-    PAST = pd.read_csv(PATH + 'locgo_visitor_api_info.csv')
-    FUTURE = pd.read_csv(PATH + 'tour_estiDeco_api_info.csv')
+    # PAST = pd.read_csv(PATH + 'locgo_visitor_api_info.csv')
+    # FUTURE = pd.read_csv(PATH + 'tour_estiDeco_api_info.csv')
 
     WEIGHTS = pd.read_excel(PATH + 'dimension_regression.xlsx')
     MAIN_CAT = pd.read_csv(PATH + 'algo_df_max.csv',index_col=0)

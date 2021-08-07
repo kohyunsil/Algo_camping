@@ -39,8 +39,8 @@ class AlgoInsert:
     # 대분류 one hot encoding 
     def maincat(self, sub_df):
         # 대분류 불러오기
-        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
-        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=list(self.category.items()))
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ", "")
 
         main_df = pd.DataFrame()
         for i in range(len(sub_df)):
@@ -160,7 +160,7 @@ class AlgoInsert:
         return review_result
 
     # 캠핑장와 리뷰 스케일링 merge
-    def merge_dataset(self, review_result):
+    def merge_dataset(self):
         review_result = self.scaling()
         
         camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
@@ -168,26 +168,20 @@ class AlgoInsert:
              '포시즌 캠핑장']
         for i in camp_name:
             review_result = review_result.query(f'camp != "{i}"')
-        merge_result = pd.merge(self.camp, review_result, how='outer', left_on='place_name', right_on='camp')
+        merge_result = pd.merge(self.camp, review_result, how='outer', left_on='facltNm', right_on='camp')
         result1 = merge_result.iloc[:, 44:].fillna(0)
         result2 = merge_result.iloc[:, :44]
         algo_result = pd.concat([result2, result1], 1)
         return algo_result
 
-    # search table 
-    def search_table(self, algo_search_df): 
-        search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
-        return search_df
-
-    # algorithm table
-    def algorithm_table(self, count_df, algo_result):
-        algo_result = algo_result[['content_id', '가격', '만족도',
+    # feature table (이전명: algorithm table)
+    def feature_table(self, count_df, algo_result):
+        algo_result = algo_result[['contentId', '가격', '만족도',
         '맛', '메인시설', '목적', '부대/공용시설', '분위기', '비품', '서비스', '수영장', '시설물관리',
         '아이 만족도', '예약', '와이파이', '위치', '음식/조식', '입장', '전망', '주차', '즐길거리',
         '청결도', '편의/부대시설', '혼잡도']]
-        algo_df = pd.merge(count_df, algo_result, how='left', on='content_id')
+        algo_df = pd.merge(count_df, algo_result, how='left', left_on='content_id', right_on='contentId')
         algo_df = algo_df.rename(columns={
-                                'id' : 'place_id',
                                 '그늘이많은' : 'shade_s',
                                 '가격' : 'price_r',
                                 '만족도' : 'satisfied_r',
@@ -212,22 +206,23 @@ class AlgoInsert:
                                 '청결도' : 'clean_r', 
                                 '편의/부대시설' : 'conv_facility_r',
                                 '혼잡도' : 'congestion_r'})
-        algo_df = algo_df.drop(['addr', 'tag', '여유있는', '재미있는', '친절한', 'activity_m', 'nature_m', 'fun_m', 'comfort_m', 'together_m', 'with_pet_s' ],1)
+        algo_df = algo_df.drop(['id', 'tag', '여유있는', '재미있는', '친절한', 'contentId'], 1)
         return algo_df
 
     # dimension table (이전명: weights table)
     def dimension_table(self):
-        self.weights.drop(['origindf', 'count'], axis=1, inplace=True)
         dimension_df = self.weights.rename(columns={
                               'category' : 'cat',
                               'originalname' : 'tag',
                               'colname' : 'tag_eng',
                               'tagname' : 'sub_cat'
                             })
+        dimension_df = dimension_df.loc[:, ~dimension_df.columns.str.match("Unnamed")]
         return dimension_df
     
     # result table (이전명: main_cat table)
     def result_table(self):
         result_df = self.main_cat.rename(columns={'contentId' : 'content_id',
-                                    'camp' : 'place_name'})
+                                                  'camp' : 'place_name'})
+        result_df = result_df.loc[:, ~result_df.columns.str.match("Unnamed")]
         return result_df

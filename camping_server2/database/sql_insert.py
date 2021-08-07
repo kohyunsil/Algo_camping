@@ -169,50 +169,13 @@ class Create():
         ''')
         cursor.execute(qry_reviewer)
 
-    def create_search(self, cursor):
-        qry_search = ('''
-        CREATE TABLE search(
-            id             INT           NOT NULL        PRIMARY KEY        AUTO_INCREMENT, 
-            content_id     INT           NOT NULL        UNIQUE, 
-            place_name     TEXT          NOT NULL, 
-            addr           TEXT          NOT NULL, 
-            with_family_s  INT           NULL, 
-            valley_s       INT           NULL, 
-            clean_s        INT           NULL, 
-            trail_s        INT           NULL, 
-            cultural_s     INT           NULL, 
-            waterplay_s    INT           NULL, 
-            pure_water_s   INT           NULL, 
-            ocean_s        INT           NULL, 
-            with_pet_s     INT           NULL,
-            star_s         INT           NULL, 
-            spacious_s     INT           NULL, 
-            ecological_s   INT           NULL, 
-            pool_s         INT           NULL, 
-            with_child_s   INT           NULL, 
-            hot_water_s    INT           NULL, 
-            extreme_s      INT           NULL, 
-            bicycle_s      INT           NULL, 
-            parking_s      INT           NULL, 
-            festival_s     INT           NULL, 
-            with_couple_s  INT           NULL, 
-            healing_s      INT           NULL, 
-            activity_m     INT           NULL, 
-            nature_m       INT           NULL, 
-            fun_m          INT           NULL, 
-            comfort_m      INT           NULL, 
-            together_m     INT           NULL 
-        );
-        ''')
-        cursor.execute(qry_search)
-
-    def create_algorithm(self, cursor):
-        qry_algorithm = ('''
-        CREATE TABLE algorithm(
+    def create_feature(self, cursor):
+        qry_feature = ('''
+        CREATE TABLE feature(
             id                INT            NOT NULL   PRIMARY KEY    AUTO_INCREMENT, 
-            place_name        TEXT           NULL, 
-            place_id          INT            NOT NULL, 
-            content_id        INT            NULL, 
+            place_name        TEXT           NULL       UNIQUE, 
+            content_id        INT            NOT NULL, 
+            addr              TEXT           NOT NULL, 
             insrnc_at         VARCHAR(45)    NULL, 
             trsagnt_no        VARCHAR(45)    NULL, 
             mange             VARCHAR(45)    NULL, 
@@ -277,10 +240,15 @@ class Create():
             exciting_r        INT            NULL, 
             clean_r           INT            NULL, 
             conv_facility_r   INT            NULL, 
-            congestion_r      INT            NULL 
+            congestion_r      INT            NULL,
+            activity_m        INT            NULL, 
+            nature_m          INT            NULL, 
+            fun_m             INT            NULL, 
+            comfort_m         INT            NULL, 
+            together_m        INT            NULL 
         );
         ''')
-        cursor.execute(qry_algorithm)
+        cursor.execute(qry_feature)
 
     def create_congestion(self, cursor):
         qry_congestion = ('''
@@ -304,6 +272,7 @@ class Create():
             tag_eng       VARCHAR(45)    NOT NULL, 
             weights       FLOAT          NULL, 
             sub_cat       VARCHAR(45)    NULL, 
+            count         INT            NULL
             PRIMARY KEY (id)
         );
         ''')
@@ -424,11 +393,11 @@ class Constraint():
         cursor.execute(qry_fk_s)
         self.fk_check_one (cursor)    
 
-    def fk_algorithm(self, cursor):
+    def fk_feature(self, cursor):
         self.fk_check_zero (cursor)
         qry_fk_a = ('''
-        ALTER TABLE algorithm
-            ADD CONSTRAINT FK_algorithm_place_id_place_id FOREIGN KEY (place_id)
+        ALTER TABLE feature
+            ADD CONSTRAINT FK_feature_place_id_place_id FOREIGN KEY (place_id)
                 REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
         ''')
         cursor.execute(qry_fk_a)
