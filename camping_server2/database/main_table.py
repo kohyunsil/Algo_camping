@@ -15,7 +15,7 @@ class MainInsert:
     def camping_data(self):
         camp = self.camp.drop(['allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
-                'intro', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)  
+                'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
         festival = self.festival.drop(['areacode', 'cat1', 'cat2', 'cat3', 'contenttypeid', 'mlevel'], 1)
         tour = self.tour.drop(['areacode', 'booktour', 'cat1', 'cat2', 'cat3', 'contenttypeid', 'mlevel', 
                             'zipcode'], 1)
@@ -131,10 +131,10 @@ class MainInsert:
 
     # place table
     def place_table(self, data):
-        place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 'event_start_date', 
-                        'event_end_date', 'first_image', 'second_image', 'tel', 'addr2', 'thema_envrn', 'tour_era', 
-                        'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount', 
-                        'content_id', 'industry', 'oper_date', 'oper_pd',]]
+        place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng',
+                         'first_image', 'tel', 'thema_envrn', 'tour_era',
+                         'homepage', 'line_intro', 'intro', 'tag', 'readcount', 'created_date', 'modified_date',
+                         'detail_image', 'content_id', 'industry', 'oper_date', 'oper_pd']]
         place_df = place_df.rename(columns={'place_id' : 'id'})
         return place_df
 

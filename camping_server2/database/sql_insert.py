@@ -40,16 +40,16 @@ class Create():
             first_image       TEXT           NULL, 
             second_image      TEXT           NULL, 
             tel               TEXT           NULL, 
-            addr2             VARCHAR(100)   NULL, 
             thema_envrn       VARCHAR(100)   NULL, 
             tour_era          VARCHAR(45)    NULL, 
             homepage          TEXT           NULL, 
             line_intro        TEXT           NULL, 
+            intro             TEXT           NULL, 
+            tag               TEXT           NULL, 
+            readcount         INT            NULL, 
             created_date      TEXT           NULL, 
             modified_date     TEXT           NULL, 
             detail_image      TEXT           NULL, 
-            tag               TEXT           NULL, 
-            readcount         INT            NULL, 
             content_id        INT            NOT NULL    UNIQUE, 
             industry          VARCHAR(45)    NULL, 
             oper_date         VARCHAR(45)    NULL, 
@@ -176,7 +176,6 @@ class Create():
             content_id     INT           NOT NULL        UNIQUE, 
             place_name     TEXT          NOT NULL, 
             addr           TEXT          NOT NULL, 
-            tag            TEXT          NULL, 
             with_family_s  INT           NULL, 
             valley_s       INT           NULL, 
             clean_s        INT           NULL, 
@@ -296,25 +295,23 @@ class Create():
         ''')
         cursor.execute(qry_congestion) 
 
-    def create_weights(self, cursor):
-        qry_weights = ('''
-        CREATE TABLE weights(
+    def create_dimension(self, cursor):
+        qry_dimension = ('''
+        CREATE TABLE dimension(
             id            INT            NOT NULL    PRIMARY KEY    AUTO_INCREMENT, 
             cat           VARCHAR(45)    NOT NULL, 
-            original_cat  VARCHAR(45)    NOT NULL, 
             tag           VARCHAR(45)    NOT NULL, 
             tag_eng       VARCHAR(45)    NOT NULL, 
             weights       FLOAT          NULL, 
             sub_cat       VARCHAR(45)    NULL, 
-            count         FLOAT          NULL
             PRIMARY KEY (id)
         );
         ''')
-        cursor.execute(qry_weights)
+        cursor.execute(qry_dimension)
 
-    def create_main_cat(self, cursor):
-        qry_main_cat = ('''
-        CREATE TABLE main_cat(
+    def create_result(self, cursor):
+        qry_result = ('''
+        CREATE TABLE result(
             id          INT            NOT NULL    PRIMARY KEY      AUTO_INCREMENT, 
             content_id  INT            NOT NULL    UNIQUE, 
             place_name  VARCHAR(45)    NOT NULL, 
@@ -326,7 +323,7 @@ class Create():
             PRIMARY KEY (id)
         );
         ''')
-        cursor.execute(qry_main_cat)
+        cursor.execute(qry_result)
 
     def create_sigungu(self, cursor):
         qry_sigungu = ('''
@@ -437,11 +434,11 @@ class Constraint():
         cursor.execute(qry_fk_a)
         self.fk_check_one (cursor)      
 
-    def fk_main_cat(self, cursor):
+    def fk_result(self, cursor):
         self.fk_check_zero (cursor)
         qry_fk_m = ('''
-        ALTER TABLE main_cat
-            ADD CONSTRAINT FK_main_cat_content_id_place_content_id FOREIGN KEY (content_id)
+        ALTER TABLE result
+            ADD CONSTRAINT FK_result_content_id_place_content_id FOREIGN KEY (content_id)
                 REFERENCES place (content_id) ON DELETE CASCADE ON UPDATE CASCADE;
         ''')
         cursor.execute(qry_fk_m)

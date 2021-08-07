@@ -186,10 +186,11 @@ class AlgoInsert:
         '아이 만족도', '예약', '와이파이', '위치', '음식/조식', '입장', '전망', '주차', '즐길거리',
         '청결도', '편의/부대시설', '혼잡도']]
         algo_df = pd.merge(count_df, algo_result, how='left', on='content_id')
-        algo_df = algo_df.rename(columns={'id' : 'place_id',
-                            '그늘이많은' : 'shade_s',
-                            '가격' : 'price_r',
-                            '만족도' : 'satisfied_r', 
+        algo_df = algo_df.rename(columns={
+                                'id' : 'place_id',
+                                '그늘이많은' : 'shade_s',
+                                '가격' : 'price_r',
+                                '만족도' : 'satisfied_r',
                                 '맛' : 'taste_r',
                                 '메인시설' : 'main_r', 
                                 '목적' : 'object_r', 
@@ -212,19 +213,21 @@ class AlgoInsert:
                                 '편의/부대시설' : 'conv_facility_r',
                                 '혼잡도' : 'congestion_r'})
         algo_df = algo_df.drop(['addr', 'tag', '여유있는', '재미있는', '친절한', 'activity_m', 'nature_m', 'fun_m', 'comfort_m', 'together_m', 'with_pet_s' ],1)
+        return algo_df
 
-    # weights table
-    def weights_table(self):
-        weights_df = self.weights.rename(columns={'category' : 'cat',
-                                  'origindf' : 'original_cat',
-                                  'originalname' : 'tag',
-                                  'colname' : 'tag_eng',
-                                  'tagname' : 'sub_cat'
-                                 })
-        return weights_df
+    # dimension table (이전명: weights table)
+    def dimension_table(self):
+        self.weights.drop(['origindf', 'count'], axis=1, inplace=True)
+        dimension_df = self.weights.rename(columns={
+                              'category' : 'cat',
+                              'originalname' : 'tag',
+                              'colname' : 'tag_eng',
+                              'tagname' : 'sub_cat'
+                            })
+        return dimension_df
     
-    # main_cat table
-    def maincat_table(self):
-        main_cat_df = self.main_cat.rename(columns={'contentId' : 'content_id',
+    # result table (이전명: main_cat table)
+    def result_table(self):
+        result_df = self.main_cat.rename(columns={'contentId' : 'content_id',
                                     'camp' : 'place_name'})
-        return main_cat_df
+        return result_df

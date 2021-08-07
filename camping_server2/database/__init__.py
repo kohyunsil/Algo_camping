@@ -22,9 +22,9 @@ if __name__ == '__main__':
     create = si.Create()
     constraint = si.Constraint()
 
-    IP = "34.136.89.21"
-    DB = "test2"
-    PW = "dss"
+    IP = " "
+    DB = " "  # test2
+    PW = " "
 
     cursor, engine, db = create.connect_sql(IP, DB, PW)
 
@@ -68,13 +68,13 @@ if __name__ == '__main__':
     create.save_sql(cursor, engine, db, algo_df, 'algorithm', 'append')
     constraint.fk_algorithm(cursor)
 
-    weights_df = algo.weights_table()
-    create.create_weights(cursor)
-    create.save_sql(cursor, engine, db, weights_df, 'weights', 'append')
+    dimension_df = algo.dimension_table()
+    create.create_dimension(cursor)
+    create.save_sql(cursor, engine, db, dimension_df, 'dimension', 'append')
 
-    main_cat_df = algo.maincat_table()
-    create.create_main_cat(cursor)
-    create.save_sql(cursor, engine, db, main_cat_df, 'main_cat', 'append')
+    result_df = algo.maincat_table()
+    create.create_result(cursor)
+    create.save_sql(cursor, engine, db, result_df, 'result_df', 'append')
     constraint.fk_main_cat(cursor)
 
     sigungu_df= main.sigungu_table()
