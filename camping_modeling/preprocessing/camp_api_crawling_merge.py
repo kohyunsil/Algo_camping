@@ -1,9 +1,7 @@
 import re
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
+
 import config as config
 
 # 한글 폰트 설정
@@ -44,31 +42,26 @@ class CampMerge:
         merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
 
         data = merge_file.reset_index(drop=True)
-        data['tags'] = data['tags'].str.replace(' ', '')
-        data['tag'] = data.tags.str.replace('#', " ")
-        data['tag'] = data['tag'].str.strip()
-        data['tag'] = data['tag'].fillna('정보없음')
+        data['tags'] = data.tags.str.replace(' #', ',')
+        data['tags'] = data.tags.str.replace('#', '')
+        data['tags'] = data.tags.fillna('정보없음')
 
         out = []
         seen = set()
-        for c in data['tag']:
-            words = c.split()
-            out.append(' '.join([w for w in words if w not in seen]))
+        for c in data['tags']:
+            words = c.split(',')
+            out.append(','.join([w for w in words if w not in seen]))
             seen.update(words)
         data['unique_tag'] = out
 
-        df = data[data['unique_tag'] != ""]
-        df = df.reset_index(drop=True)
-
-        df2 = df['unique_tag'].unique()
-        df3 = " ".join(df2)
-        df3 = df3.split(" ")
+        df = ",".join(data.unique_tag.unique())
+        df = df.split(",")
 
         def get_tag(i):
-            dfs = data['tag'].str.contains(df3[i])
-            data[df3[i]] = dfs.astype(int)
+            dfs = data['tags'].str.contains(df[i])
+            data[df[i]] = dfs.astype(int)
 
-        for i in range(len(df3)):
+        for i in range(len(df)):
             get_tag(i)
 
         tag_data = data.iloc[:, 90:]
@@ -90,12 +83,7 @@ class CampMerge:
             col_count(i)
 
         camp_algo_merge = camp_algo_merge.rename(columns={'facltNm':'camp'})
-        camp_algo_merge = camp_algo_merge.rename(
-            columns={'사이트간격이넓은': '사이트 간격이 넓은', '온수잘나오는': '온수 잘 나오는', '차대기편한': '차대기 편한',
-                     '아이들놀기좋은': '아이들 놀기 좋은', '자전거타기좋은': '자전거 타기 좋은', '별보기좋은': '별 보기 좋은',
-                     '수영장있는': '수영장 있는', '물놀이하기좋은': '물놀이 하기 좋은', '그늘이많은': '그늘이 많은', '바다가보이는': '바다가 보이는'})
-
-        # camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
+         # camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
 
         return camp_algo_merge
 
