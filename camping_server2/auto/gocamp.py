@@ -1,3 +1,4 @@
+import camping_server2.config as config
 from bs4 import BeautifulSoup
 import requests
 from urllib.request import Request, urlopen
@@ -21,7 +22,7 @@ class Gocamp:
     url = base_url + path + query
 
     def __init__(self):
-        self.secretKey = "1lQh1AXwuKpBPamJ8M10NbN0c0hg%2Beex7NUu6k5HgjiP%2FupWExgtLRbmjRV7XLAEMf5l0j%2FH5um7uy4Z0cErXg%3D%3D"
+        self.secretKey = config.Config.PUBLIC_API_KEY
 
     # gocamp API
     def gocampingAPI(self):
@@ -62,7 +63,6 @@ class Gocamp:
 
         return param
 
-
     # readcount를 가져오기 위한 검색결과 페이지 정보 가져오기
     def search_page(self, place_name):
         base_url = f"https://www.gocamping.or.kr/bsite/camp/info/list.do?searchKrwd={place_name}"
@@ -84,6 +84,7 @@ class Gocamp:
         param['readcount'] = read_count
 
         return param
+
     # 자동화 실행 날기준으로 새롭게 업데이트된 정보만 가져옴
     def update_date(self, data):
         diff_days = datetime.timedelta(days=7)
@@ -97,11 +98,12 @@ class Gocamp:
         new_data = new_data.drop(["createdtime"],1)
         new_data = new_data.rename(columns={'createdtime2' : 'createdtime'})
         return new_data
+
     # gocamp API 전처리
     def make_camp_api(self, camp_api_df):
         camp = camp_api_df.drop(['allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl',
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
-                'intro', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
+                'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
         camp = camp.rename(columns={'addr1' : 'addr',
                         'animalCmgCl' : 'animal_cmg',
                         'autoSiteCo' : 'auto_site',
@@ -162,6 +164,7 @@ class Gocamp:
                         })
         camp['place_num'] = 0
         return camp
+
     # gocamp crawling 코드 실행 및 하나의 데이터로 merge
     def make_camp_crawling(self, new_data) :
         content_id = list(new_data['contentId'])
@@ -195,6 +198,7 @@ class Gocamp:
         camp_details['readcount'] = camp_details['readcount'].str.split(' ').str[1]
 
         return camp_details
+
     # gocamp API 와 gocamp crawling merge
     def merge_data(self, camp, camp_details):
         merge_data = pd.merge(camp, camp_details, how='right', left_on='content_id', right_on='url_num')
@@ -213,14 +217,14 @@ class Gocamp:
 class Sigungucode:
     def __init__(self):
         self.do_list = {'충북': '충청북도', '충남': '충청남도',
-               '경북': '경상북도', '경남': '경상남도',
-               '전북': '전라북도', '전남': '전라남도',
-               '강원': '강원도', '경기': '경기도',
-               '인천': '인천광역시', '인천시': '인천광역시',
-               '부산': '부산광역시', '울산': '울산광역시', '대전': '대전광역시',
-               '대구': '대구광역시', '광주': '광주광역시',
-               '서울': '서울특별시', '서울시': '서울특별시',
-               '제주': '제주특별자치도', '제주도': '제주특별자치도'}
+                        '경북': '경상북도', '경남': '경상남도',
+                        '전북': '전라북도', '전남': '전라남도',
+                        '강원': '강원도', '경기': '경기도',
+                        '인천': '인천광역시', '인천시': '인천광역시',
+                        '부산': '부산광역시', '울산': '울산광역시', '대전': '대전광역시',
+                        '대구': '대구광역시', '광주': '광주광역시', '세종': '세종특별자치시',
+                        '서울': '서울특별시', '서울시': '서울특별시',
+                        '제주': '제주특별자치도', '제주도': '제주특별자치도'}
 
 
     def do_sigungu(self, df):
@@ -297,9 +301,9 @@ class Sigungucode:
 class PlaceSubTable():
     def place_table(self,camp_df):
         place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng',
-                'first_image','tel', 'addr2', 'thema_envrn', 'tour_era',
-                'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount',
-                'content_id', 'industry', 'oper_date', 'oper_pd',]]
+                            'first_image', 'tel', 'thema_envrn', 'tour_era',
+                            'homepage', 'line_intro', 'intro', 'tag', 'readcount', 'created_date', 'modified_date',
+                            'detail_image', 'content_id', 'industry', 'oper_date', 'oper_pd']]
         place_df = place_df.rename(columns={'place_id' : 'id'})
         return place_df
 

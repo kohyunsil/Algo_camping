@@ -62,7 +62,6 @@ class Gocamp:
         param['img_url'] = img_list
 
         return param
-
     
     # readcount를 가져오기 위한 검색결과 페이지 정보 가져오기
     def search_page(self, place_name):
@@ -124,7 +123,7 @@ class Gocamp:
     def make_camp_api(self, camp_api_df):
         camp = camp_api_df.drop(['allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
-                'intro', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1) 
+                'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
         camp = camp.rename(columns={'addr1' : 'addr',
                         'animalCmgCl' : 'animal_cmg',
                         'autoSiteCo' : 'auto_site',
@@ -239,15 +238,14 @@ class Gocamp:
 class Sigungucode:
     def __init__(self):
         self.do_list = {'충북': '충청북도', '충남': '충청남도',
-               '경북': '경상북도', '경남': '경상남도',
-               '전북': '전라북도', '전남': '전라남도',
-               '강원': '강원도', '경기': '경기도',
-               '인천': '인천광역시', '인천시': '인천광역시',
-               '부산': '부산광역시', '울산': '울산광역시', '대전': '대전광역시',
-               '대구': '대구광역시', '광주': '광주광역시',
-               '서울': '서울특별시', '서울시': '서울특별시',
-               '제주': '제주특별자치도', '제주도': '제주특별자치도'}
-
+                        '경북': '경상북도', '경남': '경상남도',
+                        '전북': '전라북도', '전남': '전라남도',
+                        '강원': '강원도', '경기': '경기도',
+                        '인천': '인천광역시', '인천시': '인천광역시',
+                        '부산': '부산광역시', '울산': '울산광역시', '대전': '대전광역시',
+                        '대구': '대구광역시', '광주': '광주광역시', '세종': '세종특별자치시',
+                        '서울': '서울특별시', '서울시': '서울특별시',
+                        '제주': '제주특별자치도', '제주도': '제주특별자치도'}
 
     def do_sigungu(self, df):
         df = df.drop(df[df['addr1'].isnull()].index, axis=0) # 빈 row 삭제
@@ -322,11 +320,11 @@ class Sigungucode:
     
 class PlaceSubTable():
     # place table
-    def place_table(self,camp_df):
-        place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 
-                'first_image','tel', 'addr2', 'thema_envrn', 'tour_era', 
-                'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount', 
-                'content_id', 'industry', 'oper_date', 'oper_pd',]]
+    def place_table(self, camp_df):
+        place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng',
+                            'first_image', 'tel', 'thema_envrn', 'tour_era',
+                            'homepage', 'line_intro', 'intro', 'tag', 'readcount', 'created_date', 'modified_date',
+                            'detail_image', 'content_id', 'industry', 'oper_date', 'oper_pd']]
         place_df = place_df.rename(columns={'place_id' : 'id'})
         return place_df
         
@@ -358,31 +356,32 @@ class PlaceSubTable():
     
 class AlgorithmTable():
     def __init__(self):
-        self.category = {'재미있는' : '즐길거리',
-            '온수 잘 나오는' : '쾌적/편리',
-            '아이들 놀기 좋은' : '함께',
-            '생태교육' : '즐길거리',
-            '가족' : '함께',
-            '친절한' : '쾌적/편리',
-            '여유있는' : '자연/힐링',
-            '깨끗한' : '쾌적/편리',
-            '계곡 옆' : '자연/힐링',
-            '물놀이 하기 좋은' : '액티비티',
-            '물맑은' : '자연/힐링',
-            '둘레길' : '즐길거리',
-            '별보기 좋은' : '자연/힐링',
-            '힐링' : '자연/힐링',
-            '커플' : '함께',
-            '차 대기 편한' : '쾌적/편리',
-            '사이트 간격이 넓은' : '쾌적/편리',
-            '축제' : '즐길거리',
-            '문화유적' : '즐길거리',
-            '자전거 타기 좋은' : '액티비티',
-            '그늘이 많은' : '자연/힐링',
-            '수영장 있는' : '액티비티',
-            '바다가 보이는' : '자연/힐링',
-            '익스트림' : '액티비티',
-            '반려견' : '함께'}
+        self.category = {
+                        '재미있는' : '즐길거리',
+                        '온수 잘 나오는' : '쾌적/편리',
+                        '아이들 놀기 좋은' : '함께',
+                        '생태교육' : '즐길거리',
+                        '가족' : '함께',
+                        '친절한' : '쾌적/편리',
+                        '여유있는' : '자연/힐링',
+                        '깨끗한' : '쾌적/편리',
+                        '계곡 옆' : '자연/힐링',
+                        '물놀이 하기 좋은' : '액티비티',
+                        '물맑은' : '자연/힐링',
+                        '둘레길' : '즐길거리',
+                        '별보기 좋은' : '자연/힐링',
+                        '힐링' : '자연/힐링',
+                        '커플' : '함께',
+                        '차 대기 편한' : '쾌적/편리',
+                        '사이트 간격이 넓은' : '쾌적/편리',
+                        '축제' : '즐길거리',
+                        '문화유적' : '즐길거리',
+                        '자전거 타기 좋은' : '액티비티',
+                        '그늘이 많은' : '자연/힐링',
+                        '수영장 있는' : '액티비티',
+                        '바다가 보이는' : '자연/힐링',
+                        '익스트림' : '액티비티',
+                        '반려견' : '함께'}
     
     # 태그 컬럼 전처리
     def make_tag(self, camp_df):
@@ -409,7 +408,7 @@ class AlgorithmTable():
     def maincat(self, sub_df):
         # 대분류 불러오기
         lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=self.category)
-        lookup['main_cat'] = lookup['main_cat'].str.replace(" ","")
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ", "")
 
         main_df = pd.DataFrame()
         for i in range(len(sub_df)):
@@ -425,7 +424,7 @@ class AlgorithmTable():
         camping_data = self.make_tag(camp_df)
         sub_df = self.subcat(camping_data)
         main_df = self.maincat(sub_df)
-        last_df  = pd.concat([sub_df, main_df], 1)
+        last_df = pd.concat([sub_df, main_df], 1)
         last_df[last_df > 1] = 1
         last_df['index']= last_df.index
         algo_search_df = pd.merge(camping_data, last_df, how="left", left_on = 'place_id', right_on='index').drop("index", 1)
@@ -459,7 +458,7 @@ class AlgorithmTable():
         return algo_search_df
 
     def search_table(self, algo_search_df): 
-        search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
+        search_df = algo_search_df.drop(['place_id', 'tag', 'animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'], 1)
         return search_df
 
 class Query:   

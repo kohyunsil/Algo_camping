@@ -40,16 +40,16 @@ class Create():
             first_image       TEXT           NULL, 
             second_image      TEXT           NULL, 
             tel               TEXT           NULL, 
-            addr2             VARCHAR(100)   NULL, 
             thema_envrn       VARCHAR(100)   NULL, 
             tour_era          VARCHAR(45)    NULL, 
             homepage          TEXT           NULL, 
             line_intro        TEXT           NULL, 
+            intro             TEXT           NULL, 
+            tag               TEXT           NULL, 
+            readcount         INT            NULL, 
             created_date      TEXT           NULL, 
             modified_date     TEXT           NULL, 
             detail_image      TEXT           NULL, 
-            tag               TEXT           NULL, 
-            readcount         INT            NULL, 
             content_id        INT            NOT NULL    UNIQUE, 
             industry          VARCHAR(45)    NULL, 
             oper_date         VARCHAR(45)    NULL, 
@@ -169,51 +169,13 @@ class Create():
         ''')
         cursor.execute(qry_reviewer)
 
-    def create_search(self, cursor):
-        qry_search = ('''
-        CREATE TABLE search(
-            id             INT           NOT NULL        PRIMARY KEY        AUTO_INCREMENT, 
-            content_id     INT           NOT NULL        UNIQUE, 
-            place_name     TEXT          NOT NULL, 
-            addr           TEXT          NOT NULL, 
-            tag            TEXT          NULL, 
-            with_family_s  INT           NULL, 
-            valley_s       INT           NULL, 
-            clean_s        INT           NULL, 
-            trail_s        INT           NULL, 
-            cultural_s     INT           NULL, 
-            waterplay_s    INT           NULL, 
-            pure_water_s   INT           NULL, 
-            ocean_s        INT           NULL, 
-            with_pet_s     INT           NULL,
-            star_s         INT           NULL, 
-            spacious_s     INT           NULL, 
-            ecological_s   INT           NULL, 
-            pool_s         INT           NULL, 
-            with_child_s   INT           NULL, 
-            hot_water_s    INT           NULL, 
-            extreme_s      INT           NULL, 
-            bicycle_s      INT           NULL, 
-            parking_s      INT           NULL, 
-            festival_s     INT           NULL, 
-            with_couple_s  INT           NULL, 
-            healing_s      INT           NULL, 
-            activity_m     INT           NULL, 
-            nature_m       INT           NULL, 
-            fun_m          INT           NULL, 
-            comfort_m      INT           NULL, 
-            together_m     INT           NULL 
-        );
-        ''')
-        cursor.execute(qry_search)
-
-    def create_algorithm(self, cursor):
-        qry_algorithm = ('''
-        CREATE TABLE algorithm(
+    def create_feature(self, cursor):
+        qry_feature = ('''
+        CREATE TABLE feature(
             id                INT            NOT NULL   PRIMARY KEY    AUTO_INCREMENT, 
-            place_name        TEXT           NULL, 
-            place_id          INT            NOT NULL, 
-            content_id        INT            NULL, 
+            place_name        TEXT           NULL       UNIQUE, 
+            content_id        INT            NOT NULL, 
+            addr              TEXT           NOT NULL, 
             insrnc_at         VARCHAR(45)    NULL, 
             trsagnt_no        VARCHAR(45)    NULL, 
             mange             VARCHAR(45)    NULL, 
@@ -278,10 +240,15 @@ class Create():
             exciting_r        INT            NULL, 
             clean_r           INT            NULL, 
             conv_facility_r   INT            NULL, 
-            congestion_r      INT            NULL 
+            congestion_r      INT            NULL,
+            activity_m        INT            NULL, 
+            nature_m          INT            NULL, 
+            fun_m             INT            NULL, 
+            comfort_m         INT            NULL, 
+            together_m        INT            NULL 
         );
         ''')
-        cursor.execute(qry_algorithm)
+        cursor.execute(qry_feature)
 
     def create_congestion(self, cursor):
         qry_congestion = ('''
@@ -296,25 +263,24 @@ class Create():
         ''')
         cursor.execute(qry_congestion) 
 
-    def create_weights(self, cursor):
-        qry_weights = ('''
-        CREATE TABLE weights(
+    def create_dimension(self, cursor):
+        qry_dimension = ('''
+        CREATE TABLE dimension(
             id            INT            NOT NULL    PRIMARY KEY    AUTO_INCREMENT, 
             cat           VARCHAR(45)    NOT NULL, 
-            original_cat  VARCHAR(45)    NOT NULL, 
             tag           VARCHAR(45)    NOT NULL, 
             tag_eng       VARCHAR(45)    NOT NULL, 
             weights       FLOAT          NULL, 
             sub_cat       VARCHAR(45)    NULL, 
-            count         FLOAT          NULL
+            count         INT            NULL
             PRIMARY KEY (id)
         );
         ''')
-        cursor.execute(qry_weights)
+        cursor.execute(qry_dimension)
 
-    def create_main_cat(self, cursor):
-        qry_main_cat = ('''
-        CREATE TABLE main_cat(
+    def create_result(self, cursor):
+        qry_result = ('''
+        CREATE TABLE result(
             id          INT            NOT NULL    PRIMARY KEY      AUTO_INCREMENT, 
             content_id  INT            NOT NULL    UNIQUE, 
             place_name  VARCHAR(45)    NOT NULL, 
@@ -326,7 +292,7 @@ class Create():
             PRIMARY KEY (id)
         );
         ''')
-        cursor.execute(qry_main_cat)
+        cursor.execute(qry_result)
 
     def create_sigungu(self, cursor):
         qry_sigungu = ('''
@@ -427,21 +393,21 @@ class Constraint():
         cursor.execute(qry_fk_s)
         self.fk_check_one (cursor)    
 
-    def fk_algorithm(self, cursor):
+    def fk_feature(self, cursor):
         self.fk_check_zero (cursor)
         qry_fk_a = ('''
-        ALTER TABLE algorithm
-            ADD CONSTRAINT FK_algorithm_place_id_place_id FOREIGN KEY (place_id)
+        ALTER TABLE feature
+            ADD CONSTRAINT FK_feature_place_id_place_id FOREIGN KEY (place_id)
                 REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
         ''')
         cursor.execute(qry_fk_a)
         self.fk_check_one (cursor)      
 
-    def fk_main_cat(self, cursor):
+    def fk_result(self, cursor):
         self.fk_check_zero (cursor)
         qry_fk_m = ('''
-        ALTER TABLE main_cat
-            ADD CONSTRAINT FK_main_cat_content_id_place_content_id FOREIGN KEY (content_id)
+        ALTER TABLE result
+            ADD CONSTRAINT FK_result_content_id_place_content_id FOREIGN KEY (content_id)
                 REFERENCES place (content_id) ON DELETE CASCADE ON UPDATE CASCADE;
         ''')
         cursor.execute(qry_fk_m)

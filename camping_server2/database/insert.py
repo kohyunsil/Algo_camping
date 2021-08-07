@@ -33,7 +33,7 @@ camp_details = pd.read_csv("../datas/camp_crawl_links.csv", encoding='utf-8-sig'
 
 api = api.drop(['Unnamed: 0', 'allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl', 
                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
-                'intro', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)  
+                'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
 festival = festival.drop(['Unnamed: 0', 'areacode', 'cat1', 'cat2', 'cat3', 'contenttypeid', 'mlevel'], 1)
 tour = tour.drop(['Unnamed: 0', 'areacode', 'booktour', 'cat1', 'cat2', 'cat3', 'contenttypeid', 'mlevel', 
                 'zipcode'], 1)
@@ -144,44 +144,43 @@ data = data.rename(columns={'level_0' : 'place_id',
 
 ### place
 qry1 = ('''
-CREATE TABLE place(
-    id                INT            NOT NULL    AUTO_INCREMENT, 
-    place_num         INT            NOT NULL    DEFAULT 0, 
-    place_name        TEXT           NOT NULL, 
-    sigungu_code      INT            NOT NULL, 
-    addr              TEXT           NULL, 
-    lat               FLOAT          NULL, 
-    lng               FLOAT          NULL, 
-    event_start_date  DATETIME       NULL, 
-    event_end_date    DATETIME       NULL, 
-    first_image       TEXT           NULL, 
-    second_image      TEXT           NULL, 
-    tel               TEXT           NULL, 
-    addr2             VARCHAR(100)   NULL, 
-    thema_envrn       VARCHAR(100)   NULL, 
-    tour_era          VARCHAR(45)    NULL, 
-    homepage          TEXT           NULL, 
-    line_intro        TEXT           NULL, 
-    created_date      DATETIME       NULL, 
-    modified_date     DATETIME       NULL, 
-    detail_image      TEXT           NULL, 
-    tag               TEXT           NULL, 
-    readcount         INT            NULL, 
-    content_id        INT            NOT NULL   UNIQUE, 
-    industry          VARCHAR(45)    NULL, 
-    oper_date         VARCHAR(45)    NULL, 
-    oper_pd           VARCHAR(45)    NULL, 
-    CONSTRAINT PK_place PRIMARY KEY (id, sigungu_code, content_id)
-);
-
-''')
+        CREATE TABLE place(
+            id                INT            NOT NULL     AUTO_INCREMENT,
+            place_num         INT            NOT NULL, 
+            place_name        TEXT           NOT NULL, 
+            sigungu_code      INT            NOT NULL, 
+            addr              TEXT           NULL, 
+            lat               FLOAT          NULL, 
+            lng               FLOAT          NULL, 
+            event_start_date  DATETIME       NULL, 
+            event_end_date    DATETIME       NULL, 
+            first_image       TEXT           NULL, 
+            second_image      TEXT           NULL, 
+            tel               TEXT           NULL, 
+            thema_envrn       VARCHAR(100)   NULL, 
+            tour_era          VARCHAR(45)    NULL, 
+            homepage          TEXT           NULL, 
+            line_intro        TEXT           NULL, 
+            intro             TEXT           NULL, 
+            tag               TEXT           NULL, 
+            readcount         INT            NULL, 
+            created_date      TEXT           NULL, 
+            modified_date     TEXT           NULL, 
+            detail_image      TEXT           NULL, 
+            content_id        INT            NOT NULL    UNIQUE, 
+            industry          VARCHAR(45)    NULL, 
+            oper_date         VARCHAR(45)    NULL, 
+            oper_pd           VARCHAR(45)    NULL, 
+            CONSTRAINT PK_place PRIMARY KEY (id, sigungu_code, content_id)
+        );
+        ''')
 
 cursor.execute(qry1)
 
-place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng', 'event_start_date', 
-                'event_end_date', 'first_image', 'second_image', 'tel', 'addr2', 'thema_envrn', 'tour_era', 
-                'homepage', 'line_intro', 'created_date', 'modified_date', 'detail_image', 'tag', 'readcount', 
-                'content_id', 'industry', 'oper_date', 'oper_pd',]]
+place_df = data[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng',
+                 'first_image', 'tel', 'thema_envrn', 'tour_era',
+                 'homepage', 'line_intro', 'intro', 'tag', 'readcount', 'created_date', 'modified_date',
+                 'detail_image', 'content_id', 'industry', 'oper_date', 'oper_pd']]
 place_df = place_df.rename(columns={'place_id' : 'id'})
 
 place_df.to_sql(name='place', con=engine, if_exists='append', index=False)
@@ -490,15 +489,14 @@ CREATE TABLE search(
     content_id     INT           NOT NULL        UNIQUE, 
     place_name     TEXT   NOT NULL, 
     addr           TEXT   NOT NULL, 
-    tag            TEXT                , 
-    with_family_s  INT                 , 
-    valley_s       INT                , 
-    clean_s        INT               , 
-    trail_s        INT              , 
-    cultural_s     INT              , 
+    with_family_s                 , 
+    valley_s       INT            , 
+    clean_s        INT            , 
+    trail_s        INT            , 
+    cultural_s     INT            , 
     waterplay_s    INT            , 
     pure_water_s   INT            , 
-    ocean_s        INT           , 
+    ocean_s        INT            , 
     with_pet_s     INT            , 
     star_s         INT            , 
     spacious_s     INT            , 
@@ -580,7 +578,7 @@ algo_search_df = algo_search_df.rename(columns={'가족' : 'with_family_s',
                                     '쾌적/편리' : 'comfort_m',
                                     '함께' : 'together_m'})
 
-search_df = algo_search_df.drop(['place_id','animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'],1)
+search_df = algo_search_df.drop(['place_id', 'tag', 'animal_cmg', '재미있는', '친절한', '여유있는', '그늘이많은'], 1)
 search_df.to_sql(name='search', con=engine, if_exists='append', index=False)
 
 qry27 = ('''
@@ -831,30 +829,30 @@ algo_result = algo_result[['content_id', '가격', '만족도',
        '청결도', '편의/부대시설', '혼잡도']]
 algo_df = pd.merge(tmp_df, algo_result, how='left', on='content_id')
 algo_df = algo_df.rename(columns={'id' : 'place_id',
-                       '그늘이많은' : 'shade_s',
-                       '가격' : 'price_r',
-                       '만족도' : 'satisfied_r', 
-                        '맛' : 'taste_r',
-                        '메인시설' : 'main_r', 
-                        '목적' : 'object_r', 
-                        '부대/공용시설' : 'facility_r', 
-                        '분위기' : 'atmos_r', 
-                        '비품' : 'equipment_r', 
-                        '서비스' : 'service_r', 
-                        '수영장' : 'pool_r', 
-                        '시설물관리' : 'manage_r', 
-                        '아이 만족도' : 'childlike_r',
-                        '예약' : 'reservation_r', 
-                        '와이파이' : 'wifi_r', 
-                        '위치' : 'location_r', 
-                        '음식/조식' : 'food_r', 
-                        '입장' : 'enter_r', 
-                        '전망' : 'view_r', 
-                        '주차' : 'parking_r', 
-                        '즐길거리' : 'exciting_r', 
-                        '청결도' : 'clean_r', 
-                        '편의/부대시설' : 'conv_facility_r',
-                        '혼잡도' : 'congestion_r'})
+                                  '그늘이많은' : 'shade_s',
+                                  '가격' : 'price_r',
+                                  '만족도' : 'satisfied_r',
+                                    '맛' : 'taste_r',
+                                    '메인시설' : 'main_r',
+                                    '목적' : 'object_r',
+                                    '부대/공용시설' : 'facility_r',
+                                    '분위기' : 'atmos_r',
+                                    '비품' : 'equipment_r',
+                                    '서비스' : 'service_r',
+                                    '수영장' : 'pool_r',
+                                    '시설물관리' : 'manage_r',
+                                    '아이 만족도' : 'childlike_r',
+                                    '예약' : 'reservation_r',
+                                    '와이파이' : 'wifi_r',
+                                    '위치' : 'location_r',
+                                    '음식/조식' : 'food_r',
+                                    '입장' : 'enter_r',
+                                    '전망' : 'view_r',
+                                    '주차' : 'parking_r',
+                                    '즐길거리' : 'exciting_r',
+                                    '청결도' : 'clean_r',
+                                    '편의/부대시설' : 'conv_facility_r',
+                                    '혼잡도' : 'congestion_r'})
 algo_df = algo_df.drop(['addr', 'tag', '여유있는', '재미있는', '친절한', 'activity_m', 'nature_m', 'fun_m', 'comfort_m', 'together_m', 'with_pet_s' ],1)
 algo_df.to_sql(name='algorithm', con=engine, if_exists='append', index=False)
 
