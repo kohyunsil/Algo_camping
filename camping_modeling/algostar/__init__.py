@@ -11,8 +11,6 @@ import config as config
 import cat_points as cp
 import algo_points as ap
 import tag_points as tp
-# import weights_reg_calc as wrc
-# import weights_calc as wc
 import weights as wc
 today = datetime.today().strftime('%m%d')
 
@@ -31,6 +29,5 @@ if __name__ == '__main__':
     # tag.tag_priority(8036, rank=3)
     # tag.tag_priority(7980, rank=5)
     # tag_df = tag.make_tag_prior_df(rank=7)
-
 
     final_weights.final_weights()
