@@ -1,0 +1,46 @@
+/*outer container layout*/
+.container{
+    visibility: hidden;
+}
+.outer-2{
+    margin-top: 2.5rem;
+}
+.visitor-text,
+.algo-star-text{
+    float: left;
+}
+.algo-star{
+    color: #49917D;
+}
+.detail-score{
+    color: #2b2b2b;
+    font-size: 1rem;
+}
+.loading-text{
+    margin-left: -8px;
+}
+/*table*/
+table td,
+table th{
+    text-align: center;
+}
+table a{
+    color: #2b2b2b;
+}
+/*spider web chart*/
+.polar-chart{
+    margin: 1em auto;
+}
+/*line chart*/
+.line-chart{
+    margin: 1em auto;
+}
+/*bubble chart*/
+.bubble-chart{
+    margin: 1em auto;
+}
+/*swiper.js img*/
+.swiper-container {
+    width: 100%;
+    height: 23rem;
+}

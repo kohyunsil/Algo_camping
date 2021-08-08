@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algo Camping</title>
+    <!-- Bootstrap 5.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- material icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- swiper.js -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container-fluid" style="background-color: white;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="container-fluid text-white pt-5" style="width:80%;">
+        <p class="h4 intro-text">이런 키워드는 어떠세요?</p><br>
+        <div class="row tags">&emsp;&emsp;
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg col-12 fw-bolder">#즐길거리</button>&nbsp;&nbsp;&nbsp;
+                <div class="col">
+                    <input class="form-check-input check-category" type="checkbox" value="생태교육" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #생태교육
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="둘레길" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #둘레길
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="축제" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #축제
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="문화유적" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #문화유적
+                      </label>
+                </div><br>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg col-12 fw-bolder">#쾌적/편리</button>&nbsp;&nbsp;
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="온수 잘 나오는" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #온수 잘 나오는
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="깨끗한" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #깨끗한
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="차 대기 편한" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #차 대기 편한
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="사이트 간격이 넓은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #사이트 간격이 넓은
+                      </label>
+                </div>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg col-12 fw-bolder">#함께</button>&nbsp;&nbsp;
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="아이들 놀기 좋은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #아이들 놀기 좋은
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="가족" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #가족
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="커플" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #커플
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="반려견" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #반려견
+                      </label>
+                </div><br>
+
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg col-12 fw-bolder">#자연/힐링</button>&nbsp;&nbsp;
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="계곡 옆" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #계곡 옆
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="물맑은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #물맑은
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="별보기 좋은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #별보기 좋은
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="힐링" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #힐링
+                      </label>
+                </div>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg col-12 fw-bolder">#액티비티</button>&nbsp;&nbsp;
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="물놀이 하기 좋은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #물놀이 하기 좋은
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="자전거 타기 좋은" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #자전거 타기 좋은
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="수영장 있는" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #수영장 있는
+                      </label>
+                </div><br>
+
+                <div class="col col-md-auto">
+                    <input class="form-check-input" type="checkbox" value="익스트림" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        #익스트림
+                      </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="slider">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide ss1">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="https://www.gocamping.or.kr/upload/camp/7038/thumb/thumb_1000_9847dZYeHK3ZjL3oNBLhykjy.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-1">
+                        <p class="h4 fw-bolder text-white">주변 경관이 뛰어난</p>
+                        <br>
+                        <p class="text-white">자연과 함께 어우러지는 사이트 간격 넓은 달빛정원글램핑</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide ss2">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="https://www.gocamping.or.kr/upload/camp/61/thumb/thumb_1000_7085EqJqsZa5z1eXxX7BddLq.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-2">
+                        <p class="h4 fw-bolder text-white">사랑하는 반려견과 함께</p>
+                        <br>
+                        <p class="text-white">반려견 동반이 가능한 여유있는 W글램핑</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide ss3">
+                <div class="row">
+                    <div class="col-5">
+                        <img class="img-1" src="https://www.gocamping.or.kr/upload/camp/7227/thumb/thumb_1000_7242k4Y2QyVKFNJfIwrAYega.jpg" alt="img"/>
+                    </div>
+                    <div class="col-6 promotion-3">
+                        <p class="h4 fw-bolder text-white">숲의 공기와 계곡의 하모니</p>
+                        <br>
+                        <p class="text-white">숲과 계곡의 하모니가 어우러진 플로렌스 글램핑&캠핑</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+
+{#    <div id="footer" class="container text-white">#}
+{#        <div id="footers">{% include "./layout/footer.html" %}</div>#}
+{#    </div>#}
+<!-- Swiper JS -->
+<script src="/static/js/swiper.min.js"></script>
+<script src="/static/js/swiper.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/index.js"></script>
+
+</body>
+</html>w

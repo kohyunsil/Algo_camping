@@ -1,0 +1,41 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+#logo{
+    color: #1f284a;
+    font-family: "Harlow Solid Italic";
+    font-size: 2rem;
+}
+.navbar-brand{
+    text-align: center;
+}
+/*signup container*/
+.login{
+    margin-top: 16rem;
+}
+.container-fluid{
+    height: 100%;
+    width: 100%;
+}
+#check-btn,
+.btn-signin{
+    background-color: #1f284a;
+    color: white;
+}
+.btn-signin:hover{
+    background-color: white;
+    color: #1f284a;
+}
