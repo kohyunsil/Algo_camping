@@ -1,0 +1,187 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+body, table, div, p{
+    font-family: 'Roboto', sans-serif;
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+.logo:hover,
+.logo{
+    color: #1f284a;
+    font-weight: bold;
+    font-size: 1.6rem;
+    border: none;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0);
+    font-family: "Harlow Solid Italic";
+}
+.search{
+    font-size: 1.5em;
+}
+.search-btn{
+    margin-left: -3rem;
+    vertical-align: middle;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+
+}
+.dropdown-btn{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #1f284a;
+    padding-left: 16px;
+    padding-right: 16px;
+    border : none;
+}
+.username{
+    margin-top: 2px;
+    float: right;
+}
+.user{
+    font-size: 2.5em;
+    vertical-align: center;
+
+}
+.info-text{
+    font-size: 0.9rem;
+    padding-bottom: 7px;
+}
+/* mobile device */
+@media (min-width: 10px) {
+    .user-dropdown{
+        display: none;
+    }
+}
+/* tablet device*/
+@media (min-width: 768px) {
+    .user-dropdown{
+        display: none;
+    }
+}
+/* pc */
+@media (min-width: 992px) {
+    .user-dropdown{
+        display: block;
+    }
+}
+/* pc */
+@media (min-width: 1200px) {
+
+}
+/* bootstrap-tagsinput v0.8.0 */
+.bootstrap-tagsinput {
+    background-color: #eaeaea;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    display: inline-block;
+    padding: 8px 8px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 4px;
+    width: 80%;
+    line-height: 22px;
+    cursor: text;
+}
+body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > div.d-flex.align-items-center > div.container > div > form > div{
+    border-radius: 1.2rem;
+    margin-left: 2px;
+}
+.bootstrap-tagsinput input {
+    border: none;
+    width: 30%;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0 6px;
+    margin: 0;
+}
+.bootstrap-tagsinput.form-control input::-moz-placeholder {
+    color: #777;
+    opacity: 1;
+}
+.bootstrap-tagsinput.form-control input:-ms-input-placeholder {
+    color: #777;
+}
+.bootstrap-tagsinput.form-control input::-webkit-input-placeholder {
+    color: #777;
+}
+.bootstrap-tagsinput input:focus {
+    border: none;
+    box-shadow: none;
+}
+.bootstrap-tagsinput .badge {
+    padding: 5px;
+    margin-left: 3px;
+    color: #1f284a;
+    font-size: 0.9rem;
+    border-radius: 0.8rem;
+    background-color: #f3f3f3;
+}
+.bootstrap-tagsinput .badge [data-role="remove"] {
+    margin-left: 8px;
+    cursor: pointer;
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:after {
+    content: "×";
+    padding: 0px 4px;
+    border-radius:50%;
+    font-size:14px;
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:hover:after {
+    background-color:rgba(0, 0, 0, 0.62);
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:hover:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.tt-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+    cursor: pointer;
+}
+.tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333333;
+    white-space: nowrap;
+}
+.tt-suggestion:hover,
+.tt-suggestion:focus {
+    color: #ffffff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #f3f3f3;
+    padding: 4px;
+}
+.info-text{
+    padding-right: 7rem;
+}
