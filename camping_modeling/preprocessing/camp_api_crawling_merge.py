@@ -1,8 +1,8 @@
 import re
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
-# import config as config
-import preprocessing.config as config
+import config as config
+# import preprocessing.config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt
@@ -29,9 +29,10 @@ class CampMerge:
         self.api_data = config.Config.API_DATA
         self.crawl_data = config.Config.CRAWL_DATA
         self.nv_data = config.Config.NV_DATA
-        self.kk_data = config.Config.KK_DATA
+        self.kk_data = config.Config.KAKAO
 
-    def camp_api_data_merge(self):
+    def camp_api_preprocessing(self):
+        global data
         camp_api_data = self.api_data
         camp_crawling_data = self.crawl_data
         datas = camp_crawling_data['link']
@@ -40,7 +41,6 @@ class CampMerge:
         camp_crawling_data['url_num'] = camp_crawling_data['url_num'].astype('int')
         merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', left_on='contentId',  right_on='url_num')
         merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
-
         data = merge_file.reset_index(drop=True)
         data['tags'] = data.tags.str.replace(' #', ',')
         data['tags'] = data.tags.str.replace('#', '')
@@ -65,7 +65,13 @@ class CampMerge:
             get_tag(i)
 
         tag_data = data.iloc[:, 90:]
-        tag_data = tag_data.drop(['친절한', '재미있는', '여유있는'],1)
+
+        return tag_data
+
+    def camp_api_data_merge(self):
+
+        tag_data = self.camp_api_preprocessing()
+        tag_data = tag_data.drop(['친절한', '재미있는', '여유있는'], 1)
         camp_data1 = data[['facltNm', 'contentId', 'insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc',
                            'glampInnerFclty',
                            'caravInnerFclty', 'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo',

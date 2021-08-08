@@ -19,8 +19,8 @@ today = datetime.today().strftime('%m%d')
 if __name__ == '__main__':
     # c5 = cp.Cat5Points()
     # algo = ap.AlgoPoints()
-    # tag = tp.TagPoints()
-    final_weights = wc.FinalWeights()
+    tag = tp.TagPoints()
+    # final_weights = wc.FinalWeights()
 
     # algo.polar_points('답게')
     # algo.algo_star('별똥별 글램핑')
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # algo_log_scale = algo.algo_log_scale()
 
     # tag.tag_priority(8036, rank=3)
-    # tag.tag_priority(7980, rank=5)
+    tag.tag_priority(7980, rank=5)
     # tag_df = tag.make_tag_prior_df(rank=7)
 
 
@@ -41,4 +41,4 @@ if __name__ == '__main__':
     # wrc_df2 = wrc.RegDef()
     # wrc_df2.polar_linear_reg()
 
-    final_weights.final_weights()
+    # final_weights.final_weights()
