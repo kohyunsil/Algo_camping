@@ -3,7 +3,7 @@ from flask_restx import Namespace, fields
 
 
 class PlaceDTO(object):
-    api = Namespace('place', description='relating to place info')
+    # api = Namespace('place', description='relating to place info')
 
     @hybrid_property
     def place(self):

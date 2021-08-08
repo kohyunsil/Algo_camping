@@ -1,4 +1,5 @@
 from app.main.model.user_dao import UserDAO as model_user
+from app.main.util.user_dto import UserDTO as user_dto
 from sqlalchemy.orm import sessionmaker
 from app.main.model import *
 import datetime
@@ -7,12 +8,47 @@ import bcrypt
 from flask import *
 from app.config import Config
 
-
 # 로그인 여부 확인
 def is_signin():
+    param = {}
+    # user getter값이 존재하는 경우
     try:
-        session['name']
-        return True
+        if user_dto.user is not None:
+            param = user_dto.user
+        else:
+            raise Exception('user_dto object is None')
+    except:
+        if is_exist_user():
+            param = is_exist_user()
+            # user getter값이 존재하지 않는 경우
+            param['flag'] = True
+            # setter
+            user_dto.user = param
+    finally:
+        return param
+
+# 유효한 토큰에 대한 유저 정보 얻기
+def is_exist_user():
+    try:
+        if session['access_token']:
+            param = {}
+            '''
+            # select name from user where access_token = 'access_token';
+            '''
+            client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+            Session = sessionmaker(bind=client)
+            session_ = Session()
+        try:
+            query = session_.query(model_user.name).filter(model_user.access_token == session['access_token']).all()
+            if len(query) == 0:
+                return False
+            else:
+                param['name'] = query[0].name
+                return param
+        except:
+            return False
+        finally:
+            session_.close()
     except:
         return False
 
@@ -114,6 +150,7 @@ def signin(param):
                 code = 401
     except:
         code = 500
+        access_token = ''
     else:
         code = 200
     finally:
@@ -122,37 +159,27 @@ def signin(param):
         param['error_msg'] = error_msg
         param['access_token'] = access_token
 
+        session['access_token'] = access_token
+
     return param
 
 # 토큰 삭제
-def delete_token(param):
+def delete_token(name):
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
-
     try:
-        if type(param) == str:
-            name = param
-            '''
-            # update user set access_token = null where name = 이름;
-            '''
-            user = session_.query(model_user).filter(model_user.name == name)[0]
-            user.access_token = ''
+        '''
+        # update user set access_token = null where name = 'name';
+        '''
+        user = session_.query(model_user).filter(model_user.name == name)[0]
+        user.access_token = ''
 
-            session_.add(user)
-            session_.commit()
+        session_.add(user)
+        session_.commit()
 
-            session.pop('name')
-        else:
-            email = param['email']
-            '''
-            # update user set access_token = null where email = 이메일;
-            '''
-            user = session_.query(model_user).filter(model_user.email == email)[0]
-            user.access_token = ''
-
-            session_.add(user)
-            session_.commit()
+        session.pop('access_token')
+        user_dto.user = None
     except:
         session_.rollback()
     finally:

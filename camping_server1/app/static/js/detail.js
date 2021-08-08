@@ -7,23 +7,6 @@ var DetailInfo = {
         }
         var access_token = DetailInfo.getCookie('access_token');
 
-        // if(access_token !== undefined || typeof access_token !== 'undefined'){
-        //     $.ajax({
-        //         type : 'GET',
-        //         url : '/detail/protected',
-        //         headers : {
-        //             Authorization : 'Bearer ' + access_token
-        //         },
-        //         data : param,
-        //         dataType : 'json',
-        //         success : function(response, status, xhr){
-        //             DetailInfo.doAfterSuccess(response);
-        //         },
-        //         error : function(xhr, status, error){
-        //             alert(error);
-        //         }
-        //     })
-        // }else{
             $.getJSON('/detail/info', param).done(function(response){
                 if (response.code === 200){
                     DetailInfo.doAfterSuccess(response);
@@ -385,7 +368,7 @@ var DetailInfo = {
         $('.mySwiper2').append(
             '<div class="col">\n' +
                 '<span>\n' +
-                    '<h5 class="text-center"><span class="h5 user-name"></span>\n' +
+                    '<h5 class="text-center"><span class="h5 user-name"></span>' + '님 ' + '\n' +
                         '<span class="h5 fw-bold festival-addr" style="color: #49917D">' + res.place_info.addr.split(' ')[1] + '</span> 인근 축제/관광지는 어떠세요?\n' +
                     '</h5>\n' +
                 '</span>\n' +

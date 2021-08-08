@@ -4,41 +4,41 @@ var SignoutEvent = {
     doSignout: function(){
         $('#logout-btn').on('click', function() {
             // sns 로그인인 경우
-            if(SignoutEvent.getCookie('access_token') === undefined){
-                // kakao
-                if (Kakao.Auth.getAccessToken()) {
-                  Kakao.API.request({
-                    url: '/v1/user/unlink',
-                    success: function (response) {
-                        var url = '/user/sns/signout';
-                        location.href = url;
-                    },
-                    fail: function (error) {
-                      console.log(error)
-                    },
-                  })
-                  Kakao.Auth.setAccessToken(undefined)
-                }else{
-                    // naver
-                    var testPopUp;
-                    function openPopUp(){
-                        testPopUp= window.open("https://nid.naver.com/nidlogin.logout", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1");
-                    }
-                    function closePopUp(){
-                        testPopUp.close();
-                    }
-                    openPopUp();
-                    setTimeout(function() {
-                        closePopUp();
-                    }, 10);
-                    var url = '/user/sns/signout';
-                    location.href = url;
-                }
-            }else{
-                SignoutEvent.deleteCookie('access_token');
-                var url = '/user/signout';
-                location.href = url;
-            }
+            // if(SignoutEvent.getCookie('access_token') === undefined){
+            //     // kakao
+            //     if (Kakao.Auth.getAccessToken()) {
+            //       Kakao.API.request({
+            //         url: '/v1/user/unlink',
+            //         success: function (response) {
+            //             var url = '/auth/sns/signout';
+            //             location.href = url;
+            //         },
+            //         fail: function (error) {
+            //           console.log(error)
+            //         },
+            //       })
+            //       Kakao.Auth.setAccessToken(undefined)
+            //     }else{
+            //         // naver
+            //         var testPopUp;
+            //         function openPopUp(){
+            //             testPopUp= window.open("https://nid.naver.com/nidlogin.logout", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1");
+            //         }
+            //         function closePopUp(){
+            //             testPopUp.close();
+            //         }
+            //         openPopUp();
+            //         setTimeout(function() {
+            //             closePopUp();
+            //         }, 10);
+            //         var url = '/auth/sns/signout';
+            //         location.href = url;
+            //     }
+            // }
+            SignoutEvent.deleteCookie('access_token');
+            var url = '/auth/signout';
+            location.href = url;
+
         })
     },
     deleteCookie: function(name) {

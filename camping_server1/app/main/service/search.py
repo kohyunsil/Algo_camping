@@ -126,7 +126,7 @@ def get_popular_list(place_obj, algo_obj):
     place_info.sort(key=itemgetter(Config.STAR), reverse=True)  # star = 6
 
     return jsonify(make_resobj(place_info))
-
+ 
 # 조회순 정렬
 def get_readcount_list(place_obj, algo_obj):
     place_info = []

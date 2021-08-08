@@ -1,5 +1,9 @@
 var SignupEvent = {
     checkEmail: function(){
+        // 쿠키에 토큰이 존재하면 메인페이지로 이동
+        if (SignupEvent.getCookie('access_token') !== undefined){
+            location.href = '/';
+        }
         $('#check-btn').on('click', function(){
             var param = {
                 email : $('#email-form').val(),
@@ -55,6 +59,19 @@ var SignupEvent = {
                 }
             }
         })
+    },
+    getCookie(name){
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x == name) {
+              return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
     }
 }
 SignupEvent.signUp();

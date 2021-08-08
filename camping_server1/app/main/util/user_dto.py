@@ -1,9 +1,12 @@
-from flask_restx import Namespace, fields
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
-class UserDTO:
-    api = Namespace('user', description='relating to user')
-    user = api.model('user', {
-        'user_name': fields.String(required=False),
-        'email': fields.String(required=False),
-    })
+class UserDTO(object):
+
+    @hybrid_property
+    def user(self):
+        return self.user_obj
+
+    @user.setter
+    def user(self, user_obj):
+        self.user_obj = user_obj

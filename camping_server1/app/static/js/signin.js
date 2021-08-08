@@ -1,9 +1,14 @@
 var SigninEvent = {
     signIn: function(){
+        // 쿠키에 토큰이 존재하면 메인페이지로 이동
+        if (SigninEvent.getCookie('access_token') !== undefined){
+            location.href = '/';
+        }
         $('#signin-btn').on('click', function(){
             var param = {
                 email : $('#email-form').val(),
-                password : $('#password-form').val()
+                password : $('#password-form').val(),
+                access_token : ''
             }
             if (param.email === ''){
                 alert('이메일을 입력해주세요.');
@@ -19,23 +24,17 @@ var SigninEvent = {
                         }else{
                             SigninEvent.setCookie('access_token', response.access_token, 1);
                             var access_token = SigninEvent.getCookie('access_token');
-                            var url = '/';
-                            location.href = url;
-                            // $.ajax({
-                            //     type : 'GET',
-                            //     url : '/',
-                            //     headers : {
-                            //         Authorization : 'Bearer ' + access_token
-                            //     },
-                            //     data : {'email': param.email},
-                            //     dataType : 'json',
-                            //     success : function(response, status, xhr){
-                            //         window.location.href = '/';
-                            //     },
-                            //     error : function(xhr, status, error){
-                            //         alert(error);
-                            //     }
-                            // })
+                            param.access_token = access_token;
+
+                            // 토큰 유효성 체크
+                            $.post('/user/validation', param).done(function(response){
+                                if(response.code === 200){
+                                    var url = '/';
+                                    location.href = url;
+                                }else{
+                                    console.log(response.code);
+                                }
+                            })
                         }
                     }else{
                         alert(response.code + '다시 시도해주세요.');
@@ -67,7 +66,6 @@ var SigninEvent = {
                                             $.post('/user/sns/signin', param).done(function(response){
                                                 if (response.code === 200){
                                                     location.href = '/';
-                                                    console.log(param);
                                                 }
                                             })
                                         },
