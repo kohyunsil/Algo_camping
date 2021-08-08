@@ -385,4 +385,5 @@ class FinalWeights:
         weights_reg = RegDef()
 
         df = (weights_freq.weights_calc().weights + weights_reg.polar_linear_reg().weights)/2
-        print(df)
+        final_weights = pd.concat([WeightsCalc().weights_df[['category', 'colname']], df],1)
+        print(final_weights)
