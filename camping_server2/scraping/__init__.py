@@ -1,7 +1,8 @@
 import kakao_reviews as kr
 import naverv4_blog as nv4
-import gocamp_crawl as gc
-import gocamp_link_crawl as gl
+# import gocamp_crawl as gc
+# import gocamp_link_crawl as gl
+import gocamp_scrapy as gs
 import datetime
 from camping_server2.bot import slackbot
 import camping_server2.config as config
@@ -98,4 +99,9 @@ if __name__ == '__main__':
     # ogcamp = oc.OgcampScraping()
     # ogcamp.get_data()
     # ogcamp.get_details()
+
+    ## new gocamping crawler
+    c = gs.GocampCrawl()
+    # c.view_crawler()
+    c.gocamp_crawler('modifiedtime')
 
