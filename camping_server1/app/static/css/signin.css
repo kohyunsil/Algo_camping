@@ -1,0 +1,74 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+#logo{
+    color: #1f284a;
+    font-family: "Harlow Solid Italic";
+    font-size: 2rem;
+    text-decoration: none;
+}
+.navbar-brand{
+    text-align: center;
+}
+/*login container*/
+.login{
+    margin-top: 16rem;
+}
+.container-fluid{
+    height: 100%;
+    width: 100%;
+}
+div.container.col-md-6.login > div.p-5.bg-light.col-md-auto.rounded-3.outer-2 > div > h2{
+    color: #1f284a;
+}
+.signup-href{
+    color: #5a5a5a;
+    font-size: 0.8rem;
+}
+.signup-href:hover{
+    color: #1f284a;
+    font-size: 0.8rem;
+}
+.btn-signin{
+    background-color: #1f284a;
+    color: white;
+}
+.btn-kakao{
+    background-color: #f7d600;
+    color: #1f284a;
+}
+.btn-naver{
+    background-color: #2DB400;
+    color: white;
+}
+.btn-kakao:hover{
+    background-color: #eccd00;
+    color: white;
+}
+.btn-naver:hover{
+    background-color: #2fb008;
+    color: #1f284a;
+}
+.btn-signin:hover,
+.btn-oauth:hover{
+    background-color: white;
+    color: #1f284a;
+}
+.text-or{
+    text-align: center;
+    padding-top: 0.5rem;
+}

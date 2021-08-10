@@ -1,0 +1,78 @@
+/*search result nav*/
+.container-fluid{
+    background-color: white;
+}
+.loading-text{
+    margin-left: -13px;
+}
+.search-result{
+    visibility: hidden;
+    width: 100vw;
+    margin-top: 8rem;
+    padding: 2px;
+    background-color: rgb(0, 0, 0, 0.2);
+}
+body > div.container-fluid.search-result > nav > a{
+    padding-left: 2rem;
+}
+.btn-group{
+  margin-right: 5rem;
+}
+/*search card list*/
+.tags{
+    min-height: 60px;
+    height: 60px;
+}
+.card-body{
+    text-align: center;
+    border: none;
+}
+.card-body a{
+    text-decoration: none;
+    color: #3e3e3e;
+}
+.star{
+    color: #49917D;
+    font-family: BlinkMacSystemFont, avenir next, avenir, helvetica, helvetica neue, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+}
+.detail-score{
+    color: #2b2b2b;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica, helvetica neue, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.card-img-fluid{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    object-fit: cover;
+}
+.btn-tag{
+    background-color: #e2e2e2;
+    border-radius: 1.3rem;
+    border: none;
+    font-size: 0.9rem;
+    color: #424242;
+    margin-bottom: 0.2rem;
+}
+
+.btn-tag:hover,
+.btn-tag:focus,
+.btn-tag:active{
+    background-color: #262b35;
+    color: #ffffff;
+}
+div:nth-child(5) > div > div > div > img{
+    height:19rem;
+}
+/*swiper.js img*/
+.swiper-container {
+    width: 100%;
+    height: 19rem;
+    border: none;
+}
+.swiper-slide img {
+    display: block;
+    object-fit: cover;
+}

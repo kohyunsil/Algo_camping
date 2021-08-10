@@ -1,0 +1,360 @@
+absl-py==0.12.0
+aniso8601==9.0.1
+appnope==0.1.2
+argon2-cffi==20.1.0
+arviz @ file:///tmp/build/80754af9/arviz_1614019183254/work
+astunparse==1.6.3
+async-generator==1.10
+attrs==20.3.0
+Automat==20.2.0
+backcall==0.2.0
+bcrypt==3.2.0
+beautifulsoup4 @ file:///home/linux1/recipes/ci/beautifulsoup4_1610988766420/work
+bleach==3.3.0
+bokeh @ file:///opt/concourse/worker/volumes/live/5a312fdd-9516-439e-63a9-67fcf2e3dee8/volume/bokeh_1617827440191/work
+branca==0.4.2
+brotlipy==0.7.0
+cachetools==4.2.1
+certifi==2021.5.30
+cffi @ file:///opt/concourse/worker/volumes/live/ca3c0fea-9d0f-4489-6889-89b42078ed37/volume/cffi_1613246931142/work
+cftime @ file:///opt/concourse/worker/volumes/live/19aa8553-ef83-4f8e-40da-167f8acd0344/volume/cftime_1613248241482/work
+chardet @ file:///opt/concourse/worker/volumes/live/9efbf151-b45b-463d-6340-a5c399bf00b7/volume/chardet_1607706825988/work
+click @ file:///home/linux1/recipes/ci/click_1610990599742/work
+click-plugins==1.1.1
+cligj==0.7.1
+cloudpickle @ file:///tmp/build/80754af9/cloudpickle_1598884132938/work
+colourmap==0.1.1
+constantly==15.1.0
+convertdate @ file:///home/conda/feedstock_root/build_artifacts/convertdate_1615678826465/work
+cryptography @ file:///opt/concourse/worker/volumes/live/cdf8ff17-b0bf-4081-524c-b5a0afe929ba/volume/cryptography_1616769280208/work
+cssselect==1.1.0
+cycler==0.10.0
+Cython @ file:///opt/concourse/worker/volumes/live/203a63af-5d69-4f3f-44a3-6968eb710a6a/volume/cython_1618435144870/work
+cytoolz==0.11.0
+dask @ file:///tmp/build/80754af9/dask-core_1615055117017/work
+decorator==4.4.2
+defusedxml==0.7.1
+distributed @ file:///opt/concourse/worker/volumes/live/82f02f52-d725-4053-413b-163900425318/volume/distributed_1617384070915/work
+entrypoints==0.3
+ephem @ file:///opt/concourse/worker/volumes/live/5288f9c0-a149-4319-62bf-67fcb07432b3/volume/ephem_1600355405696/work
+et-xmlfile==1.0.1
+fake-useragent==0.1.11
+fbprophet @ file:///Users/runner/miniforge3/conda-bld/fbprophet_1599365544983/work
+Fiona==1.8.19
+Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
+Flask-JWT-Extended==4.2.3
+Flask-MongoAlchemy==0.7.2
+flask-restx==0.4.0
+Flask-SQLAlchemy==2.5.1
+Flask-WTF==0.15.1
+flatbuffers==1.12
+folium==0.12.1
+fsspec @ file:///tmp/build/80754af9/fsspec_1617959894824/work
+gast==0.3.3
+geopandas @ git+git://github.com/geopandas/geopandas.git@f4a9763f90d65dea21e2e628e60326e27ca13576
+gevent @ file:///opt/concourse/worker/volumes/live/c9692c6d-50c4-4197-4de2-6c138d206ad6/volume/gevent_1616772940935/work
+gmpy2==2.0.8
+google-auth==1.29.0
+google-auth-oauthlib==0.4.4
+google-pasta==0.2.0
+graphviz==0.16
+greenlet @ file:///opt/concourse/worker/volumes/live/8bdf7f20-9285-4102-6a26-20f7823be2b8/volume/greenlet_1620913619263/work
+grpcio==1.32.0
+h2==3.2.0
+h5py==2.10.0
+HeapDict==1.0.1
+hijri-converter @ file:///home/conda/feedstock_root/build_artifacts/hijri-converter_1612531902526/work
+holidays @ file:///home/conda/feedstock_root/build_artifacts/holidays_1612548464349/work
+hpack==3.0.0
+hyperframe==5.2.0
+hyperlink==21.0.0
+idna @ file:///home/linux1/recipes/ci/idna_1610986105248/work
+imageio==2.9.0
+imbalanced-learn==0.8.0
+importlib-metadata==3.7.3
+incremental==21.3.0
+ipykernel==5.5.0
+ipython==7.21.0
+ipython-genutils==0.2.0
+ipywidgets==7.6.3
+itemadapter==0.2.0
+itemloaders==1.0.4
+itsdangerous @ file:///tmp/build/80754af9/itsdangerous_1621432558163/work
+jdcal==1.4.1
+jedi==0.18.0
+Jinja2 @ file:///tmp/build/80754af9/jinja2_1612213139570/work
+jmespath==0.10.0
+joblib @ file:///tmp/build/80754af9/joblib_1613502643832/work
+JPype1==1.2.1
+jsonschema==3.2.0
+jupyter==1.0.0
+jupyter-client==6.1.12
+jupyter-console==6.2.0
+jupyter-core==4.7.1
+jupyterlab-pygments==0.1.2
+jupyterlab-widgets==1.0.0
+Keras==2.4.3
+Keras-Preprocessing==1.1.2
+kiwisolver @ file:///opt/concourse/worker/volumes/live/1e6d28e8-da14-4365-7344-567a05db7efc/volume/kiwisolver_1612282399491/work
+korean-lunar-calendar @ file:///home/conda/feedstock_root/build_artifacts/korean_lunar_calendar_1589354365811/work
+lightgbm==3.2.0
+locket==0.2.1
+LunarCalendar==0.0.9
+lxml==4.6.3
+macropy3==1.1.0b2
+Markdown==3.3.4
+MarkupSafe==1.1.1
+matplotlib @ file:///opt/concourse/worker/volumes/live/41e8cd50-031f-4dda-5787-dd3c4f4e0f08/volume/matplotlib-suite_1613407855571/work
+missingno @ file:///tmp/build/80754af9/missingno_1605824147679/work
+mistune==0.8.4
+mkl-fft==1.3.0
+mkl-random @ file:///opt/concourse/worker/volumes/live/45391dab-1d51-4226-600a-9065613b835f/volume/mkl_random_1618853975662/work
+mkl-service==2.3.0
+mlxtend==0.18.0
+MongoAlchemy==0.19
+MouseInfo==0.1.3
+mpmath==1.2.1
+msgpack @ file:///opt/concourse/worker/volumes/live/790199ef-c7e3-451c-7ad3-97c9dd52a04d/volume/msgpack-python_1612287158473/work
+munch==2.5.0
+nbclient==0.5.3
+nbconvert==6.0.7
+nbformat==5.1.2
+nest-asyncio==1.5.1
+netCDF4 @ file:///opt/concourse/worker/volumes/live/036bf26e-3598-4e54-730a-657eff007636/volume/netcdf4_1613684171674/work
+networkx==2.5.1
+nltk @ file:///home/conda/feedstock_root/build_artifacts/nltk_1616505766995/work
+notebook==6.2.0
+numpy @ file:///opt/concourse/worker/volumes/live/13cc042b-807c-4cce-4706-4129165bc64e/volume/numpy_and_numpy_base_1618497232858/work
+oauthlib==3.1.0
+olefile==0.46
+openpyxl @ file:///tmp/build/80754af9/openpyxl_1615411699337/work
+opt-einsum==3.3.0
+packaging @ file:///tmp/build/80754af9/packaging_1611952188834/work
+pandas==1.2.4
+pandocfilters==1.4.3
+parsel==1.6.0
+parso==0.8.1
+partd @ file:///tmp/build/80754af9/partd_1618000087440/work
+patsy==0.5.1
+pca==1.5.0
+pexpect==4.8.0
+pickleshare==0.7.5
+Pillow @ file:///opt/concourse/worker/volumes/live/0aff898a-aba9-4321-76c2-58d629e96356/volume/pillow_1617386155885/work
+plotly==4.14.3
+plotly-express==0.4.1
+prettytable==2.1.0
+priority==1.3.0
+prometheus-client==0.9.0
+prompt-toolkit==3.0.17
+Protego==0.1.16
+protobuf==3.15.8
+psutil @ file:///opt/concourse/worker/volumes/live/8e01e0e9-ea07-4efa-7afb-fae37c1b9faa/volume/psutil_1612298009056/work
+ptyprocess==0.7.0
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+PyAutoGUI==0.9.52
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+PyDispatcher==2.0.5
+PyGetWindow==0.0.9
+Pygments==2.8.1
+PyJWT==2.1.0
+PyMeeus @ file:///home/conda/feedstock_root/build_artifacts/pymeeus_1615809745702/work
+pymongo==2.8.1
+PyMsgBox==1.0.9
+PyMySQL==1.0.2
+pyobjc==7.2
+pyobjc-core==7.2
+pyobjc-framework-Accounts==7.2
+pyobjc-framework-AddressBook==7.2
+pyobjc-framework-AdSupport==7.2
+pyobjc-framework-AppleScriptKit==7.2
+pyobjc-framework-AppleScriptObjC==7.2
+pyobjc-framework-ApplicationServices==7.2
+pyobjc-framework-AuthenticationServices==7.2
+pyobjc-framework-AutomaticAssessmentConfiguration==7.2
+pyobjc-framework-Automator==7.2
+pyobjc-framework-AVFoundation==7.2
+pyobjc-framework-AVKit==7.2
+pyobjc-framework-BusinessChat==7.2
+pyobjc-framework-CalendarStore==7.2
+pyobjc-framework-CFNetwork==7.2
+pyobjc-framework-CloudKit==7.2
+pyobjc-framework-Cocoa==7.2
+pyobjc-framework-Collaboration==7.2
+pyobjc-framework-ColorSync==7.2
+pyobjc-framework-Contacts==7.2
+pyobjc-framework-ContactsUI==7.2
+pyobjc-framework-CoreAudio==7.2
+pyobjc-framework-CoreAudioKit==7.2
+pyobjc-framework-CoreBluetooth==7.2
+pyobjc-framework-CoreData==7.2
+pyobjc-framework-CoreHaptics==7.2
+pyobjc-framework-CoreLocation==7.2
+pyobjc-framework-CoreMedia==7.2
+pyobjc-framework-CoreMediaIO==7.2
+pyobjc-framework-CoreMIDI==7.2
+pyobjc-framework-CoreML==7.2
+pyobjc-framework-CoreMotion==7.2
+pyobjc-framework-CoreServices==7.2
+pyobjc-framework-CoreSpotlight==7.2
+pyobjc-framework-CoreText==7.2
+pyobjc-framework-CoreWLAN==7.2
+pyobjc-framework-CryptoTokenKit==7.2
+pyobjc-framework-DeviceCheck==7.2
+pyobjc-framework-DictionaryServices==7.2
+pyobjc-framework-DiscRecording==7.2
+pyobjc-framework-DiscRecordingUI==7.2
+pyobjc-framework-DiskArbitration==7.2
+pyobjc-framework-DVDPlayback==7.2
+pyobjc-framework-EventKit==7.2
+pyobjc-framework-ExceptionHandling==7.2
+pyobjc-framework-ExecutionPolicy==7.2
+pyobjc-framework-ExternalAccessory==7.2
+pyobjc-framework-FileProvider==7.2
+pyobjc-framework-FileProviderUI==7.2
+pyobjc-framework-FinderSync==7.2
+pyobjc-framework-FSEvents==7.2
+pyobjc-framework-GameCenter==7.2
+pyobjc-framework-GameController==7.2
+pyobjc-framework-GameKit==7.2
+pyobjc-framework-GameplayKit==7.2
+pyobjc-framework-ImageCaptureCore==7.2
+pyobjc-framework-IMServicePlugIn==7.2
+pyobjc-framework-InputMethodKit==7.2
+pyobjc-framework-InstallerPlugins==7.2
+pyobjc-framework-InstantMessage==7.2
+pyobjc-framework-Intents==7.2
+pyobjc-framework-IOSurface==7.2
+pyobjc-framework-iTunesLibrary==7.2
+pyobjc-framework-LatentSemanticMapping==7.2
+pyobjc-framework-LaunchServices==7.2
+pyobjc-framework-libdispatch==7.2
+pyobjc-framework-LinkPresentation==7.2
+pyobjc-framework-LocalAuthentication==7.2
+pyobjc-framework-MapKit==7.2
+pyobjc-framework-MediaAccessibility==7.2
+pyobjc-framework-MediaLibrary==7.2
+pyobjc-framework-MediaPlayer==7.2
+pyobjc-framework-MediaToolbox==7.2
+pyobjc-framework-Metal==7.2
+pyobjc-framework-MetalKit==7.2
+pyobjc-framework-MetalPerformanceShaders==7.2
+pyobjc-framework-ModelIO==7.2
+pyobjc-framework-MultipeerConnectivity==7.2
+pyobjc-framework-NaturalLanguage==7.2
+pyobjc-framework-NetFS==7.2
+pyobjc-framework-Network==7.2
+pyobjc-framework-NetworkExtension==7.2
+pyobjc-framework-NotificationCenter==7.2
+pyobjc-framework-OpenDirectory==7.2
+pyobjc-framework-OSAKit==7.2
+pyobjc-framework-OSLog==7.2
+pyobjc-framework-PencilKit==7.2
+pyobjc-framework-Photos==7.2
+pyobjc-framework-PhotosUI==7.2
+pyobjc-framework-PreferencePanes==7.2
+pyobjc-framework-PushKit==7.2
+pyobjc-framework-Quartz==7.2
+pyobjc-framework-QuickLookThumbnailing==7.2
+pyobjc-framework-SafariServices==7.2
+pyobjc-framework-SceneKit==7.2
+pyobjc-framework-ScreenSaver==7.2
+pyobjc-framework-ScriptingBridge==7.2
+pyobjc-framework-SearchKit==7.2
+pyobjc-framework-Security==7.2
+pyobjc-framework-SecurityFoundation==7.2
+pyobjc-framework-SecurityInterface==7.2
+pyobjc-framework-ServiceManagement==7.2
+pyobjc-framework-Social==7.2
+pyobjc-framework-SoundAnalysis==7.2
+pyobjc-framework-Speech==7.2
+pyobjc-framework-SpriteKit==7.2
+pyobjc-framework-StoreKit==7.2
+pyobjc-framework-SyncServices==7.2
+pyobjc-framework-SystemConfiguration==7.2
+pyobjc-framework-SystemExtensions==7.2
+pyobjc-framework-UserNotifications==7.2
+pyobjc-framework-VideoSubscriberAccount==7.2
+pyobjc-framework-VideoToolbox==7.2
+pyobjc-framework-Vision==7.2
+pyobjc-framework-WebKit==7.2
+pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1608057966937/work
+pyparsing @ file:///home/linux1/recipes/ci/pyparsing_1610983426697/work
+pyperclip==1.8.2
+pyproj==2.6.1.post1
+PyRect==0.1.4
+pyrsistent==0.17.3
+PyScreeze==0.1.27
+PySocks @ file:///opt/concourse/worker/volumes/live/ef943889-94fc-4539-798d-461c60b77804/volume/pysocks_1605305801690/work
+pystan @ file:///opt/concourse/worker/volumes/live/229217d9-d181-4bb6-603d-ab129f3eb1da/volume/pystan_1613565291325/work
+python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+PyTweening==1.0.3
+pytz @ file:///tmp/build/80754af9/pytz_1612215392582/work
+PyWavelets==1.1.1
+PyYAML==5.4.1
+pyzmq==22.0.3
+qtconsole==5.0.2
+QtPy==1.9.0
+queuelib==1.6.1
+regex @ file:///opt/concourse/worker/volumes/live/e6eeb005-ec8b-451a-7c56-1e24b2d15761/volume/regex_1617569708726/work
+requests @ file:///tmp/build/80754af9/requests_1608241421344/work
+requests-oauthlib==1.3.0
+retrying==1.3.3
+rise==5.7.1
+rsa==4.7.2
+rubicon-objc==0.4.0
+scikit-image==0.18.1
+scikit-learn==0.24.1
+scipy @ file:///opt/concourse/worker/volumes/live/a038d231-fbb5-4cf5-6b71-513b1c94ddce/volume/scipy_1618855950518/work
+Scrapy==2.5.0
+seaborn @ file:///tmp/build/80754af9/seaborn_1608578541026/work
+selenium @ file:///opt/concourse/worker/volumes/live/ce617773-1849-4851-6e61-21e69dc5e189/volume/selenium_1614267784770/work
+Send2Trash==1.5.0
+service-identity==21.1.0
+Shapely==1.7.1
+simplejson==3.17.2
+six @ file:///opt/concourse/worker/volumes/live/f983ba11-c9fe-4dff-7ce7-d89b95b09771/volume/six_1605205318156/work
+sklearn==0.0
+sortedcontainers @ file:///tmp/build/80754af9/sortedcontainers_1606865132123/work
+soupsieve @ file:///tmp/build/80754af9/soupsieve_1616183228191/work
+SQLAlchemy==1.4.17
+statsmodels==0.12.2
+sympy @ file:///opt/concourse/worker/volumes/live/347e855c-d365-447b-5b46-aa042092978f/volume/sympy_1608137682049/work
+tblib @ file:///tmp/build/80754af9/tblib_1597928476713/work
+tensorboard==2.4.1
+tensorboard-plugin-wit==1.8.0
+tensorflow==2.4.1
+tensorflow-estimator==2.4.0
+termcolor==1.1.0
+terminado==0.9.2
+testpath==0.4.4
+threadpoolctl==2.1.0
+tifffile==2021.4.8
+toolz @ file:///home/linux1/recipes/ci/toolz_1610987900194/work
+torch==1.8.1
+torchaudio==0.8.0a0+e4e171a
+torchvision==0.9.1
+tornado @ file:///opt/concourse/worker/volumes/live/d531d395-893c-4ca1-6a5f-717b318eb08c/volume/tornado_1606942307627/work
+tqdm @ file:///tmp/build/80754af9/tqdm_1615925068909/work
+traitlets==5.0.5
+Twisted==21.2.0
+typing-extensions @ file:///home/ktietz/src/ci_mi/typing_extensions_1612808209620/work
+urllib3 @ file:///tmp/build/80754af9/urllib3_1615837158687/work
+w3lib==1.22.0
+wcwidth==0.2.5
+webencodings==0.5.1
+Werkzeug @ file:///home/ktietz/src/ci/werkzeug_1611932622770/work
+wget==3.2
+widgetsnbextension==3.5.1
+wrapt==1.12.1
+WTForms==2.3.3
+xarray @ file:///tmp/build/80754af9/xarray_1614625053385/work
+xgboost==1.3.3
+xlrd==2.0.1
+XlsxWriter @ file:///home/ktietz/src/ci_ipy2/xlsxwriter_1612556818988/work
+xmltodict==0.12.0
+zict==2.0.0
+zipp==3.4.1
+zope.event==4.5.0
+zope.interface @ file:///opt/concourse/worker/volumes/live/e2e9977a-a3b7-4323-6e48-b61fb3ed115b/volume/zope.interface_1625036168072/work
+
