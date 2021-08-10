@@ -1,11 +1,7 @@
+import config as config
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-import warnings
-import config as config
-
-warnings.simplefilter("ignore")
-
 import re
 import numpy as np
 import pandas as pd
@@ -13,9 +9,11 @@ import seaborn as sns
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import camp_api_crawling_merge as cacm
-import config as config
+import warnings
 
+warnings.simplefilter("ignore")
 TODAY = datetime.today().strftime('%m%d')
+
 
 class TagMerge:
     def __init__(self):
@@ -82,10 +80,12 @@ class TagMerge:
 
         return merge_result
 
+
 class TagPoints:
     def __init__(self):
         self.path = config.Config.PATH
         self.df = TagMerge().tag_merge()
+        self.df.set_index(['contentId'], drop=False, inplace=True)
         self.dm = config.Config.TAG_DM
 
     def get_tag_dict(self):
@@ -106,7 +106,6 @@ class TagPoints:
         return cat_points
 
     def make_tag_df(self, content_id=False):
-        self.df.set_index(['contentId'], drop=False, inplace=True)
         self.df.replace(0, np.NaN, inplace=True)
         tag_dict = self.get_tag_dict()
         tag_point_df = pd.DataFrame(self.df['camp'])
@@ -126,40 +125,53 @@ class TagPoints:
         tag_point_df.drop('camp', axis=1, inplace=True)
         target_df = tag_point_df.loc[[content_id]].T.sort_values(content_id, ascending=False)
         target_df['cat_points'] = self.get_cat_num(target_df.index.tolist(), content_id)
-        target_df['total_points'] = target_df[content_id] * target_df['cat_points']
+        # target_df['total_points'] = target_df[content_id] * target_df['cat_points']
+        target_df['total_points'] = target_df[content_id] * 100 + target_df['cat_points'] / 100  # 태그 크기 차등을 위해 지정
         target_df = target_df.sort_values('total_points', ascending=False)
         return target_df
 
     def tag_priority(self, content_id, rank=5):
         target_df = self.apply_cat_points(content_id)
         target_df.dropna(axis=0, inplace=True)
-        uq_points = np.unique(target_df[content_id].iloc[:rank]).tolist()
-        uq_points.sort(reverse=True)
-        uq_tag_len = len(uq_points)
 
-        # 동점자가 있다면 원래 포인트 cat_points 반영된 point 로 정렬 후 상위 rank 개
-        if uq_tag_len < rank:
-            tag_prior_ls = []
-            for p in uq_points:
-                temp_df = target_df[target_df[content_id] == p].sort_values('total_points', ascending=False)
-                for t in temp_df.index:
-                    tag_prior_ls.append(t)
-            tag_prior_ls = tag_prior_ls[:rank]
+        target_df = target_df.sort_values('total_points', ascending=False)
+        tag_prior_ls = target_df.iloc[:rank].index.tolist()
+        tag_point_ls = target_df.iloc[:rank]['total_points'].tolist()
 
-        # 동점자가 없다면 원래 포인트 상위 rank 개
-        else:
-            target_df = target_df.sort_values(content_id, ascending=False)
-            tag_prior_ls = target_df.iloc[:rank].index.tolist()
+        print(content_id, tag_prior_ls, tag_point_ls)
+        return tag_prior_ls, tag_point_ls
 
-        print(content_id, tag_prior_ls)
-        return tag_prior_ls
-
-    def make_tag_prior_df(self, rank):
-        tag_prior_dict = {}
+    def make_tag_prior_df(self, rank=5):
+        tag_dict, point_dict = {}, {}
         for content_id in tqdm(self.df.index.tolist()):
-            tag_ls = self.tag_priority(content_id, rank=rank)
-            tag_prior_dict[content_id] = tag_ls
+            tag_ls, point_ls = self.tag_priority(content_id=content_id, rank=rank)
+            tag_dict[content_id] = tag_ls
+            point_dict[content_id] = point_ls
 
-        tag_df = pd.DataFrame(list(tag_prior_dict.items()), columns=['contentId', 'tags'])
-        tag_df.to_csv(self.path + f"top{rank}_tags_{config.Config.NOW}.csv")
-        return tag_df
+        tag_df = pd.DataFrame(list(tag_dict.items()), columns=['contentId', '5tags'])
+        point_df = pd.DataFrame(list(point_dict.items()), columns=['contentId', '5points'])
+        tag_point_df = pd.merge(tag_df, point_df, on='contentId')
+
+        for n in range(1, 6):
+            tag_point_df[f'tag{n}'] = ""
+            tag_point_df[f'tag_point{n}'] = ""
+
+        for row, tag in enumerate(tag_point_df['5tags'].tolist()):
+            for idx in range(len(tag)):
+                try:
+                    tag_point_df[f'tag{idx + 1}'].iloc[row] = tag_point_df['5tags'][row][idx]
+                except:
+                    tag_point_df[f'tag{idx + 1}'].iloc[row] = np.nan
+
+        for row, point in enumerate(tag_point_df['5points'].tolist()):
+            for idx in range(len(point)):
+                try:
+                    tag_point_df[f'tag_point{idx + 1}'].iloc[row] = float(tag_point_df['5points'][row][idx])
+                except:
+                    tag_point_df[f'tag_point{idx + 1}'].iloc[row] = np.nan
+        tag_point_df[['tag_point1', 'tag_point2', 'tag_point3', 'tag_point4', 'tag_point5']] = \
+            tag_point_df[['tag_point1', 'tag_point2', 'tag_point3', 'tag_point4', 'tag_point5']].apply(pd.to_numeric)
+        tag_point_df.drop(['5tags', '5points'], axis=1, inplace=True)
+        tag_point_df.to_csv(self.path + f"top{rank}_tags_{config.Config.NOW}.csv")
+        print(tag_point_df)
+        return tag_point_df
