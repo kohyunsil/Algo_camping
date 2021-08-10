@@ -62,12 +62,15 @@ def is_duplicate(param):
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
-    query = session_.query(model_user).filter(model_user.email == email).all()
+    try:
+        query = session_.query(model_user).filter(model_user.email == email).all()
 
-    param['flag'] = flag if len(query) == 0 else not flag
-    param['code'] = 200
-    session_.close()
-
+        param['flag'] = flag if len(query) == 0 else not flag
+        param['code'] = 200
+    except:
+        param['code'] = 500
+    finally:
+        session_.close()
     return param
 
 # 회원가입

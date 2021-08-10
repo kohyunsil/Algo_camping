@@ -58,6 +58,7 @@ def get_detail(param):
                 params['user_name'] = '사용자'
         params['code'] = 200
 
+    print(params)
     return jsonify(params)
 
 # 관광지, 축제 정보

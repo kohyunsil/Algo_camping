@@ -45,31 +45,14 @@ var SearchList = {
             place_info : '',
         }
         var access_token = SearchList.getCookie('access_token');
-        // if (access_token !== undefined || typeof access_token !== 'undefined'){
-        //     $.ajax({
-        //         type : 'GET',
-        //         url : '/search/protected',
-        //         headers : {
-        //             Authorization : 'Bearer ' + access_token
-        //         },
-        //         data : params,
-        //         dataType : 'json',
-        //         success : function(response, status, xhr){
-        //             SearchList.doAfterSuccess(response);
-        //         },
-        //         error : function(xhr, status, error){
-        //             alert(error);
-        //         }
-        //     })
-        // }else{
-            $.getJSON('/search/list', params).done(function(response){
-                if(response.code === 200){
-                    SearchList.getSearchData(response);
-                }else{
-                    alert(response.msg);
-                }
-            })
-        // }
+        console.log(params)
+        $.getJSON('/search/list', params).done(function(response){
+            if(response.code === 200){
+                SearchList.getSearchData(response);
+            }else{
+                alert(response.msg);
+            }
+        })
     },
     showAlgoStars: function(res){
         var star = '';
