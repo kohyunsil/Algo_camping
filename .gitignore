@@ -46,6 +46,9 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 
+.idea/
+
+camping_server2/keys/
 camping_server1/.idea/
 
 camping_server1/data.ini
