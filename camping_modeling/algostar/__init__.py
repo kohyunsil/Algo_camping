@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # c5 = cp.Cat5Points()
     # algo = ap.AlgoPoints()
     # tag = tp.TagPoints()
-    final_weights = wc.FinalWeights()
+    # final_weights = wc.FinalWeights()
 
     # algo.polar_points('답게')
     # algo.algo_star('별똥별 글램핑')
@@ -30,4 +30,6 @@ if __name__ == '__main__':
     # tag.tag_priority(7980, rank=5)
     # tag_df = tag.make_tag_prior_df(rank=7)
 
-    final_weights.final_weights()
+    tag = tp.TagMerge()
+    tag.tag_merge()
+    # final_weights.final_weights()

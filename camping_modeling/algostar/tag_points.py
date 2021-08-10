@@ -20,6 +20,7 @@ class TagMerge:
         self.path = config.Config.PATH
         self.api_data = config.Config.API_DATA
         self.crawl_data = config.Config.CRAWL_DATA
+        self.dm = config.Config.DIMENSION
 
     def camp_data_merge(self):
         tags = cacm.CampMerge()
@@ -61,24 +62,15 @@ class TagMerge:
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
         merge_result = merge_result.fillna(0)
         merge_result = merge_result.drop(['만족도', '가격', '목적', '메뉴', '예약', '음식양', '입장', '혼잡도'], 1)
-        merge_result = merge_result.rename(
-            columns={'친절한': 'friendly_s', '재미있는': 'exciting_s', '여유있는': 'relax_s', '사이트 간격이 넓은': 'spacious_s',
-                     '깨끗한': 'clean_s', '온수 잘 나오는': 'hot_water_s', '차대기 편한': 'parking_s', '아이들 놀기 좋은': 'with_child_s',
-                     '생태교육': 'ecological_s', '문화유적': 'cultural_s', '축제': 'festival_s', '둘레길': 'trail_s',
-                     '자전거 타기 좋은': 'bicycle_s',
-                     '별 보기 좋은': 'star_s', '힐링': 'healing_s', '커플': 'with_couple_s', '가족': 'with_family_s',
-                     '수영장 있는': 'pool_s',
-                     '계곡옆': 'valley_s', '물놀이 하기 좋은': 'waterplay_s', '물맑은': 'pure_water_s', '그늘이 많은': 'shade_s',
-                     '바다가 보이는': 'ocean_s',
-                     '익스트림': 'extreme_s', '맛': 'taste_r', '메인시설': 'main_r', '부대/공용시설': 'facility_r', '분위기': 'atmos_r',
-                     '비품': 'equipment_r',
-                     '서비스': 'service_r', '수영장': 'pool_r', '시설물관리': 'manage_r', '아이 만족도': 'childlike_r',
-                     '와이파이': 'wifi_r', '위치': 'location_r',
-                     '음식/조식': 'food_r', '전망': 'view_r', '주차': 'parking_r', '즐길거리': 'exciting_r', '청결도': 'clean_r',
-                     '편의/부대시설': 'conv_facility_r'})
-        merge_result = pd.concat([merge_result, algo_df], 1)
+        re_cols = merge_result.columns.tolist()
+        for re_col in re_cols:
+            col_names = self.dm[self.dm.originalname == f'{re_col}']
+            col_name = np.unique(col_names.colname)
+            merge_result = merge_result.rename(columns = {f'{re_col}': f'{"".join(col_name)}'})
 
-        return merge_result
+        merge_result = pd.concat([merge_result, algo_df], 1)
+        merge_result.to_csv(self.path + 'tag_merge.csv', encoding='utf-8-sig', index=False )
+        return print(merge_result)
 
 
 class TagPoints:

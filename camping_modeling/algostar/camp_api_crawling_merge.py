@@ -1,4 +1,5 @@
 import re
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import config as config
@@ -30,9 +31,11 @@ class CampMerge:
         self.crawl_data = config.Config.CRAWL_DATA
         self.nv_data = config.Config.NV_DATA
         self.kk_data = config.Config.KAKAO
+        self.dimension = config.Config.DIMENSION
 
     def camp_api_preprocessing(self):
         global data
+
         camp_api_data = self.api_data
         camp_crawling_data = self.crawl_data
         datas = camp_crawling_data['link']
@@ -72,12 +75,9 @@ class CampMerge:
 
         tag_data = self.camp_api_preprocessing()
         tag_data = tag_data.drop(['친절한', '재미있는', '여유있는'], 1)
-        camp_data1 = data[['facltNm', 'contentId', 'insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc',
-                           'glampInnerFclty',
-                           'caravInnerFclty', 'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo',
-                           'brazierCl', 'sbrsCl',
-                           'sbrsEtc', 'posblFcltyCl', 'extshrCo', 'frprvtWrppCo', 'frprvtSandCo', 'fireSensorCo',
-                           'animalCmgCl']]
+        camp_data1 = data[['facltNm', 'contentId', 'insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc','glampInnerFclty',
+                           'caravInnerFclty', 'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo', 'brazierCl', 'sbrsCl',
+                           'sbrsEtc', 'posblFcltyCl', 'extshrCo', 'frprvtWrppCo', 'frprvtSandCo', 'fireSensorCo', 'animalCmgCl']]
         camp_algo_merge = pd.concat([camp_data1, tag_data], 1)
 
         def col_count(colname):
@@ -89,7 +89,6 @@ class CampMerge:
             col_count(i)
 
         camp_algo_merge = camp_algo_merge.rename(columns={'facltNm':'camp'})
-         # camp_algo_merge.to_csv('../datas/camp_algo_merge.csv', index=False, encoding='utf-8-sig')
 
         return camp_algo_merge
 
@@ -114,8 +113,7 @@ class ReviewPre(CampMerge):
         nv_data['user_info'] = nv_data['user_info'].astype('float64')
         nv_data['visit_info'] = nv_data['visit_info'].astype('float64')
         nv_data = nv_data.drop(['addr', 'base_addr', 'user_name', 'visit_info'], 1)
-        nv_data = nv_data.rename(
-            columns={'title': 'camp', 'highlight_review': 'review', 'star': 'point', 'user_info': 'avg_point'})
+        nv_data = nv_data.rename(columns={'title': 'camp', 'highlight_review': 'review', 'star': 'point', 'user_info': 'avg_point'})
 
         nv_data = nv_data[['camp', 'review', 'point', 'category', 'avg_point']]
         nv_data['point'] = nv_data['point'].astype('float64')
@@ -179,17 +177,11 @@ class ReviewCamp(ReviewPre):
         result1 = merge_result.iloc[:, 44:].fillna(0)
         result2 = merge_result.iloc[:, :44]
         algo_result = pd.concat([result2, result1], 1)
-        algo_result = algo_result.rename(columns={'사이트 간격이 넓은':'spacious_s', '깨끗한':'clean_s', '온수 잘 나오는':'hot_water_s',
-        '차대기 편한':'parking_s', '아이들 놀기 좋은':'with_child_s', '생태교육':'ecological_s', '문화유적':'cultural_s', '축제':'festival_s',
-        '둘레길':'trail_s', '자전거 타기 좋은':'bicycle_s', '별 보기 좋은':'star_s', '힐링':'healing_s', '커플':'with_couple_s', '가족':'with_family_s',
-        '수영장 있는':'pool_s', '계곡옆':'valley_s', '물놀이 하기 좋은':'waterplay_s', '물맑은':'pure_water_s', '그늘이 많은':'shade_s',
-        '바다가 보이는':'ocean_s', '익스트림':'extreme_s', '가격':'price_r', '만족도':'satisfied_r', '맛':'taste_r', '메인시설':'main_r','목적':'object_r',
-        '부대/공용시설': 'facility_r', '분위기':'atmos_r', '비품':'equipment_r','서비스':'service_r', '수영장':'pool_r',
-        '시설물관리':'manage_r', '아이 만족도':'childlike_r', '예약':'reservation_r', '와이파이':'wifi_r','위치':'location_r', '음식/조식':'food_r',
-        '입장': 'enter_r', '전망':'view_r', '주차':'parking_r', '즐길거리': 'exciting_r', '청결도': 'clean_r', '편의/부대시설':'conv_facility_r', '혼잡도': 'congestion_r'})
-        # algo_result.set_index('camp', inplace=True)
+        algo_re_cols = algo_result.iloc[:, 3:].columns.tolist()
+        for algo_re_col in algo_re_cols:
+            col_names = self.dimension[self.dimension.originalname == f'{algo_re_col}']
+            col_name = np.unique(col_names.colname)
+            algo_result = algo_result.rename(columns={f'{algo_re_col}': f'{"".join(col_name)}'})
+        # algo_result.to_csv(self.path+'test_c.csv', encoding='utf-8-sig', index=False)
 
-
-        # algo_result.to_csv('../datas/algo_merge_result.csv', encoding='utf-8-sig', index=False)
-
-        return print(algo_result)
+        return algo_result

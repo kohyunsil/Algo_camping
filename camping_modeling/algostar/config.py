@@ -7,14 +7,14 @@ from datetime import datetime
 config = configparser.RawConfigParser()
 abspath = os.path.abspath('../keys/data.ini')
 config.read(abspath)
-keys = config['API_KEYS']
+# keys = config['API_KEYS']
 
 
 class Config:
     # 경로 및 파일 불러오기
     PATH = "../../datas/"
     MODEL_PATH = "../models"
-    PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
+    # PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
 
     # tag_points.py 의 TagMerge를 위한 파일
     API_DATA = pd.read_csv(PATH + "camp_api_info_210619.csv", encoding = "utf-8-sig")
