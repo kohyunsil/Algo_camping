@@ -22,7 +22,7 @@ class Config:
     ALGO_DF_FINAL = pd.read_csv(PATH + "algo_df_0719.csv", encoding='utf-8-sig', index_col=0)
     ALGO_DF_FINAL = ALGO_DF_FINAL.loc[:, ~ALGO_DF_FINAL.columns.str.contains('^Unnamed')]
 
-    ALGO_DF = pd.read_csv(PATH + "algo_merge_result.csv", encoding="utf-8-sig")
+    # ALGO_DF = pd.read_csv(PATH + "algo_merge_result.csv", encoding="utf-8-sig")
     # "weights & tag" dimension 파일 불러오기
     DIMENSION = pd.read_excel(PATH + "dimension_weights_sum.xlsx")
     DIMENSION = DIMENSION.loc[:, ~DIMENSION.columns.str.contains('^Unnamed')]

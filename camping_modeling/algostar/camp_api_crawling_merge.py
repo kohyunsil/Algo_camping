@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import config as config
-# import preprocessing.config as config
 
 # 한글 폰트 설정
 import matplotlib.pyplot as plt
@@ -182,6 +181,5 @@ class ReviewCamp(ReviewPre):
             col_names = self.dimension[self.dimension.originalname == f'{algo_re_col}']
             col_name = np.unique(col_names.colname)
             algo_result = algo_result.rename(columns={f'{algo_re_col}': f'{"".join(col_name)}'})
-        # algo_result.to_csv(self.path+'test_c.csv', encoding='utf-8-sig', index=False)
 
         return algo_result
