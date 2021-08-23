@@ -47,11 +47,11 @@ class ReviewInsert:
     
     # 네이버와 카카오 리뷰 concat
     def review_dataset(self, camp_df):
-        naver = self.naver_review()
+        # naver = self.naver_review()
         kakao = self.kakao_review()
-        kakao_naver = pd.concat([naver, kakao], 0)
+        # kakao_naver = pd.concat([naver, kakao], 0)
         review_data = camp_df[['place_id', 'place_name']]
-        review_data_df = pd.merge(review_data, kakao_naver, left_on='place_name', right_on='place_name', how="right")
+        review_data_df = pd.merge(review_data, kakao, left_on='place_name', right_on='place_name', how="right")
         review_data_df = review_data_df.drop_duplicates()
         review_data_df = review_data_df.reset_index()
         review_data_df = review_data_df.rename(columns={'index' : 'id', 'userId' : 'user_id', })

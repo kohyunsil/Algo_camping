@@ -2,7 +2,7 @@ import configparser
 import os
 
 config = configparser.RawConfigParser()
-abspath = os.path.abspath('../keys/data.ini')
+abspath = os.path.abspath('../../keys/data.ini')
 config.read(abspath)
 keys = config['API_KEYS']
 
@@ -23,3 +23,8 @@ class Config:
                '대구': '대구광역시', '광주': '광주광역시',
                '서울': '서울특별시', '서울시': '서울특별시',
                '제주': '제주특별자치도', '제주도': '제주특별자치도'}
+
+    # 데이터베이스 연결 정보
+    IP = keys['IP']
+    DB = keys['DB']
+    PW = keys['PW']

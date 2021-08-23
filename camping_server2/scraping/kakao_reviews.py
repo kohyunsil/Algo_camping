@@ -51,7 +51,7 @@ class Scraping:
                 }
 
                 response = requests.get(xhr_url, headers=headers)
-                print('XHR response num : ', len(response.json()['comment']['list']))  # response len 체크
+                # print('XHR response num : ', len(response.json()['comment']['list']))  # response len 체크
                 res_data = response.json()['comment']['list']
 
                 for r in res_data:
@@ -80,7 +80,7 @@ class Scraping:
         except:
             return
 
-    def to_csv(self):
+    def to_df(self):
         kakao_reviews = pd.DataFrame()
 
         for r in result:
@@ -90,8 +90,10 @@ class Scraping:
                 for i in r:
                     kakao_reviews = kakao_reviews.append(i, ignore_index=True)
 
-        kakao_reviews = kakao_reviews.drop('commentid', axis=1)
-        kakao_reviews.to_csv(config.Config.PATH + 'tour_3000.csv', encoding='utf-8-sig', header=True)
+        kakao_reviews = kakao_reviews.drop(['commentid'], axis=1)
+        # print(kakao_reviews)
+        # kakao_reviews.to_csv(config.Config.PATH + 'tour_3000.csv', encoding='utf-8-sig', header=True)
+        return kakao_reviews
 
     def get_search(self, search_target):
         driver = self.driver
@@ -105,4 +107,4 @@ class Scraping:
             self.move_page(target)
 
         driver.quit()
-        self.to_csv()
+        return self.to_df()
