@@ -62,15 +62,15 @@ class TagMerge:
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
         merge_result = merge_result.fillna(0)
         merge_result = merge_result.drop(['만족도', '가격', '목적', '메뉴', '예약', '음식양', '입장', '혼잡도'], 1)
-        re_cols = merge_result.columns.tolist()
+        re_cols = merge_result.columns.tolist()[2:]
         for re_col in re_cols:
             col_names = self.dm[self.dm.originalname == f'{re_col}']
             col_name = np.unique(col_names.colname)
             merge_result = merge_result.rename(columns = {f'{re_col}': f'{"".join(col_name)}'})
 
         merge_result = pd.concat([merge_result, algo_df], 1)
-        merge_result.to_csv(self.path + 'tag_merge.csv', encoding='utf-8-sig', index=False )
-        return print(merge_result)
+        #merge_result.to_csv(self.path + 'tag_merge.csv', encoding='utf-8-sig', index=False )
+        return merge_result
 
 
 class TagPoints:
