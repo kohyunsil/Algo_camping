@@ -12,6 +12,7 @@ import cat_points as cp
 import algo_points as ap
 import tag_points as tp
 import weights as wc
+import recommend as rc
 today = datetime.today().strftime('%m%d')
 
 if __name__ == '__main__':
@@ -19,7 +20,19 @@ if __name__ == '__main__':
     # algo = ap.AlgoPoints()
     # tag = tp.TagPoints()
     # tag = tp.TagMerge()
-    final_weights = wc.FinalWeights().final_weights()
+    # final_weights = wc.FinalWeights().final_weights()
+    profile = rc.ProfilePro()
+    b_login = rc.BeforeLogin()
+
+    # print(profile.animal_camp()['all_animal'])
+    # print(profile.induty_camp()['auto_car'])
+    # print(profile.purpose_camp()['stress_df'])
+
+    print(profile.final_merge('all_animal', 'etc', 'healing_final_df'))
+
+    # print(b_login.main_thema()['all_season'])
+    # print(b_login.camp_thema()['downtown'])
+
 
     # algo.polar_points('답게')
     # algo.algo_star('별똥별 글램핑')

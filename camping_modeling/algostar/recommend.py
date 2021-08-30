@@ -12,10 +12,10 @@ class ProfilePro:
 
     def animal_camp(self):
         ''' 반려동물 동반여부'''
-        animal_df = self.df[['contentId','facltNm','animalCmgCl','firstImageUrl']]
-        all_animal = animal_df[animal_df.animalCmgCl == '가능'].reset_index(drop=True)
-        small_animal = animal_df[animal_df.animalCmgCl == '가능(소형견)'].reset_index(drop=True)
-        impossibility = animal_df[animal_df.animalCmgCl == '불가능'].reset_index(drop=True)
+        animal_df = self.df[['contentId','facltNm','firstImageUrl', 'animalCmgCl']]
+        all_animal = animal_df[animal_df.animalCmgCl == '가능'].dropna(subset=['firstImageUrl']).reset_index(drop = True).iloc[:, :3]
+        small_animal = animal_df[animal_df.animalCmgCl == '가능(소형견)'].dropna(subset=['firstImageUrl']).reset_index(drop = True)
+        impossibility = animal_df[animal_df.animalCmgCl == '불가능'].dropna(subset=['firstImageUrl']).reset_index(drop = True)
         return {'all_animal':all_animal, 'small_animal':small_animal, 'impossibility':impossibility}
 
     def induty_camp(self):
@@ -25,7 +25,7 @@ class ProfilePro:
         induty_df = self.df[['contentId','facltNm','firstImageUrl','induty']]
         auto_car = induty_df[induty_df['induty'].str.startswith(('일반야영장', '자동차야영장'))].reset_index(drop=True).drop('induty',1)
         glam_cara = induty_df[induty_df['induty'].str.contains(('카라반|글램핑'))].reset_index(drop=True).drop('induty', 1)
-        return {'auto_car':auto_car, 'glam_cara':glam_cara}
+        return {'auto_car':auto_car, 'glam_cara':glam_cara, 'etc':induty_df.iloc[:, :3]}
 
     def purpose_camp(self):
         """ 캠핑 목적 1. 스트레스 해소(액티비티, 관광, 물놀이)
@@ -33,7 +33,7 @@ class ProfilePro:
                     3. 자연 체험(생태교육, 아이동반 등)
                     4. 여유로운 힐링(휴양, 별 감상 등)
                     5. 캠핑족(캠핑은 나의 취미) """
-        purpose_df = self.df[['contentId','facltNm','firstImageUrl','themaEnvrnCl','intro']]
+        purpose_df = self.df[['contentId','facltNm','firstImageUrl','themaEnvrnCl','intro','brazierCl']]
 
         # 1. stress_relief (태그-축제)
         tour_df = purpose_df[purpose_df['intro'].str.contains('관광지|관광', na=False)].reset_index(drop=True).iloc[:, :3]
@@ -59,12 +59,22 @@ class ProfilePro:
                        | (healing_df['star_s'] == 1) | (healing_df['healing_s'] == 1) | (healing_df['shade_s'] == 1)].reset_index(drop=True).iloc[:, :2]
         healing_thema = purpose_df[purpose_df['themaEnvrnCl'].str.contains('명소|걷기길', na=False)].reset_index(drop=True).iloc[:, :3]
         healing_intro = purpose_df[purpose_df['intro'].str.contains('힐링|휴양|전망', na=False)].reset_index(drop=True).iloc[:, :3]
-        healing_dfs = pd.merge(healing_intro, healing_thema, how='left', on='contentId').iloc[:, :3].rename(columns={'facltNm_x':'facltNm', 'firstImageUrl_x':'firstImageUrl'}).dropna(subset=['firstImageUrl']).reset_index(drop=True)
-        healing_final_df = pd.merge(healing_dfs, healing_tags, how='left', on='contentId').iloc[:, :3]
-
-        # 5. 캠핑족
+        healing_fire = purpose_df[purpose_df['brazierCl'].str.contains('개별', na=False)].reset_index(drop=True).iloc[:, :3]
+        healing_merge_df = pd.merge(healing_intro, healing_thema, how='inner', on='contentId').iloc[:, :3]
+        healing_merge_df2 = pd.merge(healing_merge_df, healing_fire, how='inner', on='contentId').iloc[:, :3]
+        healing_final_df = pd.merge(healing_merge_df2, healing_tags, how='inner', on='contentId').iloc[:, :3]
 
         return {'stress_df':stress_df, 'with_final_df':with_final_df, 'field_trip':field_trip, 'healing_final_df':healing_final_df}
+
+    def final_merge(self, animal, induty, purpose):
+
+        data1 = self.animal_camp()[f'{animal}']
+        data2 = self.induty_camp()[f'{induty}']
+        data3 = self.purpose_camp()[f'{purpose}']
+
+        datas = pd.merge(data1, data2, how='inner', on='contentId').iloc[:,:3].rename(columns={'facltNm_x':'facltNm', 'firstImageUrl_x':'firstImageUrl'}).dropna(subset=['firstImageUrl']).reset_index(drop=True)
+        final_df = pd.merge(datas, data3, how='inner', on='contentId').iloc[:,:3].rename(columns={'facltNm_x':'facltNm', 'firstImageUrl_x':'firstImageUrl'}).dropna(subset=['firstImageUrl']).reset_index(drop=True)
+        return final_df
 
 class BeforeLogin:
 
@@ -86,7 +96,7 @@ class BeforeLogin:
         fall = thema_select('tourEraCl', '가을').iloc[:, :3]
         winter = thema_select('tourEraCl', '겨울').iloc[:, :3]
 
-        # 해변,
+        #주변환경
         beach = thema_select('lctCl', '해변').iloc[:, :3]
         river = thema_select('lctCl','강').iloc[:, :3]
         downtown = thema_select('lctCl','도심').iloc[:, :3]
@@ -95,18 +105,5 @@ class BeforeLogin:
         valley = thema_select('lctCl','계곡').iloc[:, :3]
         forest = thema_select('lctCl','숲').iloc[:, :3]
 
-
         return {'all_season':all_season, 'spring':spring, 'summer':summer, 'fall':fall, 'winter':winter, 'beach':beach,
-                'river':river, 'downtown':downtown, 'lake':lake, 'mountain':mountain, 'valley':valley, 'forest':forest}
-
-
-if __name__ == '__main__':
-    # profile = ProfilePro()
-    b_login = BeforeLogin()
-
-    # print(profile.animal_camp()['all_animal'])
-    # print(profile.induty_camp()['auto_car'])
-    # print(profile.purpose_camp()['stress_df'])
-
-    # print(b_login.main_thema()['all_season'])
-    print(b_login.tag_thema().info())
+                'river':river, 'downtown': downtown, 'lake':lake, 'mountain':mountain, 'valley':valley, 'forest':forest}
