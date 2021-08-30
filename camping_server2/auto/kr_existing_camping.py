@@ -114,130 +114,138 @@ class Scraping:
         driver.quit()
         return self.to_df()
 
-# 데이터베이스 세팅
-def db_init():
-    IP = config.Config.IP
-    DB = config.Config.DB
-    PW = config.Config.PW
 
-    engine = create_engine(f"mysql+mysqldb://root:{PW}@{IP}/{DB}")
-    conn = engine.connect()
+class Automation:
+    # 데이터베이스 세팅
+    def db_init(self):
+        IP = config.Config.IP
+        DB = config.Config.DB
+        PW = config.Config.PW
 
-    mydb = pymysql.connect(
-        user='root',
-        passwd=PW,
-        host=IP,
-        db=DB,
-        charset='utf8',
-    )
-    cursor = mydb.cursor(pymysql.cursors.DictCursor)
-    return engine, cursor
+        engine = create_engine(f"mysql+mysqldb://root:{PW}@{IP}/{DB}")
+        conn = engine.connect()
 
-
-# 전체 place_name, content_id 가져오기
-def select_list(cursor):
-    cursor.execute('SELECT content_id, place_name FROM place LIMIT 3')
-
-    place_name_query = cursor.fetchall()
-    place_name_df = pd.DataFrame(data=place_name_query)
-
-    place_list = place_name_df['place_name'].tolist()
-    contentid_list = place_name_df['content_id'].tolist()
-
-    return place_list, contentid_list, place_name_df
+        mydb = pymysql.connect(
+            user='root',
+            passwd=PW,
+            host=IP,
+            db=DB,
+            charset='utf8',
+        )
+        cursor = mydb.cursor(pymysql.cursors.DictCursor)
+        return engine, cursor
 
 
-# place 테이블과 place_name 기준으로 merge
-def merge_raws(raw_df, place_df):
-    # 카카오 리뷰 전처리
-    proc_df = raw_df
-    proc_df['platform'] = 0
-    proc_df = proc_df.rename(columns={'kakaoMapUserId': 'user_id', 'point': 'star', 'likeCnt': 'like_cnt',
-                                      'photoCnt': 'photo_cnt', 'username': 'user_nickname'})
+    # 전체 place_name, content_id 가져오기
+    def select_list(self, cursor):
+        cursor.execute('SELECT content_id, place_name FROM place LIMIT 1')
 
-    # place 테이블의 place_name 기준으로 merge
-    pd.merge(proc_df, place_df, left_on='place_name', right_on='place_name', how='right')
-    kakao_df = proc_df.drop_duplicates()
-    kakao_df = kakao_df.reset_index()
-    kakao_df = kakao_df.rename(columns={'index': 'id', 'userId': 'user_id', })
+        place_name_query = cursor.fetchall()
+        place_name_df = pd.DataFrame(data=place_name_query)
 
-    kakao_df['visit_cnt'] = None
-    kakao_df['mean_star'] = None
-    kakao_df['review_cnt'] = None
-    return kakao_df
+        place_list = place_name_df['place_name'].tolist()
+        contentid_list = place_name_df['content_id'].tolist()
+
+        return place_list, contentid_list, place_name_df
 
 
-# 기준 날짜와 비교해 review table 데이터프레임 생성
-def review_table(cur_ymd, base_ymd, kakao_df):
-    review_df = kakao_df[['platform', 'user_id', 'photo_cnt', 'date', 'star', 'contents']]
-    result_df = pd.DataFrame(columns=review_df.columns)
+    # place 테이블과 place_name 기준으로 merge
+    def merge_raws(self, raw_df, place_df):
+        # 카카오 리뷰 전처리
+        proc_df = raw_df
+        proc_df['platform'] = 0
+        proc_df = proc_df.rename(columns={'kakaoMapUserId': 'user_id', 'point': 'star', 'likeCnt': 'like_cnt',
+                                          'photoCnt': 'photo_cnt', 'username': 'user_nickname'})
 
-    for idx, date in enumerate(review_df['date']):
-        split_date = date[:-1]
-        target = datetime.datetime.strptime(split_date, '%Y.%m.%d')
-        if base_ymd <= target <= cur_ymd:
-            result_df = result_df.append(review_df.iloc[idx])
-            print(result_df.iloc[idx]['date'])
+        # place 테이블의 place_name 기준으로 merge
+        pd.merge(proc_df, place_df, left_on='place_name', right_on='place_name', how='outer')
+        print(proc_df.dtypes)
+        kakao_df = proc_df.drop_duplicates()
+        kakao_df = kakao_df.reset_index()
+        kakao_df = kakao_df.rename(columns={'index': 'id', 'userId': 'user_id', })
 
-    # review_df = review_df.dropna(subset=['place_id'])
-    return review_df
+        kakao_df['visit_cnt'] = None
+        kakao_df['mean_star'] = None
+        kakao_df['review_cnt'] = None
+        print(kakao_df.columns)
+        print(proc_df.columns)
 
-
-# reviewer table 데이터프레임 생성
-def reviewer_table(kakao_df):
-    reviewer_df = kakao_df[['id', 'platform', 'user_nickname', 'mean_star', 'visit_cnt', 'review_cnt']]
-    reviewer_df = reviewer_df.rename(columns={'id': 'review_id'})
-    reviewer_df['visit_cnt'] = reviewer_df['visit_cnt'].str.split('').str[1]
-    return reviewer_df
+        return kakao_df
 
 
-# 데이터프레임 insert
-def insert_dataframe(cursor, review_df, reviewer_df):
-    # 제한키 설정 체크
-    qry_check_one = ('''
-    SET foreign_key_checks = 1;
-    ''')
-    cursor.execute(qry_check_one)
+    # 기준 날짜와 비교해 review table 데이터프레임 생성
+    def review_table(self, cur_ymd, base_ymd, kakao_df):
+        review_df = kakao_df[['platform', 'user_id', 'photo_cnt', 'date', 'star', 'contents']]
+        result_df = pd.DataFrame(columns=review_df.columns)
 
-    # qry_fk_r = ('''
-    # ALTER TABLE review
-    #      ADD CONSTRAINT FK_review_place_id_place_id FOREIGN KEY (place_id)
-    #         REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
-    # ''')
-    # cursor.execute(qry_fk_r)
-    #
-    # qry_fk_rwr = ('''
-    #         ALTER TABLE reviewer
-    #             ADD CONSTRAINT FK_reviewer_review_id_review_id FOREIGN KEY (review_id)
-    #                 REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
-    #         ''')
-    # cursor.execute(qry_fk_rwr)
+        for idx, date in enumerate(review_df['date']):
+            split_date = date[:-1]
+            target = datetime.datetime.strptime(split_date, '%Y.%m.%d')
+            if base_ymd <= target <= cur_ymd:
+                result_df = result_df.append(review_df.iloc[idx])
+                print(result_df.iloc[idx]['date'])
 
-    # sql insert
-    review_df.to_sql(name='review', con=engine, if_exists='append', index=False)
-    reviewer_df.to_sql(name='reviewer', con=engine, if_exists='append', index=False)
+        # review_df = review_df.dropna(subset=['place_id'])
+        return review_df
 
-# 과거일 ~ 현재일 (date_range: 날짜 범위 지정)
-def calc_date(date_range):
-    #BASEDATE = int((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y%m%d'))
-    BASEDATE = str((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y.%m.%d'))
-    BASEDATE = datetime.datetime.strptime(BASEDATE, '%Y.%m.%d')
-    CURDATE = datetime.datetime.now()
 
-    return BASEDATE, CURDATE
+    # reviewer table 데이터프레임 생성
+    def reviewer_table(self, kakao_df):
+        reviewer_df = kakao_df[['id', 'platform', 'user_nickname', 'mean_star', 'visit_cnt', 'review_cnt']]
+        reviewer_df = reviewer_df.rename(columns={'id': 'review_id'})
+        reviewer_df['visit_cnt'] = reviewer_df['visit_cnt'].str.split('').str[1]
+        return reviewer_df
+
+
+    # 데이터프레임 insert
+    def insert_dataframe(self, cursor, review_df, reviewer_df):
+        # 제한키 설정 체크
+        qry_check_one = ('''
+        SET foreign_key_checks = 1;
+        ''')
+        cursor.execute(qry_check_one)
+
+        # qry_fk_r = ('''
+        # ALTER TABLE review
+        #      ADD CONSTRAINT FK_review_place_id_place_id FOREIGN KEY (place_id)
+        #         REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
+        # ''')
+        # cursor.execute(qry_fk_r)
+        #
+        # qry_fk_rwr = ('''
+        #         ALTER TABLE reviewer
+        #             ADD CONSTRAINT FK_reviewer_review_id_review_id FOREIGN KEY (review_id)
+        #                 REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
+        #         ''')
+        # cursor.execute(qry_fk_rwr)
+
+        # sql insert
+        review_df.to_sql(name='review', con=engine, if_exists='append', index=False)
+        reviewer_df.to_sql(name='reviewer', con=engine, if_exists='append', index=False)
+
+    # 과거일 ~ 현재일 (date_range: 날짜 범위 지정)
+    def calc_date(self, date_range):
+        #BASEDATE = int((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y%m%d'))
+        BASEDATE = str((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y.%m.%d'))
+        BASEDATE = datetime.datetime.strptime(BASEDATE, '%Y.%m.%d')
+        CURDATE = datetime.datetime.now()
+
+        return BASEDATE, CURDATE
 
 
 if __name__ == '__main__':
-    engine, cursor = db_init()
-    name_list, contentid_list, place_df = select_list(cursor)
+    auto = Automation()
+
+    engine, cursor = auto.db_init()
+    name_list, contentid_list, place_df = auto.select_list(cursor)
     print(name_list)
-    base_ymd, cur_ymd = calc_date(20) # 수집할 날짜 범위
+    base_ymd, cur_ymd = auto.calc_date(20) # 수집할 날짜 범위
 
     s = Scraping()
     raw_df = s.get_search(name_list)  # 크롤링 수집 완료 데이터
 
-    kakao_df = merge_raws(raw_df, place_df)  # 전처리
-    review_df = review_table(cur_ymd, base_ymd, kakao_df)  # review 테이블 데이터프레임
-    reviewer_df = reviewer_table(kakao_df)  # reviewer 테이블 데이터프레임
+    kakao_df = auto.merge_raws(raw_df, place_df)  # 전처리
+    review_df = auto.review_table(cur_ymd, base_ymd, kakao_df)  # review 테이블 데이터프레임
+    reviewer_df = auto.reviewer_table(kakao_df)  # reviewer 테이블 데이터프레임
 
-    insert_dataframe(cursor, review_df, reviewer_df)  # 데이터프레임 db에 insert
+    auto.insert_dataframe(cursor, review_df, reviewer_df)  # 데이터프레임 db에 insert

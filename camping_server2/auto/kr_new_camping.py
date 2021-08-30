@@ -155,21 +155,17 @@ class Automation:
                                           'photoCnt': 'photo_cnt', 'username': 'user_nickname'})
 
         # place 테이블의 place_name 기준으로 merge
-        pd.merge(proc_df, place_df, left_on='place_name', right_on='place_name', how='right')
-        print(f'proc_df type : {type(proc_df)}')
-        # kakao_df = proc_df.drop_duplicates()
-        kakao_df = proc_df.reset_index()
+        pd.merge(proc_df, place_df, left_on='place_name', right_on='place_name', how='outer')
+        kakao_df = proc_df.drop_duplicates(['contents'])
+        kakao_df = kakao_df.reset_index()
         kakao_df = kakao_df.rename(columns={'index': 'id', 'userId': 'user_id', })
 
         kakao_df['visit_cnt'] = None
-        kakao_df['mean_star'] = None
-        kakao_df['review_cnt'] = None
-        print(kakao_df)
         return kakao_df
 
     # 전체 리뷰 데이터 review table 데이터프레임 생성
     def review_table(self, kakao_df):
-        review_df = kakao_df[['platform', 'user_id', 'photo_cnt', 'date', 'star', 'contents']]
+        review_df = kakao_df[['platform', 'user_id', 'place_id', 'photo_cnt', 'date', 'star', 'contents']]
         result_df = pd.DataFrame(columns=review_df.columns)
 
         for idx, date in enumerate(review_df['date']):
@@ -208,11 +204,11 @@ class Automation:
         #             ADD CONSTRAINT FK_reviewer_review_id_review_id FOREIGN KEY (review_id)
         #                 REFERENCES place (id) ON DELETE CASCADE ON UPDATE CASCADE;
         #         ''')
-        # cursor.execute(qry_fk_rwr)
-
-    # 과거일 ~ 현재일 (date_range: 날짜 범위 지정)
+        # cursor.execrange: 날짜 범위 지정)
     def calc_date(self, date_range):
-        # BASEDATE = int((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y%m%d'))
+        # BASEDATE = int((datute(qry_fk_rwr)
+        #
+        #     # 과거일 ~ 현재일 (date_etime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y%m%d'))
         BASEDATE = str((datetime.datetime.now() - datetime.timedelta(days=date_range)).strftime('%Y-%m-%d'))
         BASEDATE = datetime.datetime.strptime(BASEDATE, '%Y-%m-%d')
         CURDATE = datetime.datetime.now()
@@ -225,11 +221,11 @@ if __name__ == '__main__':
     engine, cursor = auto.db_init()
     base_ymd, cur_ymd = auto.calc_date(45)  # 수집할 날짜 범위
     name_list, contentid_list, place_df = auto.select_list(cursor, base_ymd, cur_ymd)
-    print(name_list)
+
     s = Scraping()
     raw_df = s.get_search(name_list)  # 크롤링 수집 완료 데이터
 
-    kakao_df = auto.merge_raws(raw_df, place_df)  # 전처리
+    kakao_df = auto.merge_raws(raw_df, place_df, contentid_list)  # 전처리
     review_df = auto.review_table(kakao_df)  # review 테이블 데이터프레임
     reviewer_df = auto.reviewer_table(kakao_df)  # reviewer 테이블 데이터프레임
 
