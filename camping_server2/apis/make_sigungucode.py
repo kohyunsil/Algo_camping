@@ -2,17 +2,16 @@ import pandas as pd
 import camping_server2.config as config
 from datetime import datetime
 
+
 class Sigungucode:
     def __init__(self):
         self.path = config.Config.PATH
         self.do_list = config.Config.DO_LIST
         self.five_code = pd.read_csv(self.path + "/sigungucode.csv")
 
-
     def read_file(self, df):
         df.drop(df[df['addr1'].isnull()].index, axis=0, inplace=True) # 빈 row 삭제
         return df
-
 
     def do_sigungu(self, df):
         # 파일 읽어오기
@@ -51,7 +50,6 @@ class Sigungucode:
 
         return df
 
-
     def make_sigungucode(self, df):
         df = self.do_sigungu(df)
         # 조건에 맞게 시군구코드 생성
@@ -82,7 +80,6 @@ class Sigungucode:
         df.drop(['doNm', 'sigunguNm', 'sigunguNm2', 'sigunguNm3'], axis=1, inplace=True)
 
         return df
-
 
     def final_check_save(self, filename, df):
         """

@@ -67,3 +67,15 @@ camping_modeling/clustering/.ipynb_checkpoints/
 camping_modeling/clustering/results/
 camping_modeling/algostar/.ipynb_checkpoints/
 camping_modeling/preprocessing/.ipynb_checkpoints/
+
+camping_modeling/models/
+
+camping_modeling/reports/nlp/.ipynb_checkpoints/
+
+camping_modeling/reports/calc_test/.ipynb_checkpoints/
+
+camping_modeling/algostar/
+
+camping_server2/algostar/.ipynb_checkpoints/
+
+*.csv

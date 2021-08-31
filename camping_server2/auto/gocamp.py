@@ -13,6 +13,8 @@ import pymysql
 from sqlalchemy import create_engine
 
 pymysql.install_as_MySQLdb()
+
+
 # import camping_server2.config as config
 
 class Gocamp:
@@ -27,9 +29,9 @@ class Gocamp:
     # gocamp API
     def gocampingAPI(self):
         url = 'http://api.visitkorea.or.kr/openapi/service/rest/GoCamping/basedList?'
-        param = 'ServiceKey='+self.secretKey+'&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000'
+        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000'
 
-        request = Request(url+param)
+        request = Request(url + param)
         request.get_method = lambda: 'GET'
         response = urlopen(request)
         rescode = response.getcode()
@@ -51,9 +53,11 @@ class Gocamp:
 
         param = {'title': '', 'tags': '', 'address': '', 'img_url': ''}
 
-        param['title'] = dom.select_one('#sub_title_wrap2 > div.layout > div.s_title2 > p.camp_name').text.strip().split('\n')[0]
+        param['title'] = \
+        dom.select_one('#sub_title_wrap2 > div.layout > div.s_title2 > p.camp_name').text.strip().split('\n')[0]
         param['tags'] = dom.select_one('div.camp_tag > ul.tag_list').text.strip().replace('\n', ' ')
-        param['address'] = dom.select_one('#cont_inner > div.sub_layout.layout > article > header > div > div.cont_tb > table > tbody > tr:nth-of-type(1) > td').text
+        param['address'] = dom.select_one(
+            '#cont_inner > div.sub_layout.layout > article > header > div > div.cont_tb > table > tbody > tr:nth-of-type(1) > td').text
 
         imgs = dom.select('#contents > div > div.layout > div > div > div > a > img')
         img_list = []
@@ -90,83 +94,84 @@ class Gocamp:
         diff_days = datetime.timedelta(days=7)
         today = datetime.date.today()
         last_day = today - diff_days
-        last_day = last_day.isoformat().replace("-","")
+        last_day = last_day.isoformat().replace("-", "")
 
-        data['createdtime'] = data['createdtime'].str.replace("-","")
+        data['createdtime'] = data['createdtime'].str.replace("-", "")
         data['createdtime2'] = data['createdtime'].apply(lambda x: x[:8])
         new_data = data[data['createdtime2'] >= last_day]
-        new_data = new_data.drop(["createdtime"],1)
-        new_data = new_data.rename(columns={'createdtime2' : 'createdtime'})
+        new_data = new_data.drop(["createdtime"], 1)
+        new_data = new_data.rename(columns={'createdtime2': 'createdtime'})
         return new_data
 
     # gocamp API 전처리
     def make_camp_api(self, camp_api_df):
         camp = camp_api_df.drop(['allar', 'siteMg1Co', 'siteMg1Vrticl', 'siteMg1Width', 'siteMg2Co', 'siteMg2Vrticl',
-                'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl', 'resveUrl',
-                'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
-        camp = camp.rename(columns={'addr1' : 'addr',
-                        'animalCmgCl' : 'animal_cmg',
-                        'autoSiteCo' : 'auto_site',
-                        'brazierCl' : 'brazier',
-                        'caravAcmpnyAt' : 'carav_acmpny',
-                        'caravSiteCo' : 'carav_site',
-                        'clturEventAt' : 'clturevent_at',
-                        'contentId' : 'content_id',
-                        'createdtime' : 'created_date',
-                        'exprnProgrmAt' : 'exprnprogrm_at',
-                        'extshrCo' : 'extshr',
-                        'facltNm' : 'place_name',
-                        'fireSensorCo' : 'firesensor',
-                        'frprvtSandCo' : 'frprvtsand',
-                        'frprvtWrppCo' : 'frprvtwrpp',
-                        'glampSiteCo' : 'glamp_site',
-                        'gnrlSiteCo' : 'gnrl_site',
-                        'induty' : 'industry',
-                        'indvdlCaravSiteCo' : 'indvdlcarav_site',
-                        'insrncAt' : 'insrnc_at',
-                        'manageNmpr' : 'manage_num',
-                        'manageSttus' : 'manage_sttus',
-                        'mangeDivNm' : 'mange',
-                        'mapX' : 'lat',
-                        'mapY' : 'lng',
-                        'modifiedtime' : 'modified_date',
-                        'operDeCl' : 'oper_date',
-                        'operPdCl' : 'oper_pd',
-                        'prmisnDe' : 'prmisn_date',
-                        'siteBottomCl1' : 'site_bottom1',
-                        'siteBottomCl2' : 'site_bottom2',
-                        'siteBottomCl3' : 'site_bottom3',
-                        'siteBottomCl4' : 'site_bottom4',
-                        'siteBottomCl5' : 'site_bottom5',
-                        'sitedStnc' : 'sited_stnc',
-                        'swrmCo' : 'swrm_cnt',
-                        'toiletCo' : 'toilet_cnt',
-                        'trlerAcmpnyAt' : 'trler_acmpny',
-                        'wtrplCo' : 'wtrpl_cnt',
-                        'clturEvent' : 'clturevent',
-                        'eqpmnLendCl' : 'eqpmn_lend',
-                        'firstImageUrl' : 'first_image',
-                        'posblFcltyCl' : 'posblfclty',
-                        'posblFcltyEtc' : 'posblfclty_etc',
-                        'sbrsCl' : 'sbrs',
-                        'sbrsEtc' : 'sbrs_etc',
-                        'themaEnvrnCl' : 'thema_envrn',
-                        'tourEraCl' : 'tour_era',
-                        'lctCl' : 'lct',
-                        'facltDivNm' : 'faclt_div',
-                        'lineIntro' : 'line_intro',
-                        'trsagntNo' : 'trsagnt_no',
-                        'mgcDiv' : 'mgc_div',
-                        'glampInnerFclty' : 'glampinner_fclty',
-                        'caravInnerFclty' : 'caravinner_fclty',
-                        'sigungucode' : 'sigungu_code',
-                        'exprnProgrm' : 'exprnprogrm',
-                        })
+                                 'siteMg2Width', 'siteMg3Co', 'siteMg3Vrticl', 'siteMg3Width', 'zipcode', 'resveCl',
+                                 'resveUrl',
+                                 'addr2', 'direction', 'featureNm', 'hvofBgnde', 'hvofEnddle', 'tooltip'], 1)
+        camp = camp.rename(columns={'addr1': 'addr',
+                                    'animalCmgCl': 'animal_cmg',
+                                    'autoSiteCo': 'auto_site',
+                                    'brazierCl': 'brazier',
+                                    'caravAcmpnyAt': 'carav_acmpny',
+                                    'caravSiteCo': 'carav_site',
+                                    'clturEventAt': 'clturevent_at',
+                                    'contentId': 'content_id',
+                                    'createdtime': 'created_date',
+                                    'exprnProgrmAt': 'exprnprogrm_at',
+                                    'extshrCo': 'extshr',
+                                    'facltNm': 'place_name',
+                                    'fireSensorCo': 'firesensor',
+                                    'frprvtSandCo': 'frprvtsand',
+                                    'frprvtWrppCo': 'frprvtwrpp',
+                                    'glampSiteCo': 'glamp_site',
+                                    'gnrlSiteCo': 'gnrl_site',
+                                    'induty': 'industry',
+                                    'indvdlCaravSiteCo': 'indvdlcarav_site',
+                                    'insrncAt': 'insrnc_at',
+                                    'manageNmpr': 'manage_num',
+                                    'manageSttus': 'manage_sttus',
+                                    'mangeDivNm': 'mange',
+                                    'mapX': 'lat',
+                                    'mapY': 'lng',
+                                    'modifiedtime': 'modified_date',
+                                    'operDeCl': 'oper_date',
+                                    'operPdCl': 'oper_pd',
+                                    'prmisnDe': 'prmisn_date',
+                                    'siteBottomCl1': 'site_bottom1',
+                                    'siteBottomCl2': 'site_bottom2',
+                                    'siteBottomCl3': 'site_bottom3',
+                                    'siteBottomCl4': 'site_bottom4',
+                                    'siteBottomCl5': 'site_bottom5',
+                                    'sitedStnc': 'sited_stnc',
+                                    'swrmCo': 'swrm_cnt',
+                                    'toiletCo': 'toilet_cnt',
+                                    'trlerAcmpnyAt': 'trler_acmpny',
+                                    'wtrplCo': 'wtrpl_cnt',
+                                    'clturEvent': 'clturevent',
+                                    'eqpmnLendCl': 'eqpmn_lend',
+                                    'firstImageUrl': 'first_image',
+                                    'posblFcltyCl': 'posblfclty',
+                                    'posblFcltyEtc': 'posblfclty_etc',
+                                    'sbrsCl': 'sbrs',
+                                    'sbrsEtc': 'sbrs_etc',
+                                    'themaEnvrnCl': 'thema_envrn',
+                                    'tourEraCl': 'tour_era',
+                                    'lctCl': 'lct',
+                                    'facltDivNm': 'faclt_div',
+                                    'lineIntro': 'line_intro',
+                                    'trsagntNo': 'trsagnt_no',
+                                    'mgcDiv': 'mgc_div',
+                                    'glampInnerFclty': 'glampinner_fclty',
+                                    'caravInnerFclty': 'caravinner_fclty',
+                                    'sigungucode': 'sigungu_code',
+                                    'exprnProgrm': 'exprnprogrm',
+                                    })
         camp['place_num'] = 0
         return camp
 
     # gocamp crawling 코드 실행 및 하나의 데이터로 merge
-    def make_camp_crawling(self, new_data) :
+    def make_camp_crawling(self, new_data):
         content_id = list(new_data['contentId'])
         content_id = list(map(int, content_id))
         place_name = list(new_data['facltNm'])
@@ -187,7 +192,7 @@ class Gocamp:
             new_search = gocamp.search_page(name.replace(' ', ''))
             search.append(new_search)
         data_search = pd.DataFrame.from_dict(search)
-        data_search = data_search.drop(['title'],1)
+        data_search = data_search.drop(['title'], 1)
 
         # merge
         camp_details = pd.merge(data_details, data_search, how='left', on='address')
@@ -203,16 +208,16 @@ class Gocamp:
     def merge_data(self, camp, camp_details):
         merge_data = pd.merge(camp, camp_details, how='right', left_on='content_id', right_on='url_num')
         merge_data = merge_data.drop(['title', 'address'], 1)
-        camp_df = merge_data.dropna(subset = ['addr'])
+        camp_df = merge_data.dropna(subset=['addr'])
         camp_df = camp_df.reset_index().reset_index()
-        camp_df = camp_df.drop(['index'],1)
-        camp_df = camp_df.rename(columns={'level_0' : 'place_id',
-                                    'img_url' : 'detail_image',
-                                    'tags' : 'tag',
-                                    'view' : 'readcount',
-                                    })
-        camp_df
+        camp_df = camp_df.drop(['index'], 1)
+        camp_df = camp_df.rename(columns={'level_0': 'place_id',
+                                          'img_url': 'detail_image',
+                                          'tags': 'tag',
+                                          'view': 'readcount',
+                                          })
         return camp_df
+
 
 class Sigungucode:
     def __init__(self):
@@ -226,9 +231,8 @@ class Sigungucode:
                         '서울': '서울특별시', '서울시': '서울특별시',
                         '제주': '제주특별자치도', '제주도': '제주특별자치도'}
 
-
     def do_sigungu(self, df):
-        df = df.drop(df[df['addr1'].isnull()].index, axis=0) # 빈 row 삭제
+        df = df.drop(df[df['addr1'].isnull()].index, axis=0)  # 빈 row 삭제
         # 예외처리 1: 페스티발 온라인개최 삭제
         try:
             df = df.drop(df[df['addr1'] == '온라인개최'].index, axis=0)
@@ -238,7 +242,8 @@ class Sigungucode:
         # 도, 시군구명 컬럼 생성
         if not 'doNm' in df.columns.tolist():
             df['doNm'] = [a.split(" ")[0] for a in df['addr1']]
-            df['doNm'] = [as_is.replace(as_is, self.do_list[as_is]) if len(as_is) < 3 else as_is for as_is in df['doNm']]
+            df['doNm'] = [as_is.replace(as_is, self.do_list[as_is]) if len(as_is) < 3 else as_is for as_is in
+                          df['doNm']]
         if not 'sigunguNm' in df.columns.tolist():
             df['sigunguNm'] = [b.split(" ")[1:2] for b in df['addr1']]
             df['sigunguNm'] = [b[0] if len(b) > 0 else "" for b in df['sigunguNm']]
@@ -261,7 +266,6 @@ class Sigungucode:
         df['sigunguNm'] = sigunguNm
 
         return df
-
 
     def make_sigungucode(self, df):
         df = self.do_sigungu(df)
@@ -299,13 +303,14 @@ class Sigungucode:
 
 
 class PlaceSubTable():
-    def place_table(self,camp_df):
+    def place_table(self, camp_df):
         place_df = camp_df[['place_id', 'place_num', 'place_name', 'sigungu_code', 'addr', 'lat', 'lng',
                             'first_image', 'tel', 'thema_envrn', 'tour_era',
                             'homepage', 'line_intro', 'intro', 'tag', 'readcount', 'created_date', 'modified_date',
                             'detail_image', 'content_id', 'industry', 'oper_date', 'oper_pd']]
-        place_df = place_df.rename(columns={'place_id' : 'id'})
+        place_df = place_df.rename(columns={'place_id': 'id'})
         return place_df
+
 
 class Query:
     # db cursor 생성
@@ -338,7 +343,7 @@ if __name__ == '__main__':
     gocamp = Gocamp()
     sgg = Sigungucode()
     sub = PlaceSubTable()
-#     algo = AlgorithmTable()
+    #     algo = AlgorithmTable()
     sql = Query()
     cursor, engine, db = sql.connect_sql(IP, DB, PW)
 
@@ -356,5 +361,5 @@ if __name__ == '__main__':
 
     # camp info append insert to place table
     place_df = sub.place_table(camp_df)
-    sql.save_sql(cursor, engine, db,  place_df, "place", "append")
+    sql.save_sql(cursor, engine, db, place_df, "place", "append")
     db.close()
