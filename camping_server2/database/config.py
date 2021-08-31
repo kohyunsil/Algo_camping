@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class Config:
     PATH = "../../datas/"
     # CAMP = pd.read_csv(PATH + "camp_api_info_210613.csv", index_col=0)
