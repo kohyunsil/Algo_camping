@@ -21,42 +21,40 @@ class CampMerge:
         self.dimension = config.Config.DIMENSION
 
     def camp_api_preprocessing(self):
+
         global data
 
         camp_api_data = self.api_data
         camp_crawling_data = self.crawl_data
-        datas = camp_crawling_data['link']
-        data =[re.findall("\d+", data)[0] for data in datas]
-        camp_crawling_data['url_num'] = data
-        # camp_crawling_data['url_num'] = camp_crawling_data['url_num'].astype('int')
-        merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', left_on='contentId',  right_on='url_num')
-        merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
-        data = merge_file.reset_index(drop=True)
-        data['tags'] = data.tags.str.replace(' #', ',')
-        data['tags'] = data.tags.str.replace('#', '')
-        data['tags'] = data.tags.fillna('정보없음')
+        camp_api_data['contentId'] = camp_api_data['contentId'].astype('int64')
+        # merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', right_on='contentId', left_on='contentId')
+        # merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
+        # data = merge_file.reset_index(drop=True)
+        # data['tags'] = data.tags.str.replace(' #', ',')
+        # data['tags'] = data.tags.str.replace('#', '')
+        # data['tags'] = data.tags.fillna('정보없음')
+        #
+        # out = []
+        # seen = set()
+        # for c in data['tags']:
+        #     words = c.split(',')
+        #     out.append(','.join([w for w in words if w not in seen]))
+        #     seen.update(words)
+        # data['unique_tag'] = out
+        #
+        # df = ",".join(data.unique_tag.unique())
+        # df = df.split(",")
+        #
+        # def get_tag(i):
+        #     dfs = data['tags'].str.contains(df[i])
+        #     data[df[i]] = dfs.astype(int)
+        #
+        # for i in range(len(df)):
+        #     get_tag(i)
+        #
+        # tag_data = data.iloc[:, 90:]
 
-        out = []
-        seen = set()
-        for c in data['tags']:
-            words = c.split(',')
-            out.append(','.join([w for w in words if w not in seen]))
-            seen.update(words)
-        data['unique_tag'] = out
-
-        df = ",".join(data.unique_tag.unique())
-        df = df.split(",")
-
-        def get_tag(i):
-            dfs = data['tags'].str.contains(df[i])
-            data[df[i]] = dfs.astype(int)
-
-        for i in range(len(df)):
-            get_tag(i)
-
-        tag_data = data.iloc[:, 90:]
-
-        return tag_data
+        return print(camp_crawling_data)
 
     def camp_api_data_merge(self):
 
@@ -177,5 +175,5 @@ class ReviewCamp(ReviewPre):
 
 
 if __name__ == '__main__':
-    rc = ReviewCamp()
-    rc.review_camp_merge()
+    rc = CampMerge()
+    rc.camp_api_preprocessing()

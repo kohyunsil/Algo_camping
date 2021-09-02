@@ -54,9 +54,9 @@ class Config:
             '익스트림' : '액티비티',
             '반려견' : '함께'}
 
-    CAMP = pd.read_csv(PATH + "camp_api_info_210613.csv", index_col=0)
-    FESTIVAL = pd.read_csv(PATH + "festival_210613.csv", index_col=0)
-    TOUR = pd.read_csv(PATH + "tour_list_210612.csv", index_col=0)
+    CAMP = pd.read_csv(PATH + "camp_api_info_210619.csv", index_col=0)
+    # FESTIVAL = pd.read_csv(PATH + "festival_210613.csv", index_col=0)
+    # TOUR = pd.read_csv(PATH + "tour_list_210612.csv", index_col=0)
     CAMP_DETAILS = pd.read_csv(PATH + "camp_crawl_links.csv", encoding='utf-8-sig')
 
     NAVER = pd.read_csv(PATH + 'v5_category_re.csv')
@@ -65,6 +65,6 @@ class Config:
     # PAST = pd.read_csv(PATH + 'locgo_visitor_api_info.csv')
     # FUTURE = pd.read_csv(PATH + 'tour_estiDeco_api_info.csv')
 
-    WEIGHTS = pd.read_csv(PATH + 'dimension_regression.csv', index_col=0)
-    MAIN_CAT = pd.read_csv(PATH + 'algo_df_max.csv', index_col=0)
-    SIGUNGU = pd.read_csv(PATH + 'sigungucode.csv')
+    # WEIGHTS = pd.read_csv(PATH + 'dimension_weights_sum.xlsx', index_col=0)
+    # MAIN_CAT = pd.read_csv(PATH + 'algo_df_max.csv', index_col=0)
+    # SIGUNGU = pd.read_csv(PATH + 'sigungucode.csv')
