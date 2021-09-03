@@ -51,9 +51,9 @@ class GocampCrawl:
                            "tags" : response.xpath('//*[@id="sub_title_wrap2"]/div[2]/div[2]/ul/li/text()').extract()}
 
             except requests.exceptions.ChunkedEncodingError:
-                data = df[df['contentId'] == i].facltNm.unique()
+                # data = df[df['contentId'] == i].facltNm.unique()
                 new_row = {"contentId": i,
-                       "tags": data}
+                       "tags": "" }
 
             row.append(new_row)
 

@@ -27,34 +27,33 @@ class CampMerge:
         camp_api_data = self.api_data
         camp_crawling_data = self.crawl_data
         camp_api_data['contentId'] = camp_api_data['contentId'].astype('int64')
-        # merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', right_on='contentId', left_on='contentId')
-        # merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
-        # data = merge_file.reset_index(drop=True)
-        # data['tags'] = data.tags.str.replace(' #', ',')
-        # data['tags'] = data.tags.str.replace('#', '')
-        # data['tags'] = data.tags.fillna('정보없음')
-        #
-        # out = []
-        # seen = set()
-        # for c in data['tags']:
-        #     words = c.split(',')
-        #     out.append(','.join([w for w in words if w not in seen]))
-        #     seen.update(words)
-        # data['unique_tag'] = out
-        #
-        # df = ",".join(data.unique_tag.unique())
-        # df = df.split(",")
-        #
-        # def get_tag(i):
-        #     dfs = data['tags'].str.contains(df[i])
-        #     data[df[i]] = dfs.astype(int)
-        #
-        # for i in range(len(df)):
-        #     get_tag(i)
-        #
-        # tag_data = data.iloc[:, 90:]
+        merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', right_on='contentId', left_on='contentId')
+        data = merge_file.reset_index(drop=True)
+        data['tags'] = data.tags.str.replace(' #', ',')
+        data['tags'] = data.tags.str.replace('#', '')
+        data['tags'] = data.tags.fillna('정보없음')
 
-        return print(camp_crawling_data)
+        out = []
+        seen = set()
+        for c in data['tags']:
+            words = c.split(',')
+            out.append(','.join([w for w in words if w not in seen]))
+            seen.update(words)
+        data['unique_tag'] = out
+
+        df = ",".join(data.unique_tag.unique())
+        df = df.split(",")
+
+        def get_tag(i):
+            dfs = data['tags'].str.contains(df[i])
+            data[df[i]] = dfs.astype(int)
+
+        for i in range(len(df)):
+            get_tag(i)
+        tag_data = data.iloc[:, 90:]
+        tag_data = pd.concat([data.contentId, tag_data], 1)
+
+        return tag_data
 
     def camp_api_data_merge(self):
 
@@ -63,7 +62,7 @@ class CampMerge:
         camp_data1 = data[['facltNm', 'contentId', 'insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc','glampInnerFclty',
                            'caravInnerFclty', 'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo', 'brazierCl', 'sbrsCl',
                            'sbrsEtc', 'posblFcltyCl', 'extshrCo', 'frprvtWrppCo', 'frprvtSandCo', 'fireSensorCo', 'animalCmgCl']]
-        camp_algo_merge = pd.concat([camp_data1, tag_data], 1)
+        camp_algo_merge = pd.merge(camp_data1, tag_data, how='left', on='contentId')
 
         def col_count(colname):
             camp_algo_merge[f'{colname}'] = camp_algo_merge[f'{colname}'].str.count(',') + 1
@@ -148,19 +147,13 @@ class ReviewCamp(ReviewPre):
         api_data = self.camp_api_data_merge()
         df = self.review_preprocessing()
         df = df[['camp', 'category', 'final_point']]
-        df = pd.pivot_table(df, index='camp', columns='category')
-        df = df.fillna(0)
-        df = df.reset_index()
+        df = pd.pivot_table(df, index='camp', columns='category').fillna(0).reset_index()
         review_result = pd.concat([df["camp"], df["final_point"]], 1)
 
-        camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
-                     '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
-                     '포시즌 캠핑장']
-
+        camp_name = api_data[api_data.duplicated(['camp'])].camp.tolist()
         for i in camp_name:
             review_result = review_result.query(f'camp != "{i}"')
-
-        merge_result = pd.merge(api_data, review_result, how='outer', left_on='camp', right_on='camp')
+        merge_result = pd.merge(api_data, review_result, how='left', left_on='camp', right_on='camp')
 
         result1 = merge_result.iloc[:, 44:].fillna(0)
         result2 = merge_result.iloc[:, :44]
@@ -170,10 +163,6 @@ class ReviewCamp(ReviewPre):
             col_names = self.dimension[self.dimension.colname_kor == f'{algo_re_col}']
             col_name = np.unique(col_names.colname)
             algo_result = algo_result.rename(columns={f'{algo_re_col}': f'{"".join(col_name)}'})
-        algo_result.to_csv(self.path + "algo_merge_result_8.26.csv", encoding='utf-8-sig')
+
+        # algo_result.api_data.to_csv(self.path + "api_data_0903.csv", encoding='utf-8-sig')
         return algo_result
-
-
-if __name__ == '__main__':
-    rc = CampMerge()
-    rc.camp_api_preprocessing()
