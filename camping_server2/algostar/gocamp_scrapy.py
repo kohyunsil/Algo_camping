@@ -29,7 +29,7 @@ class GocampCrawl:
 
         return readcount
 
-    def gocamp_crawler(self, date):
+    def gocamp_crawler(self, time, date):
         ''' 신규캠핑장(월) 크롤링, date = createdtime,
            기존캠핑장(목) 크롤링, date = modifiedtime '''
 
@@ -37,7 +37,7 @@ class GocampCrawl:
         df = gocamping.gocampingAPI()
         df[f'{date}'] = df[f'{date}'].apply(lambda x: x.split(' ')[0])
         df[f'{date}'] = pd.to_datetime(df[f'{date}'])
-        df = df.query(f'"2021-02-01" <= {date}').reset_index(drop = True)
+        df = df.query(f'"{time}" <= {date}').reset_index(drop = True)
         contentIds = df.contentId
 
         base_url = "https://www.gocamping.or.kr"
@@ -62,7 +62,3 @@ class GocampCrawl:
         new_camp['tags'] = new_camp['tags'].apply(', '.join)
         # new_camp.to_csv('../../datas/crawling_data.csv', encoding='utf-8-sig', index=False)
         return new_camp
-
-if __name__ == '__main__':
-    c = GocampCrawl()
-    c.gocamp_crawler('createdtime')

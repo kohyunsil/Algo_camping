@@ -8,14 +8,15 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import algo_config as config
 import camping_server2.apis.gocamping_api as ga
 gocamping = ga.GocampingApi()
-
+import gocamp_scrapy as gs
+gs = GocampCrawl()
 
 class CampMerge:
 
     def __init__(self):
         self.path = config.Config.PATH
         self.api_data = gocamping.gocampingAPI()
-        self.crawl_data = config.Config.CRAWL_DATA
+        self.crawl_data = config.Config.CRAWL_DATA  # gs.gocamp_crawler('2021-02-01','createdtime')
         self.nv_data = config.Config.NV_DATA
         self.kk_data = config.Config.KAKAO
         self.dimension = config.Config.DIMENSION
