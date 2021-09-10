@@ -9,7 +9,8 @@ import algo_config as config
 import camping_server2.apis.gocamping_api as ga
 gocamping = ga.GocampingApi()
 import gocamp_scrapy as gs
-gs = GocampCrawl()
+gs = gs.GocampCrawl()
+
 
 class CampMerge:
 

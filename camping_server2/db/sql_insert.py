@@ -2,7 +2,11 @@ import pymysql
 from sqlalchemy import create_engine
 import re
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from datetime import datetime
+from tqdm import tqdm
+from fbprophet import Prophet
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
@@ -24,7 +28,7 @@ class MakeDataframe:
     def __init__(self):
         self.DIMENSION = config.Config.WEIGHTS
         self.SIGUNGU = config.Config.SIGUNGU
-        self.camp = gocamp.gocampingAPI()  # config.Config.CAMP
+        self.camp = config.Config.CAMP gocamp.gocampingAPI()
         self.festival = config.Config.FESTIVAL  # tourapi.festivalAPI(20210820)
         self.tour = config.Config.TOUR
         self.camp_details = config.Config.CAMP_DETAILS
@@ -138,6 +142,66 @@ class MakeDataframe:
         }, inplace=True)
         print(tag_df.columns)
         return tag_df
+
+    def make_visitor_past_df(self, startYmd=20180101, endYmd=20210910): #visitor_past_df
+        df = tourapi.visitors_API(startYmd, endYmd)
+        # df = pd.read_csv("../../datas/visitors_2018_2021.csv", index_col=[0], encoding='utf-8-sig')
+        df.replace(to_replace=0, value=0.0001, inplace=True)  # 0명의 경우 근사치인 0.0001로 치환
+        result_df = df[['baseYmd', 'signguCode', 'signguNm', 'touDivNm', 'touNum']].copy()
+        idx = df[df['touDivNm'] == '현지인(a)'].index
+        result_df.drop(idx, inplace=True)
+        result_df = result_df.groupby(by=['baseYmd', 'signguCode', 'signguNm']).sum()
+        result_df.reset_index(inplace=True)
+        result_df['baseYmd'] = result_df['baseYmd'].astype(str)
+        result_df['baseYmd'] = pd.to_datetime(result_df['baseYmd'], format='%Y-%m-%d')
+        result_df.sort_values(by=['signguCode', 'baseYmd'], inplace=True)
+        result_df['signguCode'] = result_df['signguCode'].replace(28170, 28177)
+        result_df.reset_index(drop=True, inplace=True)
+
+        result_df.rename(columns={
+            'baseYmd': 'base_ymd',
+            'signguCode': 'sigungu_code',
+            'touNum': 'visitor'
+        }, inplace=True)
+        result_df = result_df[['base_ymd', 'sigungu_code', 'visitor']].copy()
+        return result_df
+
+    def make_visitor_future_df(self, startYmd=20180101, endYmd=20210910, period=90):
+        sql = Query()
+        cursor, engine, db = sql.connect_sql()
+        query = "select * from visitor_past"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        result_df = pd.DataFrame(result) #self.make_visitor_past_df(startYmd, endYmd)
+        print(result_df.tail())
+        sgg_list = np.unique(result_df.sigungu_code).tolist()
+        ymd_list = pd.to_datetime(np.unique(result_df.base_ymd).tolist(), format='%Y-%m-%d')
+
+        final_df = pd.DataFrame(index=ymd_list)
+        for sgg in tqdm(sgg_list):
+            final_df[sgg] = result_df[result_df['sigungu_code'] == sgg]['visitor'].tolist()
+        print(f"기간: 총 {len(final_df.index)}일, 시군구 개수: {len(final_df.columns)}")
+
+        predict_df = pd.DataFrame(columns=['ds', 'trend', 'sigungu_code'])
+        for sigungu in tqdm(final_df.columns.tolist()):
+            train_data = final_df[[sigungu]].copy().reset_index()
+            train_data.rename(columns={'index': 'ds', sigungu: 'y'}, inplace=True)
+            m = Prophet(seasonality_mode='multiplicative', yearly_seasonality=True, daily_seasonality=True)
+            m.fit(train_data)
+            future = m.make_future_dataframe(periods=period)
+            forecast = m.predict(future)
+            new_df = forecast[['ds', 'trend']][-period:].reset_index(drop=True)
+            new_df['sigungu_code'] = sigungu
+            predict_df = pd.concat([predict_df, new_df], axis=0)
+            predict_df.reset_index(drop=True, inplace=True)
+            predict_df['created_date'] = datetime.today().strftime("%Y-%m-%d")
+
+        predict_df.rename(columns={
+            'ds': 'base_ymd',
+            'trend': 'visitor'
+        }, inplace=True)
+
+        return predict_df
 
 
 class Query:

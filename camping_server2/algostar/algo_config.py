@@ -1,6 +1,3 @@
-# import os
-# import sys
-# sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import pandas as pd
 from datetime import datetime
 import configparser
@@ -27,7 +24,7 @@ class Config:
 
     ALGO_DF = pd.read_csv(PATH + "algo_merge_result.csv", encoding="utf-8-sig")
     # "weights & tag" dimension 파일 불러오기
-    DIMENSION = pd.read_excel(PATH + "dimension_weights_sum.xlsx")
+    DIMENSION = pd.read_csv(PATH + "dimension_weights_sum.csv")
     DIMENSION = DIMENSION.loc[:, ~DIMENSION.columns.str.contains('^Unnamed')]
     WEIGHTS_DF = DIMENSION[['category', 'colname', 'weights']].copy()
     WEIGHTS_DF.dropna(axis=0, inplace=True)
