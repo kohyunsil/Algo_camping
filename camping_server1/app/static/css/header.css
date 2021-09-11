@@ -27,6 +27,10 @@ body, table, div, p{
     background-color: rgba(255, 255, 255, 0);
     font-family: "Harlow Solid Italic";
 }
+.header-logo-img{
+    width: 2rem;
+    height: 2.1rem;
+}
 .search{
     font-size: 1.5em;
 }

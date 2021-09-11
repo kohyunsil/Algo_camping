@@ -26,7 +26,15 @@ def signin():
 
 @route_api.route('/signup')
 def signup():
-    return render_template('signup.html')
+    return render_template('join/signup.html')
+
+@route_api.route('/survey/first')
+def survey_first():
+    return render_template('join/survey1.html')
+
+@route_api.route('/survey/second')
+def survey_second():
+    return render_template('join/survey2.html')
 
 @route_api.route('/search')
 def search():

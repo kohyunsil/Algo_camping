@@ -19,10 +19,17 @@ body{
     font-family: "Harlow Solid Italic";
     font-size: 2rem;
 }
+.header-logo-img{
+    width: 2rem;
+    height: 2.1rem;
+}
 .navbar-brand{
     text-align: center;
 }
 /*signup container*/
+.signin-container{
+    margin-top: -5rem;
+}
 .login{
     margin-top: 16rem;
 }
@@ -36,6 +43,20 @@ body{
     color: white;
 }
 .btn-signin:hover{
+    background-color: white;
+    color: #1f284a;
+}
+.btn-survey2,
+.btn-survey1{
+    background-color: #dbdbdb;
+    color: #707070;
+}
+#btn-survey2-prev,
+#btn-survey1-prev{
+    color: white;
+    background-color: #1f284a;
+}
+.btn-survey1-prev:hover{
     background-color: white;
     color: #1f284a;
 }

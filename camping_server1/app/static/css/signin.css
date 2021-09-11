@@ -21,6 +21,10 @@ body{
     font-size: 2rem;
     text-decoration: none;
 }
+.header-logo-img{
+    width: 2rem;
+    height: 2.1rem;
+}
 .navbar-brand{
     text-align: center;
 }
