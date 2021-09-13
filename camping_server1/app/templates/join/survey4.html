@@ -2,9 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Algo Camping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
 </head>
 <body>
-
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="navbar-brand col-md-12" href="/">
+                    <span class="navbar-text" id="logo">
+                        Algo Camping
+                        <img class="header-logo-img" src="/static/imgs/header_logo.png">
+                    </span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    <div class="container col-md-7 login">
+            <div class="signin-container p-4 bg-light col-md-auto rounded-3 outer-2">
+                <div class="container-fluid">
+                    <h3 class=" display-12 fw-bold py-2">캠핑 취향 설문</h3>
+                    <div class="progress">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 70%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    <span>거의 다 왔어요,<br>
+                    user님에게 캠핑이 어떤 즐거움을 주는지 생각해보세요</span>
+                    <br><br>
+                    <div class="mb-3 "><br>
+                        <h5>4. 캠핑을 즐기는 목적이 무엇인가요?</h5><br>
+                        <div class="d-grid gap-3 col-8 mx-auto">
+                            <button class="btn btn-survey4" type="button">스트레스 해소 <span class="sub-text">(액티비티, 관광 등)</span></button>
+                            <button class="btn btn-survey4" type="button">친목 도모 <span class="sub-text">(가족, 친구, 연인과 즐기는 캠핑)</span></button>
+                            <button class="btn btn-survey4" type="button">자연 체험 <span class="sub-text">(생태교육, 아이 동반 등)</span></button>
+                            <button class="btn btn-survey4" type="button">여유로운 힐링 <span class="sub-text">(휴양, 별 감상 등)</span></button>
+                            <button class="btn btn-survey4" type="button">캠핑족 <span class="sub-text">(캠핑은 나의 취미)</span></button>
+                        </div>
+                        <br>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn me-md-2 btn-survey4-prev" style="background-color: #dbdbdb;" type="button">Prev</button>
+                            <button class="btn me-md-2 btn-survey4-next" style="background-color: #1f284a; color:white;" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup2.js"></script>
 </body>
 </html>

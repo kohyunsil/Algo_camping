@@ -2,9 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Algo Camping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
 </head>
 <body>
-
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="navbar-brand col-md-12" href="/">
+                    <span class="navbar-text" id="logo">
+                        Algo Camping
+                        <img class="header-logo-img" src="/static/imgs/header_logo.png">
+                    </span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    <div class="container col-md-7 login">
+            <div class="signin-container p-4 bg-light col-md-auto rounded-3 outer-2">
+                <div class="container-fluid">
+                    <h3 class=" display-12 fw-bold py-2">캠핑 취향 설문</h3>
+                    <div class="progress">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    <span>
+                    저희도 이제 user님을 조금 알 것 같아요!</span>
+                    <br><br>
+                    <div class="mb-3 "><br>
+                        <h5>5. 캠핑하면 이거지!</h5><br>
+                        <div class="d-grid gap-3 col-8 mx-auto">
+                            <button class="btn btn-survey5" type="button">캠퍼형<br><span class="sub-text">캠핑은 맛있는 요리와 불멍이 대세!</span></button>
+                            <button class="btn btn-survey5" type="button">놀이형<br><span class="sub-text">물놀이도 하고 자연체험까지 즐길거야</span></button>
+                            <button class="btn btn-survey5" type="button">감성형<br><span class="sub-text">별과 달, 강물..그리고 나</span></button>
+                            <button class="btn btn-survey5" type="button">투어형<br><span class="sub-text">캠핑은 거들 뿐! 맛집, 관광지 방방곡곡~</span></button>
+                        </div>
+                        <br>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn me-md-2 btn-survey5-prev" style="background-color: #dbdbdb;" type="button">Prev</button>
+                            <button class="btn me-md-2 btn-survey5-next" style="background-color: #1f284a; color:white;" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup2.js"></script>
 </body>
 </html>

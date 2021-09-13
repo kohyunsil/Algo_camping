@@ -47,16 +47,45 @@ body{
     color: #1f284a;
 }
 .btn-survey2,
-.btn-survey1{
+.btn-survey2-1,
+.btn-survey1,
+.btn-survey3,
+.div-etc,
+.btn-survey4,
+.btn-survey5,
+.btn-survey6{
     background-color: #dbdbdb;
     color: #707070;
 }
+.etc-label{
+    margin-left: 45%;
+}
+.div-etc{
+    padding: 1rem;
+    height: 6rem;
+}
+.sub-text{
+    font-size: 0.8rem;
+}
+#btn-survey1-prev,
 #btn-survey2-prev,
-#btn-survey1-prev{
+#btn-survey3-prev,
+#btn-survey4-prev,
+#btn-survey5-prev{
     color: white;
     background-color: #1f284a;
 }
-.btn-survey1-prev:hover{
+.btn-survey-prev:hover{
     background-color: white;
     color: #1f284a;
+}
+.btn-main-router{
+    margin-left: 35%;
+    background-color: #dbdbdb;
+    color: #808080;
+    border-radius: 1.4rem;
+}
+.div-info{
+    color: #696969;
+    font-size: 0.9rem;
 }
