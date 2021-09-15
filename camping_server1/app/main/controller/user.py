@@ -85,6 +85,13 @@ class UserSignup(Resource):
         values = dict(request.values)
         return user_service.signup(values)
 
+@user.route('/signup/survey', methods=['GET'])
+class UserSurvey(Resource):
+    def get(self):
+        """회원가입 설문"""
+        param = request.args.to_dict()
+        print(param)
+        return {'code': 200}
 
 @user.route('/signin', methods=['POST'])
 class UserSignin(Resource):

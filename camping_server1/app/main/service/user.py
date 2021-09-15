@@ -78,11 +78,12 @@ def signup(param):
     email = param['email']
     password = bcrypt.hashpw(param['password'].encode('UTF-8'), bcrypt.gensalt())
     name = param['name']
+    nickname = param['nickname']
     access_token = ''
 
     param, flag = {}, True
     '''
-    # insert into user (email, name, password, access_token, created_date, modified_date) values (이메일, 패스워드, 이름);
+    # insert into user (email, name, password, nickname, access_token, created_date, modified_date) values (이메일, 이름, 패스워드, 닉네임);
     '''
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
@@ -90,7 +91,7 @@ def signup(param):
     created_date = datetime.datetime.today().strftime('%Y-%m-%d')
     modified_date = created_date
 
-    query = model_user(email, name, password, access_token, created_date, modified_date)
+    query = model_user(email, name, password, nickname, access_token, created_date, modified_date)
     try:
         session_.add(query)
         session_.commit()
@@ -100,9 +101,17 @@ def signup(param):
         param['code'] = 500
         flag = True
     finally:
+        # 유저의 고유 아이디
+        '''
+        # select id from user where email=유저의 이메일;
+        '''
+        id = session_.query(model_user.id).filter(model_user.email == email).all()
         session_.close()
+
         param['flag'] = flag
         param['code'] = 200
+        param['id'] = str(id[0][0])
+        param['nickname'] = nickname
 
     return param
 
