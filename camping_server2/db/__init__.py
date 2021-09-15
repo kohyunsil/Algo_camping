@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # camp_df = content.make_camp_df()
     # print(camp_df.columns)
     # sql.save_sql(engine, camp_df, 'camp', 'append')
-    #
+
     # dimension_df = content.make_dimension_df()
     # sql.save_sql(engine, dimension_df, 'dimension', 'append')
     #
@@ -46,14 +46,17 @@ if __name__ == '__main__':
     # tourspot_df = content.make_tourspot_df()
     # print(tourspot_df.columns)
     # sql.save_sql(engine, tourspot_df, 'tourspot', 'append')
+
+    algopoint_df = content.make_algopoint_df()
+    sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
+
+    algotag_df = content.make_algotag_df()
+    sql.save_sql(engine, algotag_df, 'algotag', 'append')
+
+    # visitor_past_df = content.make_visitor_past_df(20180101, 20210910)
+    # print(visitor_past_df.columns)
+    # sql.save_sql(engine, visitor_past_df, 'visitor_past', 'append')
     #
-    # algopoint_df = content.make_algopoint_df()
-    # sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
-
-    visitor_past_df = content.make_visitor_past_df(20180101, 20210910)
-    print(visitor_past_df.columns)
-    sql.save_sql(engine, visitor_past_df, 'visitor_past', 'append')
-
-    visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20210910, period=90)
-    print(visitor_future_df.columns)
-    sql.save_sql(engine, visitor_past_df, 'visitor_future', 'append')
+    # visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20210910, period=90)
+    # print(visitor_future_df.columns)
+    # sql.save_sql(engine, visitor_past_df, 'visitor_future', 'append')

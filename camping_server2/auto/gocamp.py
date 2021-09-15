@@ -29,7 +29,7 @@ class Gocamp:
     # gocamp API
     def gocampingAPI(self):
         url = 'http://api.visitkorea.or.kr/openapi/service/rest/GoCamping/basedList?'
-        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=3000'
+        param = 'ServiceKey=' + self.secretKey + '&MobileOS=ETC&MobileApp=AppTest&numOfRows=6000'
 
         request = Request(url + param)
         request.get_method = lambda: 'GET'

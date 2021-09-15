@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 from tqdm import tqdm
-from fbprophet import Prophet
+# from fbprophet import Prophet
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
@@ -16,24 +16,27 @@ import camping_server2.apis.koreatour_api as ka
 import camping_server2.apis.make_sigungucode as sg
 import camping_server2.algostar.algo_points as aap
 import camping_server2.algostar.tag_points as atp
+import camping_server2.algostar.camp_api_crawling_merge as cacm
 gocamp = ga.GocampingApi()
 tourapi = ka.KoreaTourApi()
 sgg = sg.Sigungucode()
 algo = aap.AlgoPoints()
 tag = atp.TagPoints()
+rv_camp = cacm.ReviewCamp()
 pymysql.install_as_MySQLdb()
 
 
 class MakeDataframe:
     def __init__(self):
+        self.category = config.Config.CATEGORY
         self.DIMENSION = config.Config.WEIGHTS
         self.SIGUNGU = config.Config.SIGUNGU
-        self.camp = config.Config.CAMP gocamp.gocampingAPI()
+        self.camp = gocamp.gocampingAPI()  # config.Config.CAMP
         self.festival = config.Config.FESTIVAL  # tourapi.festivalAPI(20210820)
         self.tour = config.Config.TOUR
         self.camp_details = config.Config.CAMP_DETAILS
 
-    def make_camp_df(self):
+    def make_camp_df(self, last_date='0'):  # '2021-09-01 00:00:00'
         # 캠핑장, 축제, 관광지 전처리
         camp = self.camp[['addr1', 'contentId', 'createdtime', 'firstImageUrl', 'homepage',
                           'induty', 'intro', 'mapX', 'lineIntro', 'mapY', 'modifiedtime', 'operDeCl',
@@ -45,7 +48,6 @@ class MakeDataframe:
         # 컬럼명 DB 삽입용으로 변경
         camp = camp.rename(columns={'addr1': 'addr',
                                     'animalCmgCl': 'animal_cmg',
-                                    'contentId': 'content_id',
                                     'createdtime': 'created_date',
                                     'facltNm': 'place_name',
                                     'induty': 'industry',
@@ -60,22 +62,21 @@ class MakeDataframe:
                                     'lineIntro': 'line_intro',
                                     'sigungucode': 'sigungu_code',
                                     })
-        # 캠핑장 크롤링 데이터 전처리
-        camp_details = self.camp_details.rename(columns={'view': 'readcount'})
-        camp_details['readcount'] = camp_details['readcount'].str.split(' ').str[1]
-        datas = camp_details['link']
-        data = [re.findall("\d+", data)[0] for data in datas]
-        camp_details['url_num'] = data
-        # camp_details['url_num'] = camp_details['url_num'].astype('int')
+
         # 캠핑장 크롤링 과 API 데이터 merge
-        merge_data = pd.merge(camp, camp_details, how='left', left_on='content_id', right_on='url_num')
-        merge_data.drop(['title', 'address', 'url_num', 'description'], 1, inplace=True)
+        camp_details = self.camp_details
+        camp_details['contentId'] = camp_details['contentId'].astype(str)
+        merge_data = pd.merge(camp, camp_details, how='left', on='contentId')
         merge_data.dropna(subset=['addr'], inplace=True)
         merge_data = merge_data.rename(columns={
                                           'link': 'detail_image',
                                           'tags': 'tag',
                                           'view': 'readcount',
+                                          'contentId': 'content_id'
                                           })
+
+        merge_data = merge_data[merge_data['created_date'] > last_date]
+        merge_data.drop_duplicates(subset=['content_id'], inplace=True)
         return merge_data
 
     def make_tourspot_df(self):
@@ -138,10 +139,91 @@ class MakeDataframe:
     def make_algotag_df(self):
         tag_df = tag.make_tag_prior_df()
         tag_df.rename(columns={
-            'contentId': 'content_id'
+            'contentId': 'content_id',
+            'total_points': 'point'
         }, inplace=True)
         print(tag_df.columns)
         return tag_df
+
+    def make_feature_df(self, last_date='0'):
+        camp_df = self.make_camp_df(last_date)
+        camp_df2 = camp_df[['content_id', 'addr']].copy()
+        algo_result = rv_camp.review_camp_merge()
+        algo_result.rename(columns={
+                              'camp': 'place_name',
+                              'contentId': 'content_id',
+                              'insrncAt': 'insrnc_at',
+                              'trsagntNo': 'trsagnt_no',
+                              'mangeDivNm': 'mange',
+                              'manageNmpr': 'manage_num',
+                              'sitedStnc': 'sited_stnc',
+                              'glampInnerFclty': 'glampinner_fclty',
+                              'caravInnerFclty': 'caravinner_fclty',
+                              'trlerAcmpnyAt': 'trler_acmpny',
+                              'caravAcmpnyAt': 'carav_acmpny',
+                              'swrmCo': 'swrm_cnt',
+                              'toiletCo': 'toilet_cnt',
+                              'wtrplCo': 'wtrpl_cnt',
+                              'brazierCl': 'brazier',
+                              'sbrsCl': 'sbrs',
+                              'sbrsEtc': 'sbrs_etc',
+                              'posblFcltyCl': 'posblfclty',
+                              'extshrCo': 'extshr',
+                              'frprvtWrppCo': 'frprvtwrpp',
+                              'frprvtSandCo': 'frprvtsand',
+                              'fireSensorCo': 'firesensor',
+                              'animalCmgCl': 'animal_cmg'
+                            }, inplace=True)
+        algo_result['content_id'] = algo_result['content_id'].astype(str)
+        merge_data = pd.merge(algo_result, camp_df2, how='left', on='content_id')
+        merge_data.drop(['menu_r', 'food_amount_r'], axis=1, inplace=True)
+
+        camping_data = camp_df[['content_id', 'addr', 'tag', 'animal_cmg']].copy()
+        camping_data['tag'] = camping_data['tag'].fillna("")
+
+        # 반려견 출입 가능 유무 컬럼으로 반려견 태그 만들기
+        camping_data["tag"][camping_data["animal_cmg"] == "가능"] = camping_data[camping_data["animal_cmg"] == "가능"][
+                                                                      "tag"] + "#반려견"
+        camping_data["tag"][camping_data["animal_cmg"] == "가능(소형견)"] = \
+        camping_data[camping_data["animal_cmg"] == "가능(소형견)"]["tag"] + "#반려견"
+
+        # 태그 내에서 봄,여름,가을,겨울 제외
+        camping_data['tag'] = [t[:] if type(t) == str else "" for t in camping_data['tag']]
+        for kw in [',', '#봄 ', '#여름 ', '#가을', '#겨울', '봄', '여름', '가을', '겨울']:
+            camping_data['tag'] = [t.replace(kw, "") if type(t) == str else np.NaN for t in camping_data['tag']]
+        # 소분류 one hot encoding
+        camping_data["tag"] = camping_data["tag"].str.replace(" #", "#")
+        subcat = camping_data["tag"].str.split("#").apply(pd.Series).loc[:, 1:]
+        sub_df = pd.get_dummies(subcat.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+        sub_df.drop("", axis=1, inplace=True)
+        sub_df.index = sub_df.index.astype(str)
+
+        lookup = pd.DataFrame(columns=["sub_cat", "main_cat"], data=list(self.category.items()))
+        lookup['main_cat'] = lookup['main_cat'].str.replace(" ", "")
+
+        # 5개 대분류 one hot encoding
+        main_df = pd.DataFrame()
+        for i in range(len(sub_df)):
+            main_df = pd.concat([pd.DataFrame(sub_df.values[i] * lookup["main_cat"].T), main_df], 1)
+        main_df = main_df.T.reset_index(drop=True)
+        main_df = pd.get_dummies(main_df.stack()).reset_index().groupby("level_0").sum().drop("level_1", 1)
+        main_df = main_df.iloc[:, 1:]
+        main_df.index = sub_df.index
+        main_df.index = main_df.index.astype(str)
+        main_df = pd.merge(main_df, sub_df[['반려견']], how='left', left_index=True, right_index=True)
+        main_df.reset_index(inplace=True)
+        main_df.rename(columns={'level_0': 'content_id',
+                                '반려견': 'with_pet_s',
+                                '액티비티': 'activity_m',
+                                '자연/힐링': 'nature_m',
+                                '즐길거리': 'fun_m',
+                                '쾌적/편리': 'comfort_m',
+                                '함께': 'together_m'}, inplace=True)
+
+        final_data = pd.merge(merge_data, main_df, how='left', on='content_id')
+        print(len(final_data.columns), final_data.columns)
+
+        return final_data
 
     def make_visitor_past_df(self, startYmd=20180101, endYmd=20210910): #visitor_past_df
         df = tourapi.visitors_API(startYmd, endYmd)
@@ -252,5 +334,7 @@ if __name__ == '__main__':
     # sql.save_sql(engine, tourspot_df, 'tourspot', 'append')
     # algopoint_df = content.make_algopoint_df()
     # sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
+    feature_df = content.make_feature_df()
+    sql.save_sql(engine, feature_df, 'feature', 'append')
 
 

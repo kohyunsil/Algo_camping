@@ -166,5 +166,8 @@ class ReviewCamp(ReviewPre):
             col_name = np.unique(col_names.colname)
             algo_result = algo_result.rename(columns={f'{algo_re_col}': f'{"".join(col_name)}'})
 
-        # algo_result.api_data.to_csv(self.path + "api_data_0903.csv", encoding='utf-8-sig')
         return algo_result
+
+if __name__ == '__main__':
+    main = ReviewCamp()
+    algo_result = main.review_camp_merge()
