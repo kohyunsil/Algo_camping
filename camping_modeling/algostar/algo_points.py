@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import warnings
-import config as config
+import algo_config as config
 import cat_points as cp
+import camp_api_crawling_merge as cacm
 
 warnings.simplefilter("ignore")
 
@@ -13,7 +14,8 @@ class AlgoPoints(cp.Cat5Points):
     def __init__(self):
         super().__init__()
         self.path = config.Config.PATH
-        self.df = cacm.ReviewCamp().review_camp_merge() # config.Config.ALGO_DF
+        self.df = cacm.ReviewCamp().review_camp_merge()  #config.Config.ALGO_DF
+        self.df.dropna(subset=['contentId'], axis=0, inplace=True)
 
     def polar_points(self, camp_id):
         comfort_point = self.comfort_point(camp_id)
@@ -50,7 +52,7 @@ class AlgoPoints(cp.Cat5Points):
             algo_df['fun'] = fun
             algo_df['healing'] = healing
             algo_df['clean'] = clean
-            # algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
+            algo_df.to_csv(self.path + "algo_df_max.csv", encoding='utf-8-sig')
         else:
             algo_df = pd.read_csv(self.path + f"algo_df_{just_load_file}.csv", encoding='utf-8-sig', index_col=0)
         return algo_df

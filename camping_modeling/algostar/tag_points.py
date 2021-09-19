@@ -1,16 +1,14 @@
-import config as config
-import pandas as pd
-import numpy as np
+import algo_config as config
 from tqdm import tqdm
-import re
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import camp_api_crawling_merge as cacm
+import camping_server2.apis.gocamping_api as ga
 import warnings
 
+gocamping = ga.GocampingApi()
 warnings.simplefilter("ignore")
 TODAY = datetime.today().strftime('%m%d')
 
@@ -18,13 +16,13 @@ TODAY = datetime.today().strftime('%m%d')
 class TagMerge:
     def __init__(self):
         self.path = config.Config.PATH
-        self.api_data = config.Config.API_DATA
+        self.api_data = gocamping.gocampingAPI()
         self.crawl_data = config.Config.CRAWL_DATA
         self.dm = config.Config.DIMENSION
 
     def camp_data_merge(self):
         tags = cacm.CampMerge()
-        camp_data1 = self.api_data[['facltNm', 'contentId']]
+        camp_data1 = self.api_data[['facltNm']] # , 'contentId'
         camp_data_merge = pd.concat([camp_data1, tags.camp_api_preprocessing()], 1)
         camp_data_merge = camp_data_merge.rename(columns={'facltNm': 'camp'})
 
@@ -35,7 +33,7 @@ class TagMerge:
         re_df = cacm.ReviewPre().review_preprocessing()
 
         # 태그별 우선순위를 위한 preprocessing
-        tag_df = re_df.drop(['point', 'count', 'Unnamed: 0','avg_point'], 1)
+        tag_df = re_df.drop(['point', 'count', 'Unnamed: 0', 'avg_point'], 1)
         mm = MinMaxScaler()
         mm_fit = mm.fit_transform(tag_df.iloc[:, 2:])
         tag_df['mm_point'] = mm_fit
@@ -62,14 +60,18 @@ class TagMerge:
         merge_result = pd.merge(datas, review, how='left', left_on='camp', right_on='camp')
         merge_result = merge_result.fillna(0)
         merge_result = merge_result.drop(['만족도', '가격', '목적', '메뉴', '예약', '음식양', '입장', '혼잡도'], 1)
-        re_cols = merge_result.columns.tolist()[2:]
+        re_cols = merge_result.columns.tolist()
+        for kw in ['camp', 'contentId']:
+            while kw in re_cols:
+                re_cols.remove(kw)
         for re_col in re_cols:
-            col_names = self.dm[self.dm.originalname == f'{re_col}']
+            col_names = self.dm[self.dm.colname_kor == f'{re_col}']
             col_name = np.unique(col_names.colname)
             merge_result = merge_result.rename(columns = {f'{re_col}': f'{"".join(col_name)}'})
 
         merge_result = pd.concat([merge_result, algo_df], 1)
-        #merge_result.to_csv(self.path + 'tag_merge.csv', encoding='utf-8-sig', index=False )
+        merge_result = merge_result.loc[:, ~merge_result.T.duplicated()]
+        # merge_result.to_csv(self.path + 'tag_merge.csv', encoding='utf-8-sig', index=False )
         return merge_result
 
 
@@ -125,45 +127,21 @@ class TagPoints:
     def tag_priority(self, content_id, rank=5):
         target_df = self.apply_cat_points(content_id)
         target_df.dropna(axis=0, inplace=True)
-
         target_df = target_df.sort_values('total_points', ascending=False)
-        tag_prior_ls = target_df.iloc[:rank].index.tolist()
-        tag_point_ls = target_df.iloc[:rank]['total_points'].tolist()
+        target_df = target_df[:rank]
 
-        print(content_id, tag_prior_ls, tag_point_ls)
-        return tag_prior_ls, tag_point_ls
+        tag_df = target_df[['total_points']].copy()
+        tag_df.reset_index(inplace=True)
+        tag_df['contentId'] = content_id
+        tag_df.rename(columns={'index': 'tag'}, inplace=True)
+        return tag_df
 
     def make_tag_prior_df(self, rank=5):
-        tag_dict, point_dict = {}, {}
-        for content_id in tqdm(self.df.index.tolist()):
-            tag_ls, point_ls = self.tag_priority(content_id=content_id, rank=rank)
-            tag_dict[content_id] = tag_ls
-            point_dict[content_id] = point_ls
+        tag_point_df = self.tag_priority(self.df.index.tolist()[0], rank=rank)
+        for content_id in tqdm(self.df.index.tolist()[1:]):
+            df = self.tag_priority(content_id=content_id, rank=rank)
+            tag_point_df = pd.concat([tag_point_df, df])
+        tag_point_df.rename(index={'contentId': 'index'}, inplace=True)
 
-        tag_df = pd.DataFrame(list(tag_dict.items()), columns=['contentId', '5tags'])
-        point_df = pd.DataFrame(list(point_dict.items()), columns=['contentId', '5points'])
-        tag_point_df = pd.merge(tag_df, point_df, on='contentId')
-
-        for n in range(1, 6):
-            tag_point_df[f'tag{n}'] = ""
-            tag_point_df[f'tag_point{n}'] = ""
-
-        for row, tag in enumerate(tag_point_df['5tags'].tolist()):
-            for idx in range(len(tag)):
-                try:
-                    tag_point_df[f'tag{idx + 1}'].iloc[row] = tag_point_df['5tags'][row][idx]
-                except:
-                    tag_point_df[f'tag{idx + 1}'].iloc[row] = np.nan
-
-        for row, point in enumerate(tag_point_df['5points'].tolist()):
-            for idx in range(len(point)):
-                try:
-                    tag_point_df[f'tag_point{idx + 1}'].iloc[row] = float(tag_point_df['5points'][row][idx])
-                except:
-                    tag_point_df[f'tag_point{idx + 1}'].iloc[row] = np.nan
-        tag_point_df[['tag_point1', 'tag_point2', 'tag_point3', 'tag_point4', 'tag_point5']] = \
-            tag_point_df[['tag_point1', 'tag_point2', 'tag_point3', 'tag_point4', 'tag_point5']].apply(pd.to_numeric)
-        tag_point_df.drop(['5tags', '5points'], axis=1, inplace=True)
-        tag_point_df.to_csv(self.path + f"top{rank}_tags_{config.Config.NOW}.csv")
         print(tag_point_df)
         return tag_point_df

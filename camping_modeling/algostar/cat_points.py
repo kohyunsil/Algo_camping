@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
 import warnings
-import config as config
+import algo_config as config
+import camp_api_crawling_merge as cacm
 warnings.simplefilter("ignore", UserWarning)
+
 
 
 class CalcLogic:

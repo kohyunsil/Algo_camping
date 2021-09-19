@@ -2,13 +2,43 @@ import camp_api_crawling_merge as cacm
 import tag_points as tp
 import config as config
 import pandas as pd
-
-class ProfilePro:
+class BeforeLogin:
 
     def __init__(self):
         self.df = config.Config.API_DATA
         self.cdf = cacm.ReviewCamp().review_camp_merge()
         self.tdf = tp.TagMerge().tag_merge()
+    def camp_thema(self):
+
+        data_df = self.df[['contentId', 'facltNm', 'firstImageUrl', 'tourEraCl', 'lctCl']]
+
+        def thema_select(column, value):
+            data = data_df[data_df[f'{column}'].str.contains(f'{value}', na = False)].dropna(subset=['firstImageUrl']).reset_index(drop = True)
+            return data
+
+        #season
+        all_season = thema_select('tourEraCl','봄,여름,가을,겨울').iloc[:, :3]
+        spring = thema_select('tourEraCl','봄').iloc[:, :3]
+        summer = thema_select('tourEraCl','여름').iloc[:, :3]
+        fall = thema_select('tourEraCl', '가을').iloc[:, :3]
+        winter = thema_select('tourEraCl', '겨울').iloc[:, :3]
+
+        #주변환경
+        beach = thema_select('lctCl', '해변').iloc[:, :3]
+        river = thema_select('lctCl','강').iloc[:, :3]
+        downtown = thema_select('lctCl','도심').iloc[:, :3]
+        lake = thema_select('lctCl','호수').iloc[:, :3]
+        mountain = thema_select('lctCl','산').iloc[:, :3]
+        valley = thema_select('lctCl','계곡').iloc[:, :3]
+        forest = thema_select('lctCl','숲').iloc[:, :3]
+
+        return {'all_season':all_season, 'spring':spring, 'summer':summer, 'fall':fall, 'winter':winter, 'beach':beach,
+                'river':river, 'downtown': downtown, 'lake':lake, 'mountain':mountain, 'valley':valley, 'forest':forest}
+
+class ProfilePro(BeforeLogin):
+
+    def __init__(self):
+        super().__init__()
 
     def animal_camp(self):
         ''' 반려동물 동반여부'''
@@ -74,36 +104,13 @@ class ProfilePro:
 
         datas = pd.merge(data1, data2, how='inner', on='contentId').iloc[:,:3].rename(columns={'facltNm_x':'facltNm', 'firstImageUrl_x':'firstImageUrl'}).dropna(subset=['firstImageUrl']).reset_index(drop=True)
         final_df = pd.merge(datas, data3, how='inner', on='contentId').iloc[:,:3].rename(columns={'facltNm_x':'facltNm', 'firstImageUrl_x':'firstImageUrl'}).dropna(subset=['firstImageUrl']).reset_index(drop=True)
+
         return final_df
 
-class BeforeLogin:
+if __name__ == '__main__':
+    profile = ProfilePro()
+    b_login = BeforeLogin()
 
-    def __init__(self):
-        self.df = config.Config.API_DATA
-        self.tdf = tp.TagMerge().tag_merge()
-
-    def camp_thema(self):
-
-        data_df = self.df[['contentId', 'facltNm', 'firstImageUrl', 'tourEraCl', 'lctCl']]
-        def thema_select(column, value):
-            data = data_df[data_df[f'{column}'].str.contains(f'{value}', na = False)].dropna(subset=['firstImageUrl']).reset_index(drop = True)
-            return data
-
-        #season
-        all_season = thema_select('tourEraCl','봄,여름,가을,겨울').iloc[:, :3]
-        spring = thema_select('tourEraCl','봄').iloc[:, :3]
-        summer = thema_select('tourEraCl','여름').iloc[:, :3]
-        fall = thema_select('tourEraCl', '가을').iloc[:, :3]
-        winter = thema_select('tourEraCl', '겨울').iloc[:, :3]
-
-        #주변환경
-        beach = thema_select('lctCl', '해변').iloc[:, :3]
-        river = thema_select('lctCl','강').iloc[:, :3]
-        downtown = thema_select('lctCl','도심').iloc[:, :3]
-        lake = thema_select('lctCl','호수').iloc[:, :3]
-        mountain = thema_select('lctCl','산').iloc[:, :3]
-        valley = thema_select('lctCl','계곡').iloc[:, :3]
-        forest = thema_select('lctCl','숲').iloc[:, :3]
-
-        return {'all_season':all_season, 'spring':spring, 'summer':summer, 'fall':fall, 'winter':winter, 'beach':beach,
-                'river':river, 'downtown': downtown, 'lake':lake, 'mountain':mountain, 'valley':valley, 'forest':forest}
+    # print(profile.animal_camp()['all_animal'])
+    # print(profile.induty_camp()['auto_car'])
+    print(profile.purpose_camp()['stress_df'])

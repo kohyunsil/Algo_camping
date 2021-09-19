@@ -1,48 +1,35 @@
 import re
 import numpy as np
 import pandas as pd
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
-import config as config
+import algo_config as config
+import camping_server2.apis.gocamping_api as ga
+gocamping = ga.GocampingApi()
+import gocamp_scrapy as gs
+gs = gs.GocampCrawl()
 
-# 한글 폰트 설정
-import matplotlib.pyplot as plt
-import platform
-from matplotlib import font_manager, rc
-import matplotlib.pyplot as plt
-plt.rcParams['axes.unicode_minus'] = False
-
-if platform.system() == 'Windows':
-    path = "c:/Windows/Fonts/malgun.ttf"
-    font_name = font_manager.FontProperties(fname=path).get_name()
-    rc('font', family=font_name)
-elif platform.system() == 'Darwin':
-    rc('font', family='AppleGothic')
-elif platform.system() == 'Linux':
-    rc('font', family='NanumBarunGothic')
-else:
-    print('Unknown system... sorry~')
 
 class CampMerge:
 
     def __init__(self):
         self.path = config.Config.PATH
-        self.api_data = config.Config.API_DATA
-        self.crawl_data = config.Config.CRAWL_DATA
+        self.api_data = gocamping.gocampingAPI()
+        self.crawl_data = config.Config.CRAWL_DATA  # gs.gocamp_crawler('2021-02-01','createdtime')
         self.nv_data = config.Config.NV_DATA
         self.kk_data = config.Config.KAKAO
         self.dimension = config.Config.DIMENSION
 
     def camp_api_preprocessing(self):
+
         global data
 
         camp_api_data = self.api_data
         camp_crawling_data = self.crawl_data
-        datas = camp_crawling_data['link']
-        data =[re.findall("\d+",data)[0] for data in datas]
-        camp_crawling_data['url_num'] = data
-        camp_crawling_data['url_num'] = camp_crawling_data['url_num'].astype('int')
-        merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', left_on='contentId',  right_on='url_num')
-        merge_file = merge_file.drop(['title', 'description', 'address', 'link', 'url_num'],1)
+        camp_api_data['contentId'] = camp_api_data['contentId'].astype('int64')
+        merge_file = pd.merge(camp_api_data, camp_crawling_data, how='left', right_on='contentId', left_on='contentId')
         data = merge_file.reset_index(drop=True)
         data['tags'] = data.tags.str.replace(' #', ',')
         data['tags'] = data.tags.str.replace('#', '')
@@ -65,8 +52,8 @@ class CampMerge:
 
         for i in range(len(df)):
             get_tag(i)
-
         tag_data = data.iloc[:, 90:]
+        tag_data = pd.concat([data.contentId, tag_data], 1)
 
         return tag_data
 
@@ -77,7 +64,7 @@ class CampMerge:
         camp_data1 = data[['facltNm', 'contentId', 'insrncAt', 'trsagntNo', 'mangeDivNm', 'manageNmpr', 'sitedStnc','glampInnerFclty',
                            'caravInnerFclty', 'trlerAcmpnyAt', 'caravAcmpnyAt', 'toiletCo', 'swrmCo', 'wtrplCo', 'brazierCl', 'sbrsCl',
                            'sbrsEtc', 'posblFcltyCl', 'extshrCo', 'frprvtWrppCo', 'frprvtSandCo', 'fireSensorCo', 'animalCmgCl']]
-        camp_algo_merge = pd.concat([camp_data1, tag_data], 1)
+        camp_algo_merge = pd.merge(camp_data1, tag_data, how='left', on='contentId')
 
         def col_count(colname):
             camp_algo_merge[f'{colname}'] = camp_algo_merge[f'{colname}'].str.count(',') + 1
@@ -93,13 +80,14 @@ class CampMerge:
 
 
 class ReviewPre(CampMerge):
+    def __init__(self):
+        super().__init__()
 
     def review_preprocessing(self):
         """ 카카오 데이터는 네이버 카테고리 학습 후 반영"""
 
         nv_data = self.nv_data
         kk_data = self.kk_data
-
 
         # naver_review_data preprocessing
         nv_data['user_info'] = nv_data['user_info'].fillna(0)
@@ -154,31 +142,27 @@ class ReviewPre(CampMerge):
 
 class ReviewCamp(ReviewPre):
 
+    def __init__(self):
+        super().__init__()
+
     def review_camp_merge(self):
-        cm = CampMerge()
-        api_data = cm.camp_api_data_merge()
+        api_data = self.camp_api_data_merge()
         df = self.review_preprocessing()
         df = df[['camp', 'category', 'final_point']]
-        df = pd.pivot_table(df, index='camp', columns='category')
-        df = df.fillna(0)
-        df = df.reset_index()
+        df = pd.pivot_table(df, index='camp', columns='category').fillna(0).reset_index()
         review_result = pd.concat([df["camp"], df["final_point"]], 1)
 
-        camp_name = ['느티나무 캠핑장', '늘푸른캠핑장', '두리캠핑장', '둥지캠핑장', '백운계곡캠핑장', '별빛야영장',
-                     '별헤는 밤', '산여울캠핑장', '소풍캠핑장', '솔바람 캠핑장', '솔밭야영장', '솔밭캠핑장', '포시즌',
-                     '포시즌 캠핑장']
-
+        camp_name = api_data[api_data.duplicated(['camp'])].camp.tolist()
         for i in camp_name:
             review_result = review_result.query(f'camp != "{i}"')
-
-        merge_result = pd.merge(api_data, review_result, how='outer', left_on='camp', right_on='camp')
+        merge_result = pd.merge(api_data, review_result, how='left', left_on='camp', right_on='camp')
 
         result1 = merge_result.iloc[:, 44:].fillna(0)
         result2 = merge_result.iloc[:, :44]
         algo_result = pd.concat([result2, result1], 1)
         algo_re_cols = algo_result.iloc[:, 3:].columns.tolist()
         for algo_re_col in algo_re_cols:
-            col_names = self.dimension[self.dimension.originalname == f'{algo_re_col}']
+            col_names = self.dimension[self.dimension.colname_kor == f'{algo_re_col}']
             col_name = np.unique(col_names.colname)
             algo_result = algo_result.rename(columns={f'{algo_re_col}': f'{"".join(col_name)}'})
 
