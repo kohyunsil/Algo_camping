@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import camp_api_crawling_merge as cacm
-import camping_server2.apis.gocamping_api as ga
+import camping_modeling.apis.gocamping_api as ga
 import warnings
 
 gocamping = ga.GocampingApi()

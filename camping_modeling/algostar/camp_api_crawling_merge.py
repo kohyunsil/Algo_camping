@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import algo_config as config
-import camping_server2.apis.gocamping_api as ga
+import camping_modeling.apis.gocamping_api as ga
 gocamping = ga.GocampingApi()
 import gocamp_scrapy as gs
 gs = gs.GocampCrawl()

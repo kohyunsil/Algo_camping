@@ -1,13 +1,16 @@
 import camp_api_crawling_merge as cacm
 import tag_points as tp
-import config as config
+import camping_modeling.apis.gocamping_api as ga
+gocamping = ga.GocampingApi()
 import pandas as pd
 class BeforeLogin:
 
     def __init__(self):
-        self.df = config.Config.API_DATA
+        self.df = gocamping.gocampingAPI()
+        self.df['contentId'] = self.df['contentId'].astype('int64')
         self.cdf = cacm.ReviewCamp().review_camp_merge()
         self.tdf = tp.TagMerge().tag_merge()
+
     def camp_thema(self):
 
         data_df = self.df[['contentId', 'facltNm', 'firstImageUrl', 'tourEraCl', 'lctCl']]
@@ -113,4 +116,4 @@ if __name__ == '__main__':
 
     # print(profile.animal_camp()['all_animal'])
     # print(profile.induty_camp()['auto_car'])
-    print(profile.purpose_camp()['stress_df'])
+    print(profile.purpose_camp()['with_final_df'])
