@@ -263,13 +263,21 @@ class CreateDb:
         qry_result = (f'''
             CREATE TABLE {db}.user (
                 id             INT            NOT NULL    AUTO_INCREMENT COMMENT 'ID', 
-                user_id        VARCHAR(30)    NOT NULL    COMMENT '유저 ID', 
-                email          VARCHAR(45)    NOT NULL    COMMENT '이메일', 
-                name           VARCHAR(30)    NULL        COMMENT '유저 이름', 
-                password       VARCHAR(30)    NULL        COMMENT '유저 패스워드', 
-                nickname       VARCHAR(15)    NULL        COMMENT '유저 닉네임', 
-                created_date   DATETIME       NULL        COMMENT '회원가입일', 
-                modified_date  DATETIME       NULL        COMMENT '수정일', 
+                user_id        VARCHAR(30)    NOT NULL    UNIQUE         COMMENT '유저 ID', 
+                email          VARCHAR(45)    NOT NULL    UNIQUE         COMMENT '이메일', 
+                name           VARCHAR(30)    NULL                       COMMENT '유저 이름', 
+                password       VARCHAR(30)    NULL                       COMMENT '유저 패스워드', 
+                nickname       VARCHAR(15)    NULL                       COMMENT '유저 닉네임', 
+                created_date   DATETIME       NULL                       COMMENT '회원가입일', 
+                modified_date  DATETIME       NULL                       COMMENT '수정일',
+                access_token   TEXT           NULL                       COMMENT '액세스 토큰',
+                question1      SMALLINT       NULL                       COMMENT '회원가입 설문 1번',
+                question2      SMALLINT       NULL                       COMMENT '회원가입 설문 2번',
+                question2_1    SMALLINT       NULL                       COMMENT '회원가입 설문 3번',
+                question3      SMALLINT       NULL                       COMMENT '회원가입 설문 4번',
+                question4      SMALLINT       NULL                       COMMENT '회원가입 설문 5번',
+                question5      SMALLINT       NULL                       COMMENT '회원가입 설문 6번',
+                question6      SMALLINT       NULL                       COMMENT '회원가입 설문 7번',
                 CONSTRAINT PK_user PRIMARY KEY (id, user_id, email)
             );
                 ''')
@@ -355,7 +363,7 @@ class CreateDb:
                 platform   INT            NOT NULL    DEFAULT 0      COMMENT '플랫폼 구분 (kakao: 0, naver: 1)', 
                 user_id    VARCHAR(45)    NULL                       COMMENT '유저의 아이디 (kakao만 있음)', 
                 photo_cnt  INT            NULL     					 COMMENT '사진 개수', 
-                date`     DATETIME       NULL     					 COMMENT '날짜', 
+                date       DATETIME       NULL     					 COMMENT '날짜', 
                 cat_tag    VARCHAR(45)    NULL                       COMMENT '네이버 태그', 
                 star       FLOAT          NULL                       COMMENT '별점', 
                 contents   TEXT           NULL                       COMMENT '리뷰 내용', 
@@ -463,15 +471,16 @@ if __name__ == '__main__':
     cursor, engine, db = sql.connect_sql()
 
     create = CreateDb()
-    create.create_camp_tb(sql.DB, cursor)
-    create.create_tourspot_tb(sql.DB, cursor)
-    create.create_feature_tb(sql.DB, cursor)
-    create.create_algopoint_tb(sql.DB, cursor)
-    create.create_algotag_tb(sql.DB, cursor)
-    create.create_sigungu_tb(sql.DB, cursor)
-    create.create_dimension_tb(sql.DB, cursor)
-    create.create_user_tb(sql.DB, cursor)
-    create.create_sns_info_tb(sql.DB, cursor)
-    create.create_user_action_tb(sql.DB, cursor)
-    create.create_visitor_past_tb(sql.DB, cursor)
-    create.create_visitor_future_tb(sql.DB, cursor)
+    # create.create_camp_tb(sql.DB, cursor)
+    # create.create_tourspot_tb(sql.DB, cursor)
+    # create.create_feature_tb(sql.DB, cursor)
+    # create.create_algopoint_tb(sql.DB, cursor)
+    # create.create_algotag_tb(sql.DB, cursor)
+    # create.create_sigungu_tb(sql.DB, cursor)
+    # create.create_dimension_tb(sql.DB, cursor)
+    # create.create_user_tb(sql.DB, cursor)
+    # create.create_sns_info_tb(sql.DB, cursor)
+    # create.create_user_action_tb(sql.DB, cursor)
+    # create.create_visitor_past_tb(sql.DB, cursor)
+    # create.create_visitor_future_tb(sql.DB, cursor)
+    create.create_review_tb(sql.DB, cursor)
