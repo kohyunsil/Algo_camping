@@ -276,14 +276,64 @@ class MakeDataframe:
             new_df['sigungu_code'] = sigungu
             predict_df = pd.concat([predict_df, new_df], axis=0)
             predict_df.reset_index(drop=True, inplace=True)
-            predict_df['created_date'] = datetime.today().strftime("%Y-%m-%d")
 
+        predict_df = predict_df[['sigungu_code', 'ds', 'trend']].copy()
+        predict_df['created_date'] = datetime.now()
         predict_df.rename(columns={
             'ds': 'base_ymd',
             'trend': 'visitor'
         }, inplace=True)
 
         return predict_df
+
+    def make_review_df(self):
+        path = config.Config.PATH
+        kakao = pd.read_csv(path + "kakao_review_cat_predict.csv", encoding='utf-8-sig', low_memory=False)
+        naver = pd.read_csv(path + "v5_category_re.csv", encoding='utf-8-sig', low_memory=False)
+
+        # 카카오 리뷰 전처리
+        kakao['platform'] = 0
+        kakao = kakao.rename(columns={'kakaoMapUserId': 'user_id',
+                                      'point': 'star',
+                                      'likeCnt': 'like_cnt',
+                                      'photoCnt': 'photo_cnt',
+                                      'username': 'user_nickname',
+                                      'category': 'cat_tag'})
+
+        # 네이버 리뷰 전처리
+        naver['user_info'] = naver['user_info'].str.replace("\n", "")
+        naver['user_info'] = naver['user_info'].str.replace(" ", "")
+        naver["user_review"] = \
+        naver['user_info'].str.split("리뷰", expand=True)[1].str.split("평균별점", expand=True)[0].str.split("사진",
+                                                                                                       expand=True)[0]
+        naver["user_picture"] = naver['user_info'].str.split("사진", expand=True)[1].str.split("평균별점", expand=True)[0]
+        naver["user_star"] = naver['user_info'].str.split("평균별점", expand=True)[1]
+        naver['date'], naver['visit'] = naver["visit_info"].str.split(" ", 1).str
+        naver['visit_date'] = naver['date'].str[:10]
+        naver = naver.drop(['user_info', 'visit_info', 'date', 'visit'], 1)
+        naver['platform'] = 1
+        naver = naver.drop(['addr'], 1)
+        naver = naver.rename(columns={'title': 'place_name',
+                                      'user_name': 'user_nickname',
+                                      'visit_date': 'date',
+                                      'base_addr': 'addr',
+                                      'user_picture': 'photo_cnt',
+                                      'highlight_review': 'contents',
+                                      'category': 'cat_tag',
+                                      'user_review': 'review_cnt',
+                                      'user_star': 'mean_star'})
+
+        # 카카오 + 네이버 MERGE
+        kakao_naver = pd.concat([naver, kakao], 0)
+        review_data = self.camp[['contentId', 'facltNm']].copy()
+        review_data = review_data.rename(columns={'contentId': 'camp_id', 'facltNm': 'place_name'})
+        review_data_df = pd.merge(review_data, kakao_naver, left_on='place_name', right_on='place_name', how="right")
+        review_data_df = review_data_df.drop_duplicates()
+        review_data_df = review_data_df.reset_index()
+        review_data_df = review_data_df.rename(columns={'index': 'id', 'userId': 'user_id'})
+        review_df = review_data_df[['platform', 'user_id', 'camp_id', 'photo_cnt', 'date', 'cat_tag', 'star', 'contents']]
+        review_df = review_df.dropna(subset=['camp_id'])
+        return review_df
 
 
 class Query:
@@ -319,21 +369,7 @@ if __name__ == '__main__':
     cursor, engine, db = sql.connect_sql()
 
     content = MakeDataframe()
-    # dimension_df = content.make_dimension_df()
-    # sql.save_sql(engine, dimension_df, 'dimension', 'append')
-    #
-    # sigungu_df = content.make_sigungu_df()
-    # sql.save_sql(engine, sigungu_df, 'sigungu', 'append')
 
-    # camp_df = content.make_camp_df()
-    # print(camp_df.columns)
-    # camp_df.to_csv("let me see.csv", encoding='utf-8-sig')
-    # sql.save_sql(engine, camp_df, 'camp', 'append')
-    # tourspot_df = content.make_tourspot_df()
-    # print(tourspot_df.columns)
-    # sql.save_sql(engine, tourspot_df, 'tourspot', 'append')
-    # algopoint_df = content.make_algopoint_df()
-    # sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
     feature_df = content.make_feature_df()
     sql.save_sql(engine, feature_df, 'feature', 'append')
 
