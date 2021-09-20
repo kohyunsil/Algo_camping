@@ -6,8 +6,8 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 import algo_config as config
-import camping_modeling.apis.gocamping_api as ga
-gocamping = ga.GocampingApi()
+# import camping_modeling.apis.gocamping_api as ga
+# gocamping = ga.GocampingApi()
 import gocamp_scrapy as gs
 gs = gs.GocampCrawl()
 
@@ -16,7 +16,7 @@ class CampMerge:
 
     def __init__(self):
         self.path = config.Config.PATH
-        self.api_data = gocamping.gocampingAPI()
+        self.api_data = config.Config.API_DATA #gocamping.gocampingAPI()
         self.crawl_data = config.Config.CRAWL_DATA  # gs.gocamp_crawler('2021-02-01','createdtime')
         self.nv_data = config.Config.NV_DATA
         self.kk_data = config.Config.KAKAO
