@@ -86,12 +86,18 @@ class UserSignup(Resource):
         return user_service.signup(values)
 
 @user.route('/signup/survey', methods=['GET'])
+@user.doc(params={'userId': '유저 고유 아이디', 'firstAnswer': 'q1에 대한 답', 'secondAnswer': 'q2에 대한 답', 'secondSubAnswer': 'q2-1에 대한 답',
+                  'thirdAnswer': 'q3에 대한 답', 'fourthAnswer': 'q4에 대한 답', 'fourthSubAnswer': 'q4-1에 대한 답',
+                  'fifthAnswer': 'q5에 대한 답', 'sixthAnswer': 'q6에 대한 답'})
+@user.doc(response={400: 'Validation Error', 500: 'Database Server Error'})
+@user.response(200, 'Success')
 class UserSurvey(Resource):
     def get(self):
         """회원가입 설문"""
         param = request.args.to_dict()
         print(param)
-        return {'code': 200}
+        return user_service.signup_survey(param)
+
 
 @user.route('/signin', methods=['POST'])
 class UserSignin(Resource):

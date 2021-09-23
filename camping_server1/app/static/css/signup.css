@@ -51,11 +51,15 @@ body{
 .btn-survey1,
 .btn-survey3,
 .div-etc,
-.btn-survey4,
-.btn-survey5,
+.btn-survey4-1,
+.btn-survey4-2,
 .btn-survey6{
     background-color: #dbdbdb;
     color: #707070;
+}
+.btn-survey5{
+    background-color: #dbdbdb;
+    color: #2f2f2f;
 }
 .etc-label{
     margin-left: 45%;
@@ -64,8 +68,12 @@ body{
     padding: 1rem;
     height: 6rem;
 }
-.sub-text{
+.sub-text,
+.sub-text5{
     font-size: 0.8rem;
+}
+.sub-text5{
+    color: gray;
 }
 #btn-survey1-prev,
 #btn-survey2-prev,
@@ -88,4 +96,16 @@ body{
 .div-info{
     color: #696969;
     font-size: 0.9rem;
+}
+.option-text{
+    font-size: 0.8rem;
+    color: gray;
+}
+.option-img-1,
+.option-img-2,
+.option-img-3{
+    margin-top: 0.5rem;
+    display: block;
+    height: auto;
+    width: 100%;
 }

@@ -52,6 +52,10 @@ def survey_fifth():
 def survey_sixth():
     return render_template('join/survey6.html')
 
+@route_api.route('/signup/survey/done')
+def survey_done():
+    return render_template('join/done.html')
+
 @route_api.route('/search')
 def search():
     if user.is_signin():

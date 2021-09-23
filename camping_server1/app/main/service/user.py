@@ -79,11 +79,13 @@ def signup(param):
     password = bcrypt.hashpw(param['password'].encode('UTF-8'), bcrypt.gensalt())
     name = param['name']
     nickname = param['nickname']
+    birth_date = param['birthDate']
     access_token = ''
+    _ = ''
 
     param, flag = {}, True
     '''
-    # insert into user (email, name, password, nickname, access_token, created_date, modified_date) values (이메일, 이름, 패스워드, 닉네임);
+    # insert into user (email, name, password, nickname, birth_date, access_token, created_date, modified_date) values (이메일, 이름, 패스워드, 닉네임);
     '''
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
@@ -91,7 +93,9 @@ def signup(param):
     created_date = datetime.datetime.today().strftime('%Y-%m-%d')
     modified_date = created_date
 
-    query = model_user(email, name, password, nickname, access_token, created_date, modified_date)
+    query = model_user(email, name, password, nickname, birth_date, access_token, created_date, modified_date, _,
+                       _, _, _, _, _, _, _)
+
     try:
         session_.add(query)
         session_.commit()
@@ -114,6 +118,49 @@ def signup(param):
         param['nickname'] = nickname
 
     return param
+
+# 회원가입 설문 추가
+def signup_survey(param):
+    id = param['userId']
+    answer1 = param['firstAnswer']
+    answer2 = param['secondAnswer']
+    answer2_sub = param['secondSubAnswer']
+    answer3 = param['thirdAnswer']
+    answer4 = param['fourthAnswer']
+    answer4_sub = param['fourthSubAnswer']
+    answer5 = param['fifthAnswer']
+    answer6 = param['sixthAnswer']
+
+    try:
+        client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+        param = {}
+
+        '''
+        # update user set A100 = answer1, A200 = answer2, A210 = answer2_sub, A300 = answer3, 
+        # A410 = answer4, A420 = answer4_sub, A500 = answer5, A600 = answer6 where id = 유저 고유 id
+        '''
+        user = session_.query(model_user).filter(model_user.id == id)[0]
+        user.A100 = answer1
+        user.A200 = answer2
+        user.A210 = answer2_sub
+        user.A300 = answer3
+        user.A410 = answer4
+        user.A420 = answer4_sub
+        user.A500 = answer5
+        user.A600 = answer6
+
+        session_.add(user)
+        session_.commit()
+
+    except:
+        session_.rollback()
+        param['code'] = 500
+    finally:
+        session_.close()
+        param['code'] = 200
+        return param
 
 # 로그인
 def signin(param):
