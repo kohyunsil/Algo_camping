@@ -46,6 +46,17 @@ var getQueryString = function(key){
 }
 
 var SignupEvent = {
+    verifyEmail: function(){
+        var emailVal = $('#email-form').val();
+        var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+        if (emailVal.match(regExp) === null){
+            alert('이메일 형식에 맞게 작성해주세요.');
+            return false;
+        }else{
+            return true;
+        }
+    },
     checkEmail: function(){
         $('#check-btn').on('click', function(){
             var param = {
@@ -53,6 +64,9 @@ var SignupEvent = {
                 flag : ''
             }
             $.post('/user/check', param).done(function(response){
+                if (SignupEvent.verifyEmail() === false){
+                    return;
+                }
                 if (response.code === 200){
                     if (response.flag === false){
                         alert('사용 가능한 이메일입니다.');
@@ -84,6 +98,10 @@ var SignupEvent = {
             }
             if (param.email === ''){
                 alert('이메일을 입력해주세요.');
+            }else{
+                if (SignupEvent.verifyEmail() === false){
+                    return;
+                }
             }
             if (param.password === ''){
                 alert('패스워드를 입력해주세요.');
@@ -344,6 +362,14 @@ var SignupEvent = {
 
                 // 설문 결과 전달
                 $.getJSON('/user/signup/survey', answerParam).done(function(response){
+                    if (id === '' || getQueryString('q1') === '' || getQueryString('q2') === '' || getQueryString('q2sub') === '' ||
+                    getQueryString('q3') === '' || getQueryString('q4') === '' || getQueryString('q4sub') === '' || getQueryString('q5') === ''){
+                        alert('비정상적인 접근입니다.');
+                        // document.location.reload(true);
+                        // document.location.href = '/signup';
+                        // document.location.replace = '/signup';
+                        return;
+                    }
                     if(response.code === 200){
                         location.href = '/signup/survey/done?id=' + id;
                     }else{
@@ -360,33 +386,33 @@ var SignupEvent = {
     },
     surveyDone: function(){
         var id = getQueryString('id');
-
+        if (id === '' || getQueryString('q1') === '' || getQueryString('q2') === '' || getQueryString('q2sub') === '' ||
+                    getQueryString('q3') === '' || getQueryString('q4') === '' || getQueryString('q4sub') === '' || getQueryString('q5') === ''){
+            window.alert('비정상적인 접근입니다.');
+            window.location.href = '/signup';
+            continue
+        }
         $('.user-nickname').text(getCookie(id));
+        delCookie(id);
         $('.btn-main-router').on('click', function(){
             location.href = '/';
         })
     }
 }
 var setCookie = function(name, value, days){
-    var expireDate = new Date();
-    expireDate.setDate(expireDate.getDate() + days);
-
-    var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + expireDate.toUTCString());
-    document.cookie = name + '=' + cookie_value;
+  var date = new Date();
+  date.setTime(date.getTime() + days*24*60*60*1000);
+  document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
 }
 
 var getCookie = function(name){
-    var x, y;
-    var val = document.cookie.split(';');
+    var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return value? value[2] : null;
+}
 
-    for (var i = 0; i < val.length; i++) {
-        x = val[i].substr(0, val[i].indexOf('='));
-        y = val[i].substr(val[i].indexOf('=') + 1);
-        x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
-        if (x == name) {
-          return unescape(y); // unescape로 디코딩 후 값 리턴
-        }
-    }
+var delCookie = function(name){
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    console.log('delCookie is called!');
 }
 
 SignupEvent.signUp();
