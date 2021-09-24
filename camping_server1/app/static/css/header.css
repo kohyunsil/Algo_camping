@@ -41,6 +41,9 @@ body, table, div, p{
     background-color: rgba(255, 255, 255, 0);
 
 }
+.dropdown-menu-tags{
+    width: 85%;
+}
 .dropdown-btn{
     padding-top: 10px;
     padding-bottom: 10px;
@@ -124,13 +127,19 @@ body > div:nth-child(1) > div > div.container-fluid.d-grid.align-items-center > 
     border: none;
     box-shadow: none;
 }
-.bootstrap-tagsinput .badge {
-    padding: 5px;
-    margin-left: 3px;
-    color: #1f284a;
+.cat-fun-1,
+.cat-comfort-2,
+.cat-together-3,
+.cat-healing-4,
+.cat-activity-5{
+    padding: 0.2rem;
+    margin-left: 0.4rem;
+    text-align: center;
+    color: #f3f3f3;
     font-size: 0.9rem;
     border-radius: 0.8rem;
-    background-color: #f3f3f3;
+    background-color: #1f284a;
+    width: 70%;
 }
 .bootstrap-tagsinput .badge [data-role="remove"] {
     margin-left: 8px;
