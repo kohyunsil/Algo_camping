@@ -124,7 +124,7 @@ class ProfilePro(BeforeLogin):
 
         return {'kids_camp':kids_camp, 'healing_camp':healing_camp, 'field_trip':field_trip, 'tour_camp':tour_camp}
 
-    def final_merge(self, value, together, animal, induty, season, around, purpose, how):
+    def final_merge(self, value, together, animal, induty, season, around, purpose):
 
         """
         설문항목 2 누구와 함께 가시나요? > df1
@@ -144,12 +144,13 @@ class ProfilePro(BeforeLogin):
         df6 = self.purpose_camp()[f'{purpose}'] #kids_camp, healing_camp, field_trip, tour_camp
 
         profile_df = [df1, df2, df3, df4, df5, df6]
-        profile_df.sort(key=len, reverse=True)
+        profile_df.sort(key = len, reverse = True)
 
-        merged_profile_df = reduce(lambda x, y: pd.merge(x, y, how=f'{how}', on='contentId'), profile_df)
+        merged_profile_df = reduce(lambda x, y: pd.merge(x, y, how = 'left', on = 'contentId'), profile_df)
+        merged_profile_final = pd.concat([merged_profile_df.contentId, merged_profile_df.iloc[:, 11:]], 1).rename(columns={'facltNm_y':'facltNm', 'firstImageUrl_y':'firstImageUrl'}).dropna(subset = ['firstImageUrl'])
 
+        return merged_profile_final
 
-        return merged_profile_df.iloc[:,:3]
 
 if __name__ == '__main__':
     profile = ProfilePro()
@@ -170,5 +171,5 @@ if __name__ == '__main__':
     # print(profile.purpose_camp()['tour_camp']) # 180 rows
 
 
-    print(profile.final_merge('가족|친구|동료', 'with_family_df', 'all_animal', 'auto_car', 'spring', 'mountain_valley', 'kids_camp', 'right'))
+    print(profile.final_merge('혼자', 'alone_df', 'all_animal', 'auto_car', 'spring', 'mountain_valley', 'field_trip'))
 
