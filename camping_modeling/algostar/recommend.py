@@ -124,7 +124,26 @@ class ProfilePro(BeforeLogin):
 
         return {'kids_camp':kids_camp, 'healing_camp':healing_camp, 'field_trip':field_trip, 'tour_camp':tour_camp}
 
-    def final_merge(self, value, together, animal, induty, season, around, purpose):
+    def region_camp(self):
+        region_df = self.df[['contentId','facltNm','firstImageUrl','doNm']]
+
+        # 수도권 (서울시/경기도/인천시)
+        region_1 = self.thema_select(region_df, 'doNm', '서울시|경기도|인천시').reset_index(drop=True)
+        # 동해/강원권 (강원도)
+        region_2 = self.thema_select(region_df, 'doNm', '강원도').reset_index(drop=True)
+        # 남해/영남권 (경상남도/경상북도/대구시/부산시/울산시)
+        region_3 = self.thema_select(region_df, 'doNm', '경상남도|경상북도|대구시|부산시|울산시').reset_index(drop=True)
+        # 서해/충청권 (대전시/세종시/충청북도/충청남도)
+        region_4 = self.thema_select(region_df, 'doNm', '대전시|세종시|충청북도|충청남도').reset_index(drop=True)
+        # 광주/호남권 (광주시/전라남도/전라북도)
+        region_5 = self.thema_select(region_df, 'doNm', '광주시|전라남도|전라북도').reset_index(drop=True)
+        # 제주도
+        region_6 = self.thema_select(region_df, 'doNm', '제주도').reset_index(drop=True)
+
+        return {'region_1':region_1, 'region_2':region_2, 'region_3':region_3, 'region_4':region_4, 'region_5':region_5, 'region_6':region_6}
+
+
+    def final_merge(self, value, together, animal, induty, season, around, purpose, region):
 
         """
         설문항목 2 누구와 함께 가시나요? > df1
@@ -137,11 +156,11 @@ class ProfilePro(BeforeLogin):
         """
 
         df1 = self.together_camp(f'{value}')[f'{together}']
-        df2 = self.animal_camp()[f'{animal}'] #all_animal, small_animal, impossibility
-        df3 = self.induty_camp()[f'{induty}']  #auto_car, glam_cara, induty_camp
-        df4 = self.camp_thema()[f'{season}'] #spring, summer, fall, winter
-        df5 = self.camp_thema()[f'{around}'] #beach, mountain_valley, lake_river, downtown
-        df6 = self.purpose_camp()[f'{purpose}'] #kids_camp, healing_camp, field_trip, tour_camp
+        df2 = self.animal_camp()[f'{animal}']               #all_animal, small_animal, impossibility
+        df3 = self.induty_camp()[f'{induty}']               #auto_car, glam_cara, induty_camp
+        df4 = self.camp_thema()[f'{season}']                #spring, summer, fall, winter
+        df5 = self.camp_thema()[f'{around}']                #beach, mountain_valley, lake_river, downtown
+        df6 = self.purpose_camp()[f'{purpose}']             #kids_camp, healing_camp, field_trip, tour_camp
 
         profile_df = [df1, df2, df3, df4, df5, df6]
         profile_df.sort(key = len, reverse = True)
@@ -149,7 +168,10 @@ class ProfilePro(BeforeLogin):
         merged_profile_df = reduce(lambda x, y: pd.merge(x, y, how = 'left', on = 'contentId'), profile_df)
         merged_profile_final = pd.concat([merged_profile_df.contentId, merged_profile_df.iloc[:, 11:]], 1).rename(columns={'facltNm_y':'facltNm', 'firstImageUrl_y':'firstImageUrl'}).dropna(subset = ['firstImageUrl'])
 
-        return merged_profile_final
+        region_df = self.region_camp()[f'{region}']
+        merge_df_f = pd.merge(region_df, merged_profile_final, how='left', on='contentId')
+
+        return merge_df_f
 
 
 if __name__ == '__main__':
@@ -170,6 +192,9 @@ if __name__ == '__main__':
     # print(profile.purpose_camp()['field_trip']) # 237 rows
     # print(profile.purpose_camp()['tour_camp']) # 180 rows
 
+    # print(profile.region_camp()['region_1']) #546 rows
+    # print(profile.region_camp()['region_2']) #443 rows
 
-    print(profile.final_merge('혼자', 'alone_df', 'all_animal', 'auto_car', 'spring', 'mountain_valley', 'field_trip'))
+
+    print(profile.final_merge('가족|친구|동료', 'with_family_df', 'all_animal', 'auto_car', 'spring', 'mountain_valley', 'field_trip', 'region_1'))
 
