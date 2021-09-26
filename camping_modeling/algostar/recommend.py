@@ -152,7 +152,7 @@ class ProfilePro(BeforeLogin):
         설문항목 4-1 캠핑가기 딱 좋은 계절은? df4
         설문항목 4-2 어디 근처에서 캠핑하는 걸 좋아하세요? df5
         설문항목 5 캠핑 취향 설문? > df6
-        설문항목 6 선호하는 지역은? > df7
+        설문항목 6 선호하는 지역은? > region_df
         """
 
         df1 = self.together_camp(f'{value}')[f'{together}']
@@ -166,10 +166,11 @@ class ProfilePro(BeforeLogin):
         profile_df.sort(key = len, reverse = True)
 
         merged_profile_df = reduce(lambda x, y: pd.merge(x, y, how = 'left', on = 'contentId'), profile_df)
-        merged_profile_final = pd.concat([merged_profile_df.contentId, merged_profile_df.iloc[:, 11:]], 1).rename(columns={'facltNm_y':'facltNm', 'firstImageUrl_y':'firstImageUrl'}).dropna(subset = ['firstImageUrl'])
+        merged_profile_final = pd.concat([merged_profile_df.contentId, merged_profile_df.iloc[:, 11:]], 1)
 
         region_df = self.region_camp()[f'{region}']
         merge_df_f = pd.merge(region_df, merged_profile_final, how='left', on='contentId')
+        merge_df_f = pd.concat([merge_df_f.contentId, merge_df_f.iloc[:, 4:]], 1).rename(columns={'facltNm_y':'facltNm', 'firstImageUrl_y':'firstImageUrl'}).dropna(subset = ['firstImageUrl'])
 
         return merge_df_f
 
