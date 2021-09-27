@@ -262,23 +262,24 @@ class CreateDb:
 
         qry_result = (f'''
             CREATE TABLE {db}.user (
-                id             INT            NOT NULL    AUTO_INCREMENT COMMENT 'ID', 
-                user_id        VARCHAR(30)    NOT NULL    UNIQUE         COMMENT '유저 ID', 
+                id             INT            NOT NULL    AUTO_INCREMENT COMMENT 'ID',  
                 email          VARCHAR(45)    NOT NULL    UNIQUE         COMMENT '이메일', 
                 name           VARCHAR(30)    NULL                       COMMENT '유저 이름', 
                 password       VARCHAR(30)    NULL                       COMMENT '유저 패스워드', 
-                nickname       VARCHAR(15)    NULL                       COMMENT '유저 닉네임', 
+                nickname       VARCHAR(15)    NULL                       COMMENT '유저 닉네임',
+                birth_date     VARCHAR(6)     NULL                       COMMENT '출생년월일 6자리 (ex:990801)',  
                 created_date   DATETIME       NULL                       COMMENT '회원가입일', 
                 modified_date  DATETIME       NULL                       COMMENT '수정일',
                 access_token   TEXT           NULL                       COMMENT '액세스 토큰',
-                question1      SMALLINT       NULL                       COMMENT '회원가입 설문 1번',
-                question2      SMALLINT       NULL                       COMMENT '회원가입 설문 2번',
-                question2_1    SMALLINT       NULL                       COMMENT '회원가입 설문 3번',
-                question3      SMALLINT       NULL                       COMMENT '회원가입 설문 4번',
-                question4      SMALLINT       NULL                       COMMENT '회원가입 설문 5번',
-                question5      SMALLINT       NULL                       COMMENT '회원가입 설문 6번',
-                question6      SMALLINT       NULL                       COMMENT '회원가입 설문 7번',
-                CONSTRAINT PK_user PRIMARY KEY (id, user_id, email)
+                A100           SMALLINT       NULL                       COMMENT '회원가입 설문 1번',
+                A200           SMALLINT       NULL                       COMMENT '회원가입 설문 2번',
+                A210           SMALLINT       NULL                       COMMENT '회원가입 설문 2-1번',
+                A300           SMALLINT       NULL                       COMMENT '회원가입 설문 3번',
+                A410           SMALLINT       NULL                       COMMENT '회원가입 설문 4-1번',
+                A420           SMALLINT       NULL                       COMMENT '회원가입 설문 4-2번',
+                A500           SMALLINT       NULL                       COMMENT '회원가입 설문 5번',
+                A600           SMALLINT       NULL                       COMMENT '회원가입 설문 6번',
+                CONSTRAINT PK_user PRIMARY KEY (id, email)
             );
                 ''')
         cursor.execute(qry_result)
@@ -440,9 +441,9 @@ class Constraint:
 
 class Query:
     def __init__(self):
-        self.IP = ' '
-        self.DB = ' '
-        self.PW = ' '
+        self.IP = 'algo-camping-rds.cbnmrlyxxadn.ap-northeast-2.rds.amazonaws.com'
+        self.DB = 'algo_09'
+        self.PW = 'algocamping'
 
     # db cursor 생성
     def connect_sql(self):
@@ -478,9 +479,9 @@ if __name__ == '__main__':
     # create.create_algotag_tb(sql.DB, cursor)
     # create.create_sigungu_tb(sql.DB, cursor)
     # create.create_dimension_tb(sql.DB, cursor)
-    # create.create_user_tb(sql.DB, cursor)
+    create.create_user_tb(sql.DB, cursor)
     # create.create_sns_info_tb(sql.DB, cursor)
     # create.create_user_action_tb(sql.DB, cursor)
     # create.create_visitor_past_tb(sql.DB, cursor)
     # create.create_visitor_future_tb(sql.DB, cursor)
-    create.create_review_tb(sql.DB, cursor)
+    # create.create_review_tb(sql.DB, cursor)
