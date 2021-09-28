@@ -1,7 +1,10 @@
-var mySwiper = new Swiper('.swiper-container', {
+var mySwiper = new Swiper('.mySwiper', {
     autoplay: {
-      delay: 2000,
+      delay: 3000,
       disableOnInteraction: false,
+    },
+    lazy: {
+        loadPrevNext: true,
     },
     pagination: {
       el: ".swiper-pagination",
@@ -11,4 +14,31 @@ var mySwiper = new Swiper('.swiper-container', {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev",
     },
+});
+mySwiper.update();
+
+var swiper = new Swiper(".mySwiper2", {
+    slidesPerView: 4,
+    spaceBetween: 30,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      // 320px ~
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 20
+      },
+      // 480px ~
+      480: {
+        slidesPerView: 3,
+        spaceBetween: 30
+      },
+      // 640px ~
+      640: {
+        slidesPerView: 4,
+        spaceBetween: 40
+      }
+    }
 });

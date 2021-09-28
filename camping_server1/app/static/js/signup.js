@@ -386,12 +386,12 @@ var SignupEvent = {
     },
     surveyDone: function(){
         var id = getQueryString('id');
-        if (id === '' || getQueryString('q1') === '' || getQueryString('q2') === '' || getQueryString('q2sub') === '' ||
-                    getQueryString('q3') === '' || getQueryString('q4') === '' || getQueryString('q4sub') === '' || getQueryString('q5') === ''){
-            window.alert('비정상적인 접근입니다.');
-            window.location.href = '/signup';
-            continue
-        }
+        // if (id === '' || getQueryString('q1') === '' || getQueryString('q2') === '' || getQueryString('q2sub') === '' ||
+        //             getQueryString('q3') === '' || getQueryString('q4') === '' || getQueryString('q4sub') === '' || getQueryString('q5') === ''){
+        //     window.alert('비정상적인 접근입니다.');
+        //     window.location.href = '/signup';
+        //     continue
+        // }
         $('.user-nickname').text(getCookie(id));
         delCookie(id);
         $('.btn-main-router').on('click', function(){

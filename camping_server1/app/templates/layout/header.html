@@ -1,16 +1,30 @@
-<link rel="stylesheet" type="text/css" href="/static/css/header.css">
-<div class="container-fluid outer-1">
-    <div class="container-fluid d-grid align-items-center" style="grid-template-columns: 0.5fr 2fr; padding-top: 10px;">
-        <div class="dropdown">
-            <a class="logo" href="/main">Algo Camping<img class="header-logo-img" src="/static/imgs/header_logo.png"></a>
-        </div>
+<!doctype html>
+<html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
 
-        <div class="d-flex align-items-center">
+        <!-- Bootstrap core CSS -->
+        <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+      </head>
+    <body>
+    <main>
+        <header class="p-3 bg-light text-white">
             <div class="container">
-                <div class="row">
-                   <form class="align-items-center">
-                         <span>
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="default-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <div class="row">
+                        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                            <a class="logo" href="/main">Algo Camping<img class="header-logo-img" src="/static/imgs/header_logo.png"></a>
+                        </a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="text-end">
+                        <span>
+                            <button class="btn btn-warning dropdown-toggle" type="button" id="default-menu" data-bs-toggle="dropdown" aria-expanded="false">
                              전체
                             </button>
                             <ul class="dropdown-menu" id="area-menu">
@@ -32,149 +46,148 @@
                                 <li><a class="dropdown-item" href="#">제주</a></li>
                             </ul>
                         </span>
-
                         <span>
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="default-menu1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-warning dropdown-toggle" type="button" id="recommend-default-menu1" data-bs-toggle="dropdown" aria-expanded="false">
                              추천태그
                             </button>
                             <ul class="dropdown-menu dropdown-menu-tags" id="area-menu1">
                                 <li>
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <a class="dropdown-item cat-fun-1" href="#">#즐길거리</a>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-1" type="button" id="fun-option-1">#생태교육</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-1" type="button" id="fun-option-2">#둘레길</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-1" type="button" id="fun-option-3">#축제</button>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-1" type="button" id="fun-option-4">#문화유적</button>
                                         </div>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <a class="dropdown-item cat-comfort-2" href="#">#쾌적/편리</a>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-2" type="button" id="comfort-option-1">#온수 잘 나오는</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-2" type="button" id="comfort-option-2">#깨끗한</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-2" type="button" id="comfort-option-3">#차 대기 편한</button>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-2" type="button" id="comfort-option-4">#사이트 간격이 넓은</button>
                                         </div>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <a class="dropdown-item cat-together-3" href="#">#함께</a>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-3" type="button" id="together-option-1">#아이들 놀기 좋은</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-3" type="button" id="together-option-2">#가족</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-3" type="button" id="together-option-3">#커플</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-3" type="button" id="together-option-4">#반려견</button>
                                         </div>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <a class="dropdown-item cat-healing-4" href="#">#자연/힐링</a>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-4" type="button" id="healing-option-1">#계곡 옆</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-4" type="button" id="healing-option-2">#물맑은</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-4" type="button" id="healing-option-3">#별보기 좋은</button>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-4" type="button" id="healing-option-4">#힐링</button>
                                         </div>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <a class="dropdown-item cat-activity-5" href="#">#액티비티</a>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-5" type="button" id="activity-option-1">#물놀이 하기 좋은</button>
                                         </div>
-                                        <div class="col-1"></div>
-                                        <div class="mx-auto col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-5" type="button" id="activity-option-2">#자전거 타기 좋은</button>
                                         </div>
-                                        <div class="mx-auto col-2">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-5" type="button" id="activity-option-3">#수영장 있는</button>
                                         </div>
-                                        <div class="mx-auto col-3">
+                                        <div class="col-sm">
                                             <button class="btn btn-cat-5" type="button" id="activity-option-4">#익스트림</button>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
                         </span>
+                    </div><br><br><br>
+
+                    <div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 col-xl-6 custom-search">
+                    <!--          <input type="text" class="custom-search-input" placeholder="태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장">-->
                         <input class="col-12" type="search" data-role="tagsinput" value="" style="display: none">
-                        <button class="col-0 search-btn" type="button" style="">
+                        <button class="col-0 custom-search-botton" type="button" style="">
                             <i class="material-icons search" width="32" height="32">search</i>
                         </button>
-                   </form>
+                    </div>
+                    <div class="col text-end ">
+                        {% if param %}
+                        <a href="#" class="d-flex flex-wrap align-items-center justify-content-center link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons user " style="color: #1f284a;">account_circle</i>
+                            <p class="mx-2 py-1 username">test님 안녕하세요</p>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" id="logout-menu">
+                            <li><a class="dropdown-item" id="logout-btn" href="#">로그아웃</a></li>
+                        </ul>
+                        {% else %}
+                        <a href="#" class="d-flex flex-wrap align-items-center justify-content-center link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons user" style="color: #1f284a;">account_circle</i>
+                            <p class="mx-2 py-1 username">로그인</p>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" id="login-menu">
+                            <li><a class="dropdown-item" id="login-btn" href="/signin">로그인</a></li>
+                        </ul>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-
-            <div class="flex-shrink-0 dropdown user-dropdown">
-                {% if param %}
-                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>
-                        <p class="mx-2 py-1 username">{{ param.name }}님 안녕하세요</p>
-                    </a>
-                    <ul class="dropdown-menu text-small shadow" id="logout-menu">
-                        <li><a class="dropdown-item" id="logout-btn" href="#">로그아웃</a></li>
-                    </ul>
-                {% else %}
-                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="material-icons user" width="32" height="32" style="color: #1f284a;">account_circle</i>
-                        <p class="mx-2 py-1 username">로그인</p>
-                    </a>
-                    <ul class="dropdown-menu text-small shadow" id="login-menu">
-                        <li><a class="dropdown-item" id="login-btn" href="/signin">로그인</a></li>
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <span class="text-secondary text-center info-text">태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장</span>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="/static/js/tagsinput.js"></script>
-<script src="/static/css/header.css"></script>
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script>
-    Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
-</script>
+        </header>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="/static/js/tagsinput.js"></script>
+    <script src="/static/css/header.css"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
+    </script>
+  </body>
+</html>
