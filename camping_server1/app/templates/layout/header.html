@@ -25,7 +25,7 @@
                     <div class="text-end">
                         <span>
                             <button class="btn btn-warning dropdown-toggle" type="button" id="default-menu" data-bs-toggle="dropdown" aria-expanded="false">
-                             전체
+                             지역
                             </button>
                             <ul class="dropdown-menu" id="area-menu">
                                 <li><a class="dropdown-item" href="#">서울</a></li>
@@ -70,6 +70,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <hr>
                                 <li>
                                     <div class="row">
                                         <div class="col-sm">
@@ -89,6 +90,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <hr>
                                 <li>
                                     <div class="row">
                                         <div class="col-sm">
@@ -108,6 +110,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <hr>
                                 <li>
                                     <div class="row">
                                         <div class="col-sm">
@@ -127,6 +130,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <hr>
                                 <li>
                                     <div class="row">
                                         <div class="col-sm">
@@ -161,7 +165,7 @@
                         {% if param %}
                         <a href="#" class="d-flex flex-wrap align-items-center justify-content-center link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="material-icons user " style="color: #1f284a;">account_circle</i>
-                            <p class="mx-2 py-1 username">test님 안녕하세요</p>
+                            <p class="mx-2 py-1 username">{{ param.name }}님 안녕하세요</p>
                         </a>
                         <ul class="dropdown-menu text-small shadow" id="logout-menu">
                             <li><a class="dropdown-item" id="logout-btn" href="#">로그아웃</a></li>

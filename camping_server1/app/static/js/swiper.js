@@ -1,4 +1,4 @@
-var mySwiper = new Swiper('.mySwiper', {
+var mySwiper = new Swiper('.mySwiper1', {
     autoplay: {
       delay: 3000,
       disableOnInteraction: false,
@@ -6,10 +6,10 @@ var mySwiper = new Swiper('.mySwiper', {
     lazy: {
         loadPrevNext: true,
     },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
+    // pagination: {
+    //   el: ".swiper-pagination",
+    //   clickable: true,
+    // },
     navigation: {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev",
@@ -18,8 +18,8 @@ var mySwiper = new Swiper('.mySwiper', {
 mySwiper.update();
 
 var swiper = new Swiper(".mySwiper2", {
-    slidesPerView: 4,
-    spaceBetween: 30,
+    slidesPerView: 5,
+    spaceBetween: 3,
     pagination: {
       el: ".swiper-pagination",
       clickable: true,
@@ -33,12 +33,13 @@ var swiper = new Swiper(".mySwiper2", {
       // 480px ~
       480: {
         slidesPerView: 3,
-        spaceBetween: 30
+        spaceBetween: 20
       },
       // 640px ~
       640: {
         slidesPerView: 4,
-        spaceBetween: 40
+        spaceBetween: 0
       }
     }
 });
+swiper.update();

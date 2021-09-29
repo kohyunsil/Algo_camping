@@ -2,11 +2,17 @@
 @media (min-width: 10px){
     body{
         background-image: url('../imgs/background_mobile.png');
+        /*background-position: center center;*/
+        /*background-repeat: no-repeat;*/
+        /*background-attachment: fixed;*/
+        /*background-size: cover;*/
+        /*height: 100%;*/
+        width: 100vw;
+        height: 100vh;
         background-position: center center;
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
-        height: 100%;
     }
 }
 @media (min-width:768px){
@@ -23,30 +29,30 @@
         background-size: cover;
     }
 }
+.header-logo-img{
+    width: 2rem;
+    height: 2rem;
+}
 .form-control-dark {
-  color: #fff;
-  border-color: gray;
-  background-color: white;
+    color: #fff;
+    border-color: gray;
+    background-color: white;
 }
 .form-control-dark:focus {
-  color: #fff;
-  border-color: #fff;
-  box-shadow: 0 0 0 .25rem rgba(226, 226, 226, 0.25);
+    color: #fff;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 .25rem rgba(226, 226, 226, 0.25);
 }
-
 .bi {
-  vertical-align: -.125em;
-  fill: currentColor;
+    vertical-align: -.125em;
+    fill: currentColor;
 }
-
 .text-small {
-  font-size: 85%;
+    font-size: 85%;
 }
-
 .dropdown-toggle {
-  outline: 0;
+    outline: 0;
 }
-
 @font-face {
     font-family: 'Harlow Solid Italic';
     font-style: normal;
@@ -55,6 +61,7 @@
     src: local('Harlow Solid Italic'), url('HARLOWSI.TTF') format('ttf');
 }
 .logo{
+    margin-left: 2.5rem;
     color: #1f284a;
     font-weight: bold;
     font-size: 1.6rem;
@@ -64,41 +71,41 @@
     font-family: "Harlow Solid Italic";
 }
 .username{
-    font-size: 0.8rem;
+    font-size: 1.1rem;
     margin-bottom: 0.2rem;
 }
 .user{
-    font-size: 2em;
+    font-size: 2.5em;
     vertical-align: center;
 }
 
 /*--search button--*/
 .custom-search {
-  position: relative;
-
+    position: relative;
 }
 .bootstrap-tagsinput {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 100px;
-  padding: 10px 100px 10px 20px;
-  line-height: 1;
-  box-sizing: border-box;
-  outline: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 100px;
+    padding: 10px 100px 10px 20px;
+    line-height: 1;
+    box-sizing: border-box;
+    outline: none;
 }
 .custom-search-botton {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  border: 0;
-  background : rgb(255, 255, 255, 0);
-  outline: none;
-  margin: 0;
-  padding: 0 10px;
-  border-radius: 100px;
-  z-index: 2;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    bottom: 3px;
+    border: 0;
+    background : rgb(255, 255, 255, 0);
+    outline: none;
+    margin: 0;
+    padding: 0 10px;
+    border-radius: 100px;
+    z-index: 2;
 }
+
 /*--input tag--*/
 .badge-info{
     border-radius: 0.8rem;
@@ -117,6 +124,7 @@
     padding: 0 6px;
     margin: 0;
 }
+
 /*--input tag remove icon--*/
 .bootstrap-tagsinput .badge [data-role="remove"] {
     margin-left: 8px;
@@ -139,18 +147,29 @@
 .cat-together-3,
 .cat-healing-4,
 .cat-activity-5{
-    padding: 0.2rem;
-    margin-left: 0.4rem;
+    margin-left: 0.5rem;
     text-align: center;
     color: #f3f3f3;
     font-size: 0.9rem;
-    border-radius: 0.8rem;
+    border-radius: 1rem;
     background-color: #1f284a;
     width: 70%;
+    font-weight: bold;
+    padding: 0.3rem;
+}
+#fun-option-1, #fun-option-2, #fun-option-3, #fun-option-4,
+#comfort-option-1, #comfort-option-2, #comfort-option-3, #comfort-option-4,
+#together-option-1, #together-option-2, #together-option-3, #together-option-4,
+#healing-option-1, #healing-option-2, #healing-option-3, #healing-option-4,
+#activity-option-1, #activity-option-2, #activity-option-3, #activity-option-4{
+    font-weight: 550;
 }
 .dropdown-menu-tags{
-    width: 80%;
+    width: 55%;
 }
 #recommend-default-menu1{
     margin-right: 0.2rem;
+}
+hr{
+    border: 1px solid #c3c3c3;
 }
