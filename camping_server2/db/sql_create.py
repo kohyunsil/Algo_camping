@@ -441,9 +441,9 @@ class Constraint:
 
 class Query:
     def __init__(self):
-        self.IP = 'algo-camping-rds.cbnmrlyxxadn.ap-northeast-2.rds.amazonaws.com'
-        self.DB = 'algo_09'
-        self.PW = 'algocamping'
+        self.IP = ' '
+        self.DB = ' '
+        self.PW = ' '
 
     # db cursor 생성
     def connect_sql(self):
