@@ -25,7 +25,6 @@ class UserWeights(reco.ProfilePro):
         alone = self.together_camp('혼자')['alone_df'].iloc[:, :1]
         alone = pd.merge(self.eda_df, alone, how='inner', on='contentId')
 
-
         return {'family':family, 'friends':friends, 'couple':couple, 'alone':alone}
 
     def reco_A210(self):
@@ -52,10 +51,9 @@ class UserWeights(reco.ProfilePro):
         etc = self.induty_camp()['etc'].iloc[:, :1]
         etc = pd.merge(self.eda_df, etc, how='inner', on='contentId')
 
-
         return {'auto_car' : auto_car, 'glam_cara':glam_cara, 'etc':etc}
 
-    def reco_A310(self):
+    def reco_A410(self):
         ''' 1. 봄 / 2. 여름 / 3. 가을 / 4. 겨울 '''
 
         spring = self.camp_thema()['spring'].iloc[:, :1]
@@ -69,7 +67,6 @@ class UserWeights(reco.ProfilePro):
 
         winter = self.camp_thema()['winter'].iloc[:, :1]
         winter = pd.merge(self.eda_df, winter, how='inner', on='contentId')
-
 
         return {'spring':spring, 'summer':summer, 'fall':fall, 'winter':winter}
 
@@ -87,7 +84,6 @@ class UserWeights(reco.ProfilePro):
 
         downtown = self.camp_thema()['downtown'].iloc[:, :1]
         downtown = pd.merge(self.eda_df, downtown, how='inner', on='contentId')
-
 
         return {'beach':beach, 'mountain_valley':mountain_valley, 'lake_river':lake_river, 'downtown':downtown}
 
@@ -130,10 +126,9 @@ class UserWeights(reco.ProfilePro):
         region_6 = self.region_camp()['region_6'].iloc[:, :1]
         region_6 = pd.merge(self.eda_df, region_6, how='inner', on='contentId')
 
-
         return {'region_1':region_1, 'region_2':region_2, 'region_3':region_3, 'region_4':region_4, 'region_5':region_5, 'region_6':region_6}
 
 
 if __name__ == '__main__':
     df = UserWeights()
-    print(df.reco_A200()['family'])
+    print(df.reco_A600()['region_6'])
