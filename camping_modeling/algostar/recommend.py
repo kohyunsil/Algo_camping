@@ -135,7 +135,7 @@ class ProfilePro(BeforeLogin):
         region_3 = self.thema_select(region_df, 'doNm', '경상남도|경상북도|대구시|부산시|울산시').reset_index(drop=True)
         # 서해/충청권 (대전시/세종시/충청북도/충청남도)
         region_4 = self.thema_select(region_df, 'doNm', '대전시|세종시|충청북도|충청남도').reset_index(drop=True)
-        # 광주/호남권 (광주시/전라남도/전라북도)
+        # 호남권 (광주시/전라남도/전라북도)
         region_5 = self.thema_select(region_df, 'doNm', '광주시|전라남도|전라북도').reset_index(drop=True)
         # 제주도
         region_6 = self.thema_select(region_df, 'doNm', '제주도').reset_index(drop=True)
