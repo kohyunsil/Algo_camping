@@ -1,4 +1,4 @@
-// 카테고리 체크 값 확인
+var count = 0;
 var items = []
 var SignoutEvent = {
     doSignout: function(){
@@ -72,31 +72,22 @@ var SearchTags = {
                 '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
             '</div>'
         );
-        $('input:checkbox').on('change', function(){
-            // 검색창에서 추가한 태그 개수 포함 처리
-            if (cnt > 1){
-                $('#alert-form').addClass('show');
-                $('#alert-form').show();
-                // 3개 이상 선택한 경우 비활성화
-                $('input:not(:checked)').attr('disabled', 'disabled');
-            }
-            if ($(this).prop('checked')) {
-                items.push('#' + $(this).val());
-                cnt += 1
-            }else {
-                // 3개 이하일시 비활성화 해제
-                $('input:not(:checked)').removeAttr('disabled');
-                var compare = items.indexOf($(this).val());
-                items.splice(compare, 1);
-                cnt -= 1
-            }
-        });
         cnt += $('.badge-info').length;
         // 지역 선택
-        $('.dropdown-menu li a').on('click', function() {
-            $('#default-menu').text($(this).text());
-            $("#default-menu").val($(this).text());
+        $('#area-menu li a').on('click', function() {
+            $('#area-default-menu').text($(this).text());
+            $("#area-default-menu").val($(this).text());
         });
+        // 추천 태그 선택
+        $('#recommend-tag-menu li div div button').on('click', function(){
+            var tag = $(this).text();
+            var span_tag = '<span class="badge badge-info">' + tag + '</span>'
+            if (count === 0){
+                $('.bootstrap-tagsinput').empty();
+            }
+            $('.bootstrap-tagsinput').append(span_tag);
+            count ++;
+        })
     },
     // 사용자 입력 키워드
     getKeywords: function(){
@@ -104,9 +95,9 @@ var SearchTags = {
         var req = '';
 
         // 선택된 지역
-        req += '#' + $(".dropdown-toggle").text().trim();
+        req += '#' + $(".btn-area").text().trim();
         if (req === '#'){
-            req += '전체';
+            req += '지역';
         }
 
         for (var i = 0; i < items.length; i++) {
@@ -121,6 +112,7 @@ var SearchTags = {
         if ($('.badge-info').text() != '') {
             req += $('.badge-info').text();
         }
+        console.log('req is ' + req);
         return req
     },
     doSearchTags: function(){

@@ -23,7 +23,7 @@ def get_searchlist(params):
     # 입력 데이터 태그/캠핑장 구분
     for i, param in enumerate(split_params):
         if i == 0:
-            if split_params[0] == '전체':
+            if split_params[0] == '지역':
                 continue
             else:
                 area = '%{}%'.format(split_params[0].replace(' ', ''))
@@ -194,7 +194,7 @@ def get_algo_points(content_id):
         algo_star = round(sum(cat_points_list) / 100, 1)
     except:
         # content_id에 대한 별점, 점수 산출 불가인 경우
-        return '', []
+        return 0.0, []
     return algo_star, cat_points_list
 
 # top3,5 특성

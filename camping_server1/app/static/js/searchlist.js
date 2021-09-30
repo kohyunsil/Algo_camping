@@ -38,14 +38,14 @@ var SearchList = {
     getList: function(){
         var param = document.location.href.split("?keywords=");
         var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
-        var req_param = decode_param.replaceAll('%3B', ';');
+        var req_param = decode_param.replaceAll('%3B', ';').replace('추천태그', '');
         var params = {
             keywords : req_param,
             res_num : '',
             place_info : '',
         }
         var access_token = SearchList.getCookie('access_token');
-        console.log(params)
+        console.log('req_param' + req_param);
         $.getJSON('/search/list', params).done(function(response){
             if(response.code === 200){
                 SearchList.getSearchData(response);
@@ -72,7 +72,16 @@ var SearchList = {
         }
     },
     showSearchList: function(res){
-        $('.input-keyword').text(res.keywords);
+        var rtn_keywords = '';
+        if (res.keywords.indexOf('지역') !== -1){
+            rtn_keywords = res.keywords.toString().replace('지역', '지역 전체');
+        }else{
+            rtn_keywords = res.keywords;
+        }
+        $('#area-default-menu').text(rtn_keywords.substr(0, 2));
+        $("#area-default-menu").val(rtn_keywords.substr(0, 2));
+
+        $('.input-keyword').text(rtn_keywords);
         $('.input-size').text(res.res_num);
         $('.search-result').css({'visibility': 'visible'});
 

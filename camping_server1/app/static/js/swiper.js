@@ -43,3 +43,11 @@ var swiper = new Swiper(".mySwiper2", {
     }
 });
 swiper.update();
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })

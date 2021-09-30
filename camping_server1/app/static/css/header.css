@@ -105,6 +105,9 @@
     border-radius: 100px;
     z-index: 2;
 }
+.btn-area{
+    background-color: #ffffff;
+}
 
 /*--input tag--*/
 .badge-info{
@@ -171,5 +174,20 @@
     margin-right: 0.2rem;
 }
 hr{
-    border: 1px solid #c3c3c3;
+    /*border: 1px solid #c3c3c3;*/
+    border: 1px solid #84b7a3;
+}
+.btn-area,
+.btn-recommend{
+    background-color: #49917D;
+    color: white;
+    border: 0;
+}
+.btn-recommend{
+    margin-right: 0.3rem;
+}
+.btn-recommend:hover,
+.btn-area:hover{
+    background-color: #326457;
+    color: white;
 }
