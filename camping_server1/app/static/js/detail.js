@@ -57,12 +57,11 @@ var DetailInfo = {
                 '</div>\n'
             )
         }else{
-            var img_array = res.place_info.detail_image.split(',');
             $('#swiper-place').empty();
-            for(var i=0; i< img_array.length; i++){
+            for(var i=0; i< res.place_info.detail_image.length; i++){
                 $('.swiper-wrapper').append(
                     '<div class="swiper-slide">\n' +
-                            '<img src="' + img_array[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
+                            '<img src="' + res.place_info.detail_image[i] + '" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
                     '</div>\n'
                 )
             }

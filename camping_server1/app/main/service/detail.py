@@ -42,6 +42,8 @@ def get_detail(param):
                 # future_date, future_congestion = json_default(future_congestion_obj)
 
                 params['place_info'] = place_info[0]
+                params['place_info'].detail_image = str(place_info[0].detail_image).split(',')[:5]
+
                 params['avg_star'] = avg_star
                 params['local_info'] = local_obj if local_obj is not None else None
 
@@ -62,7 +64,6 @@ def get_detail(param):
         finally:
             session_.close()
 
-    print(params)
     return jsonify(params)
 
 # 관광지, 축제 정보
