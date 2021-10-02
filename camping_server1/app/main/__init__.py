@@ -1,8 +1,11 @@
 from flask import Flask
+from flask import *
+import logging
 from ..view import routes
 from app.main.controller import user
 import warnings
 from ..config import DBConfig, Config
+from datetime import datetime
 from .model import db, migrate
 from flask_jwt_extended import *
 
@@ -25,5 +28,11 @@ def create_app():
     )
 
     jwt = JWTManager(app)
+
+    logging_format = '%(asctime)s - %(levelname)s - %(message)s'
+
+    logging.basicConfig(filename=str(datetime.now()) + 'log/debug/_debug.log', level=logging.DEBUG, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + 'log/warning/_warning.log', level=logging.WARNING, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + 'log/error/_error.log', level=logging.ERROR, format=logging_format)
 
     return app

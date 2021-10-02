@@ -2,6 +2,7 @@ from app.main.service import search as search_service
 from app.main.model import *
 from flask_restx import Resource, Namespace, fields
 from flask import request, redirect, jsonify
+import logging
 
 search = Namespace('search', description='relating to search')
 

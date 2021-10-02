@@ -7,6 +7,8 @@ from flask_jwt_extended import *
 import bcrypt
 from flask import *
 from app.config import Config
+import logging
+from datetime import datetime
 
 # 로그인 여부 확인
 def is_signin():
@@ -66,8 +68,10 @@ def is_duplicate(param):
         query = session_.query(model_user).filter(model_user.email == email).all()
 
         param['flag'] = flag if len(query) == 0 else not flag
+        logging.info('----[' + str(datetime.now()) + ' is_duplicate() : 200]----')
         param['code'] = 200
     except:
+        logging.error('----[' + str(datetime.now()) + ' is_duplicate() : 500]----')
         param['code'] = 500
     finally:
         session_.close()
@@ -101,6 +105,7 @@ def signup(param):
         session_.commit()
         flag = False
     except:
+        logging.error('----[' + str(datetime.now()) + ' signup() : 500]----')
         session_.rollback()
         param['code'] = 500
         flag = True
@@ -112,6 +117,7 @@ def signup(param):
         id = session_.query(model_user.id).filter(model_user.email == email).all()
         session_.close()
 
+        logging.info('----[' + str(datetime.now()) + ' signup() : 200]----')
         param['flag'] = flag
         param['code'] = 200
         param['id'] = str(id[0][0])
@@ -155,9 +161,11 @@ def signup_survey(param):
         session_.commit()
 
     except:
+        logging.error('----[' + str(datetime.now()) + ' signup_survey() : 500]----')
         session_.rollback()
         param['code'] = 500
     finally:
+        logging.info('----[' + str(datetime.now()) + ' signup_survey() : 200]----')
         session_.close()
         param['code'] = 200
         return param
@@ -173,6 +181,7 @@ def signin(param):
     try:
         query = model_user.query.filter(model_user.email == email).all()
         if len(query) == 0:
+            logging.warning('----[' + str(datetime.now()) + ' signin() : 401]----')
             error_msg = '이메일을 다시 확인하세요.'
             code = 401
         else:
@@ -205,12 +214,15 @@ def signin(param):
                 app.permanent_session_lifetime = Config.SESSION_LIFETIME
                 session['name'] = name
             else:
+                logging.warning('----[' + str(datetime.now()) + ' signin() : 401]----')
                 error_msg = '비밀번호를 다시 확인하세요.'
                 code = 401
     except:
+        logging.error('----[' + str(datetime.now()) + ' signin() : 500]----')
         code = 500
         access_token = ''
     else:
+        logging.info('----[' + str(datetime.now()) + ' signin() : 200]----')
         code = 200
     finally:
         param['code'] = code

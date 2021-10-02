@@ -7,14 +7,13 @@ var DetailInfo = {
         }
         var access_token = DetailInfo.getCookie('access_token');
 
-            $.getJSON('/detail/info', param).done(function(response){
-                if (response.code === 200){
-                    DetailInfo.doAfterSuccess(response);
-                }else{
-                    alert(response.msg);
-                }
-            })
-        // }
+        $.getJSON('/detail/info', param).done(function(response){
+            if (response.code === 200){
+                DetailInfo.doAfterSuccess(response);
+            }else{
+                alert(response.msg);
+            }
+        })
     },
     showPlaceInfo: function(res){
         var star = '';

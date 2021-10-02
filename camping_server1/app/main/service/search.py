@@ -8,6 +8,8 @@ from app.config import Config
 from ..service.tag_points import TagPoints
 import datetime
 import pandas as pd
+from datetime import datetime
+import logging
 
 # 검색결과 리스트
 def get_searchlist(params):
@@ -94,6 +96,7 @@ def get_searchlist(params):
     place_dto.place = place_info
     modeling_dto.modeling = {'algo_stars': algo_stars, 'tags': tags}
 
+    logging.info('----[' + str(datetime.now()) + ' get_searchlist() : 200]----')
     params['code'] = 200
     params['keywords'] = ', '.join(split_params)
     params['res_num'] = len(main_query)
@@ -222,6 +225,7 @@ def make_resobj(place_info):
         stars.append(param['star'])
         tags.append(param['tag'])
 
+    logging.info('----[' + str(datetime.now()) + ' make_resobj() : 200]----')
     params['code'] = 200
     params['place_info'] = param_list
     params['algo_star'] = stars
