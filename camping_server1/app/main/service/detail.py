@@ -62,6 +62,7 @@ def get_detail(param):
         finally:
             session_.close()
 
+    print(params)
     return jsonify(params)
 
 # 관광지, 축제 정보

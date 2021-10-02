@@ -112,7 +112,6 @@ var SearchTags = {
         if ($('.badge-info').text() != '') {
             req += $('.badge-info').text();
         }
-        console.log('req is ' + req);
         return req
     },
     doSearchTags: function(){

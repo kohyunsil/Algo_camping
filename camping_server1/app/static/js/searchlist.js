@@ -45,7 +45,7 @@ var SearchList = {
             place_info : '',
         }
         var access_token = SearchList.getCookie('access_token');
-        console.log('req_param' + req_param);
+
         $.getJSON('/search/list', params).done(function(response){
             if(response.code === 200){
                 SearchList.getSearchData(response);
@@ -73,13 +73,14 @@ var SearchList = {
     },
     showSearchList: function(res){
         var rtn_keywords = '';
-        if (res.keywords.indexOf('지역') !== -1){
-            rtn_keywords = res.keywords.toString().replace('지역', '지역 전체');
-        }else{
-            rtn_keywords = res.keywords;
+        rtn_keywords = res.keywords;
+
+        try{
+            $('#area-default-menu').text(rtn_keywords.substr(0, 2));
+            $("#area-default-menu").val(rtn_keywords.substr(0, 2));
+        } catch(err){
+
         }
-        $('#area-default-menu').text(rtn_keywords.substr(0, 2));
-        $("#area-default-menu").val(rtn_keywords.substr(0, 2));
 
         $('.input-keyword').text(rtn_keywords);
         $('.input-size').text(res.res_num);
@@ -87,7 +88,7 @@ var SearchList = {
 
         for(var i=0; i<res.place_info.length; i++){
             $('#card-layout').append(
-                '<div class="col" style="cursor: pointer;">\n' +
+                '<div class="col" style="cursor: pointer;" id=' + '"' + i + '"' + '>\n' +
                     '<div class="card border-0">\n' +
                         '<div class="swiper-container card mySwiper">\n' +
                             '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
@@ -137,8 +138,10 @@ var SearchList = {
         // 장소 클릭
         $('.col').each(function(idx){
             $(this).click(function(event){
+                var idx = $(this).attr('id');
+                var id = res.place_info[idx].content_id;
+
                 event.preventDefault();
-                var id = res.place_info[Number(idx / 2)].content_id;
                 var param = {
                     content_id: id
                 }
