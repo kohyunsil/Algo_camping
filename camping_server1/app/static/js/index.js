@@ -126,7 +126,53 @@ var SearchTags = {
         });
     }
 }
+var ClickBannerEvent = {
+    clickRecommendSwiper : function(){
+        $('.mySwiper2-slide').on('click', function(){
+            var click_id = $(this).attr('id');
+            var access_token = SignoutEvent.getCookie('access_token');
+            if (access_token === undefined){
+                access_token = '';
+            }
+            var param = {
+                id : click_id,
+                access_token : access_token
+            }
+            $.getJSON('/main/swiper', param).done(function(response){
+                if(response.code === 200){
+                    // 임시
+                    location.href = '/signin';
+                }else{
+                    alert(response.msg);
+                }
+            });
+        })
+    },
+    clickBannerSwiper: function(){
+        $('.swiper-slide-1').on('click', function(){
+            var click_id = $(this).attr('id');
+            var access_token = SignoutEvent.getCookie('access_token');
+            if (access_token === undefined){
+                access_token = '';
+            }
+            var param = {
+                id : click_id,
+                access_token : access_token
+            }
+            $.getJSON('/main/swiper', param).done(function(response){
+                if(response.code === 200){
+                    // 임시
+                    location.href = '/signin';
+                }else{
+                    alert(response.msg);
+                }
+            });
+        })
+    }
+}
 SignoutEvent.doSignout();
 SearchTags.getSearchTags();
 SearchTags.getKeywords();
 SearchTags.doSearchTags();
+ClickBannerEvent.clickRecommendSwiper();
+ClickBannerEvent.clickBannerSwiper();

@@ -49,3 +49,5 @@ share/python-wheels/
 data.ini
 
 .idea/
+
+*.log

@@ -41,11 +41,12 @@ def is_exist_user():
             Session = sessionmaker(bind=client)
             session_ = Session()
         try:
-            query = session_.query(model_user.name).filter(model_user.access_token == session['access_token']).all()
+            query = session_.query(model_user.id, model_user.name).filter(model_user.access_token == session['access_token']).all()
             if len(query) == 0:
                 return False
             else:
                 param['name'] = query[0].name
+                param['id'] = query[0].id
                 return param
         except:
             return False

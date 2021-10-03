@@ -7,6 +7,7 @@ config = configparser.ConfigParser()
 abspath = os.path.abspath('data.ini')
 config.read(abspath)
 keys = config['SECRET_KEYS']
+mongo_keys = config['MONGODB']
 
 
 class DBConfig(object):
@@ -15,10 +16,14 @@ class DBConfig(object):
     CSRF_ENABLED = True
     SECRET_KEY = 'super secret key'
     SQLALCHEMY_DATABASE_URI = (
-        'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
+            'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
         # 'mysql://root:root@localhost:3306/camping?charset=utf8'
     )
-
+    MONGO_DATABASE_URI = 'mongodb://' + mongo_keys['USER'] + ':' + mongo_keys['PASSWORD'] + '@' + mongo_keys['HOST'] + ':27017/'
+    MONGO_USER = mongo_keys['USER']
+    MONGO_PWD = mongo_keys['PASSWORD']
+    MONGO_HOST = mongo_keys['HOST']
+    MONGO_DB = mongo_keys['DB']
 
 class Config(object):
     TEMPLATE_AUTO_RELOAD = True
@@ -52,3 +57,5 @@ class Config(object):
     DIMENSION = DIMENSION.loc[:, ~DIMENSION.columns.str.contains('^Unnamed')]
     TAG_DM = DIMENSION[['category', 'colname', 'tagname', 'count']].copy()
     TAG_DM.dropna(axis=0, inplace=True)
+
+    RANDOM_RANGE = 100000

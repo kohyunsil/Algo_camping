@@ -6,7 +6,6 @@ from ..service.search import get_score, get_top_tag
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from app.config import Config
-from datetime import datetime
 import datetime
 import logging
 
@@ -61,10 +60,10 @@ def get_detail(param):
                 except KeyError:
                     params['user_name'] = '사용자'
 
-            logging.info('----[' + str(datetime.now()) + ' get_detail() : 200]----')
+            logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
             params['code'] = 200
         except:
-            logging.error('----[' + str(datetime.now()) + ' get_detail() : 500]----')
+            logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500
         finally:
             session_.close()

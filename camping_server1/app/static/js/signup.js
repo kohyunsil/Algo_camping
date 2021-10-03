@@ -98,22 +98,27 @@ var SignupEvent = {
             }
             if (param.email === ''){
                 alert('이메일을 입력해주세요.');
+                return
             }else{
                 if (SignupEvent.verifyEmail() === false){
-                    return;
+                    return
                 }
             }
             if (param.password === ''){
                 alert('패스워드를 입력해주세요.');
+                return
             }
             if (param.passwordConfirm === ''){
                 alert('패스워드 확인을 입력해주세요.');
+                return
             }
             if (param.name === ''){
                 alert('이름을 입력해주세요.');
+                return
             }
             if (param.nickname === ''){
                 alert('닉네임을 입력해주세요.');
+                return
             }
             if (param.password !== '' && param.name !== '' && param.email !== ''){
                 if ($('#check-btn').is(':disabled')){

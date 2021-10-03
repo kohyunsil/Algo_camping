@@ -4,7 +4,7 @@ from app.main import create_app
 from app import blueprint
 import logging
 
-app = create_app()
+app, mongodb = create_app()
 app.register_blueprint(blueprint)
 
 @app.errorhandler(404)

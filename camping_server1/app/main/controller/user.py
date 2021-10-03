@@ -95,7 +95,6 @@ class UserSurvey(Resource):
     def get(self):
         """회원가입 설문"""
         param = request.args.to_dict()
-        print(param)
         return user_service.signup_survey(param)
 
 

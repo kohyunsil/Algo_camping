@@ -12,9 +12,11 @@ var SigninEvent = {
             }
             if (param.email === ''){
                 alert('이메일을 입력해주세요.');
+                return
             }
             if (param.password === ''){
                 alert('패스워드를 입력해주세요.');
+                return
             }
             if (param.email !== '' && param.password !== ''){
                 $.post('/user/signin', param).done(function(response){

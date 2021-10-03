@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import *
+from flask_mongoengine import MongoEngine
 import logging
+from logging.config import dictConfig
 from ..view import routes
 from app.main.controller import user
 import warnings
@@ -8,6 +10,7 @@ from ..config import DBConfig, Config
 from datetime import datetime
 from .model import db, migrate
 from flask_jwt_extended import *
+
 
 warnings.filterwarnings('ignore')
 
@@ -27,12 +30,36 @@ def create_app():
         JWT_SECRET_KEY=Config.JWT_SECRET_KEY
     )
 
+    app.config['MONGODB_SETTINGS'] = {
+        'db': DBConfig.MONGO_DB,
+        'host': DBConfig.MONGO_HOST,
+        'port': 27017,
+        'username': DBConfig.MONGO_USER,
+        'password': DBConfig.MONGO_PWD
+    }
+    mongodb = MongoEngine(app)
     jwt = JWTManager(app)
 
     logging_format = '%(asctime)s - %(levelname)s - %(message)s'
 
-    logging.basicConfig(filename=str(datetime.now()) + 'log/debug/_debug.log', level=logging.DEBUG, format=logging_format)
-    logging.basicConfig(filename=str(datetime.now()) + 'log/warning/_warning.log', level=logging.WARNING, format=logging_format)
-    logging.basicConfig(filename=str(datetime.now()) + 'log/error/_error.log', level=logging.ERROR, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + '_debug.log', level=logging.DEBUG, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + '_warn.log', level=logging.WARN, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + '_warning.log', level=logging.WARNING, format=logging_format)
+    logging.basicConfig(filename=str(datetime.now()) + '_error.log', level=logging.ERROR, format=logging_format)
 
-    return app
+    dictConfig({
+        'version': 1,
+        'formatters': {'default': {
+            'format' : "%(asctime)s | %(lineno)d line | %(funcName)s() | %(levelname)s | %(message)s "
+        }},
+        'handlers': {'wsgi': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://flask.logging.wsgi_errors_stream',
+            'formatter': 'default'
+        }},
+        'root': {
+            'level': 'INFO',
+            'handlers': ['wsgi']
+        }
+    })
+    return app, mongodb
