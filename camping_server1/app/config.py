@@ -19,7 +19,7 @@ class DBConfig(object):
             'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
         # 'mysql://root:root@localhost:3306/camping?charset=utf8'
     )
-    MONGO_DATABASE_URI = 'mongodb://' + mongo_keys['USER'] + ':' + mongo_keys['PASSWORD'] + '@' + mongo_keys['HOST'] + ':27017/'
+    # MONGO_DATABASE_URI = 'mongodb://' + mongo_keys['USER'] + ':' + mongo_keys['PASSWORD'] + '@' + mongo_keys['HOST'] + ':27017/'
     MONGO_USER = mongo_keys['USER']
     MONGO_PWD = mongo_keys['PASSWORD']
     MONGO_HOST = mongo_keys['HOST']

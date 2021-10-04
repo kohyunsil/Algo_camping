@@ -25,20 +25,21 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    mongodb = MongoEngine()
+
+    jwt = JWTManager(app)
+
+    app.config['MONGODB_SETTINGS'] = {
+        'host': 'mongodb://' + DBConfig.MONGO_USER + ':' + DBConfig.MONGO_PWD + '@' + DBConfig.MONGO_HOST + ':27017/' + DBConfig.MONGO_DB + '?authSource=admin'
+    }
+
+    mongodb.init_app(app)
+    migrate.init_app(app, mongodb)
+
     app.config.update(
         DEBUG=True,
         JWT_SECRET_KEY=Config.JWT_SECRET_KEY
     )
-
-    app.config['MONGODB_SETTINGS'] = {
-        'db': DBConfig.MONGO_DB,
-        'host': DBConfig.MONGO_HOST,
-        'port': 27017,
-        'username': DBConfig.MONGO_USER,
-        'password': DBConfig.MONGO_PWD
-    }
-    mongodb = MongoEngine(app)
-    jwt = JWTManager(app)
 
     logging_format = '%(asctime)s - %(levelname)s - %(message)s'
 
@@ -62,4 +63,4 @@ def create_app():
             'handlers': ['wsgi']
         }
     })
-    return app, mongodb
+    return app

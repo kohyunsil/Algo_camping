@@ -3,8 +3,9 @@ from datetime import datetime
 from app.main import create_app
 from app import blueprint
 import logging
+from flask_mongoengine import MongoEngine
 
-app, mongodb = create_app()
+app = create_app()
 app.register_blueprint(blueprint)
 
 @app.errorhandler(404)
