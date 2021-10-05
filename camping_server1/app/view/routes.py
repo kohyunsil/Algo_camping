@@ -14,8 +14,8 @@ def main_page():
         param['name'] = user.is_signin()['name']
     return render_template("index.html", param=param)
 
-@route_api.route('/detail')
-def detail():
+@route_api.route('/detail/<int:content_id>/<int:id>')
+def detail(content_id, id):
     param = {}
     if user.is_signin():
         param['name'] = user.is_signin()['name']

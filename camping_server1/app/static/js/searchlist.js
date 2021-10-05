@@ -1,11 +1,16 @@
 const MAX_TAG = 3;
+var params = {
+    keywords : '',
+    res_num : '',
+    place_info : '',
+}
 
 var SearchList = {
     // 검색결과 정렬
     sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
-            $.getJSON('/search/popular').done(function(response){
+            $.getJSON('/search/popular', params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
@@ -14,7 +19,7 @@ var SearchList = {
         });
         // 등록순
         $('#btnradio-update').click(function() {
-                $.getJSON('/search/recent').done(function (response) {
+                $.getJSON('/search/recent', params).done(function (response) {
                     if(response.code === 200){
                         SearchList.getSearchData(response);
                     }else{
@@ -25,7 +30,7 @@ var SearchList = {
         });
         // 조회순
         $('#btnradio-readcount').click(function() {
-            $.getJSON('/search/readcount').done(function(response){
+            $.getJSON('/search/readcount', params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
@@ -39,11 +44,8 @@ var SearchList = {
         var param = document.location.href.split("?keywords=");
         var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
         var req_param = decode_param.replaceAll('%3B', ';').replace('추천태그', '');
-        var params = {
-            keywords : req_param,
-            res_num : '',
-            place_info : '',
-        }
+        params.keywords = req_param;
+
         var access_token = SearchList.getCookie('access_token');
 
         $.getJSON('/search/list', params).done(function(response){
@@ -143,10 +145,11 @@ var SearchList = {
 
                 event.preventDefault();
                 var param = {
-                    content_id: id
+                    content_id : id,
+                    id : idx
                 }
-                var url = '/detail?content_id=';
-                location.href = url + encodeURI(encodeURIComponent(param.content_id));
+
+                location.href = '/detail/' + param.content_id + '/' + param.id;
             })
         })
     },

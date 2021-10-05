@@ -1,9 +1,10 @@
 var DetailInfo = {
     getPlaceInfo: function(){
-        var param = document.location.href.split("?content_id=");
-        var decode_param = decodeURI(decodeURIComponent(param[1].toString()));
+        var p_content_id = document.location.href.split("/")[4].toString();
+        var p_id = document.location.href.split("/")[5].toString();
         var param = {
-            content_id: decode_param
+            content_id: p_content_id,
+            id: p_id
         }
         var access_token = DetailInfo.getCookie('access_token');
 

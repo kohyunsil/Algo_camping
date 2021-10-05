@@ -32,6 +32,7 @@ search_model = search.model('Response Search Model',
                                                 description='algo top tags for each place'),
                              })
 
+keyword_list = []
 
 @search.route('/list')
 @search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
@@ -50,7 +51,7 @@ class SearchTags(Resource):
             method = request.method
             action = 'click'
             type = 'keyword'
-            keyword = params['keywords'].split(';')
+            keyword = params['keywords'].split(';')[1:]
 
             main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
 
@@ -58,10 +59,14 @@ class SearchTags(Resource):
 
 
 @search.route('/popular')
+@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchPopular(Resource):
     def get(self):
         """인기순 정렬"""
+        params = request.args.to_dict()
+
         # getter
         place_obj = place_dto.place
         algo_obj = modeling_dto.modeling
@@ -71,8 +76,8 @@ class SearchPopular(Resource):
         screen = request.path
         method = request.method
         action = 'click'
-        type = 'keyword'
-        keyword = params['keywords'].split(';')
+        type = 'button'
+        keyword = params['keywords'].split(';')[1:]
 
         main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
 
@@ -80,10 +85,14 @@ class SearchPopular(Resource):
 
 
 @search.route('/readcount')
+@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchReadCount(Resource):
     def get(self):
         """조회순 정렬"""
+        params = request.args.to_dict()
+
         # getter
         place_obj = place_dto.place
         algo_obj = modeling_dto.modeling
@@ -93,8 +102,8 @@ class SearchReadCount(Resource):
         screen = request.path
         method = request.method
         action = 'click'
-        type = 'keyword'
-        keyword = params['keywords'].split(';')
+        type = 'button'
+        keyword = params['keywords'].split(';')[1:]
 
         main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
 
@@ -102,11 +111,26 @@ class SearchReadCount(Resource):
 
 
 @search.route('/recent')
+@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchRecent(Resource):
     def get(self):
         """등록순 정렬"""
+        params = request.args.to_dict()
+
         # getter
         place_obj = place_dto.place
         algo_obj = modeling_dto.modeling
+
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
+        action = 'click'
+        type = 'button'
+        keyword = params['keywords'].split(';')[1:]
+
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+
         return search_service.get_modified_list(place_obj, algo_obj)
