@@ -65,6 +65,17 @@ class SearchPopular(Resource):
         # getter
         place_obj = place_dto.place
         algo_obj = modeling_dto.modeling
+
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
+        action = 'click'
+        type = 'keyword'
+        keyword = params['keywords'].split(';')
+
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+
         return search_service.get_popular_list(place_obj, algo_obj)
 
 
@@ -76,6 +87,17 @@ class SearchReadCount(Resource):
         # getter
         place_obj = place_dto.place
         algo_obj = modeling_dto.modeling
+
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
+        action = 'click'
+        type = 'keyword'
+        keyword = params['keywords'].split(';')
+
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+
         return search_service.get_readcount_list(place_obj, algo_obj)
 
 

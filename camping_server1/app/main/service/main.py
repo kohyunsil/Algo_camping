@@ -22,7 +22,7 @@ def user_event_logging(headers, base_url, screen, method, action, type, keyword,
         is_signin = 0
 
     try:
-        userevent = model_userevent(headers=headers, isSignin=is_signin, userNo=id, base_url=base_url, screen=screen, method=method, action=action)
+        userevent = model_userevent(headers=headers, isSignin=is_signin, userNo=id, baseUrl=base_url, screen=screen, method=method, action=action)
         userevent.param = model_param(type=type, position=position, keyword=keyword)
         userevent.save()
 

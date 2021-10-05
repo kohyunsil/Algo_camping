@@ -15,7 +15,7 @@ class UserEventDAO(mongodb.Document):
     isSignin = mongodb.IntField(max_length=2)
     userNo = mongodb.IntField()
     date = mongodb.DateTimeField(default=datetime.datetime.now)
-    base_url = mongodb.StringField()
+    baseUrl = mongodb.StringField()
     screen = mongodb.StringField()
     method = mongodb.StringField()
     action = mongodb.StringField()
