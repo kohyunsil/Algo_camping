@@ -58,4 +58,4 @@ class Config(object):
     TAG_DM = DIMENSION[['category', 'colname', 'tagname', 'count']].copy()
     TAG_DM.dropna(axis=0, inplace=True)
 
-    RANDOM_RANGE = 100000
+    RANDOM_RANGE = 10000000

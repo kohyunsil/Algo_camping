@@ -1,5 +1,6 @@
 from flask import *
 from app.main.service import user
+from app.main.service import main as main_service
 from flask import Blueprint
 param = {}
 
@@ -22,6 +23,11 @@ def detail():
 
 @route_api.route('/signin')
 def signin():
+    screen = '/signin'
+    action = 'click'
+    type = 'button'
+    keyword = []
+    main_service.user_event_logging(screen, action, type, keyword)
     return render_template('signin.html')
 
 @route_api.route('/signup')
