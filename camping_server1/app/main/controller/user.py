@@ -111,12 +111,15 @@ class UserSignin(Resource):
         values = dict(request.values)
         param = user_service.signin(values)
 
-        screen = '/user/signin'
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
         action = 'click'
         type = 'button'
         keyword = []
 
-        main_service.user_event_logging(screen, action, type, keyword) if param['code'] == 200 else param
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword) if param['code'] == 200 else param
         return param
 
 
@@ -156,12 +159,15 @@ def signout():
     # getter
     user_param = user_dto.user
 
-    screen = '/user/signout'
+    headers = str(request.headers)
+    base_url = request.base_url
+    screen = request.path
+    method = request.method
     action = 'click'
     type = 'button'
     keyword = []
 
-    main_service.user_event_logging(screen, action, type, keyword)
+    main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
     user_service.delete_token(user_param['name'])
 
     return redirect(request.host_url, code=302)

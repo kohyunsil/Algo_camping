@@ -23,11 +23,15 @@ def detail():
 
 @route_api.route('/signin')
 def signin():
-    screen = '/signin'
+    headers = str(request.headers)
+    base_url = request.base_url
+    screen = request.path
+    method = request.method
     action = 'click'
     type = 'button'
     keyword = []
-    main_service.user_event_logging(screen, action, type, keyword)
+
+    main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
     return render_template('signin.html')
 
 @route_api.route('/signup')

@@ -12,9 +12,12 @@ main = Namespace('main', description='relating to main')
 class MainSwiper(Resource):
     def get(self):
         """메인 페이지 배너 클릭 이벤트"""
-        param = request.args.to_dict()
-        screen = '/main'
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
         action = 'click'
         type = 'banner'
         keyword = []
-        return main_service.user_event_logging(screen, action, type, keyword, param)
+
+        return main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)

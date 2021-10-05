@@ -11,10 +11,13 @@ class Param(mongodb.EmbeddedDocument):
 class UserEventDAO(mongodb.Document):
     meta = {'collection': 'userEvent'}
 
+    headers = mongodb.StringField()
     isSignin = mongodb.IntField(max_length=2)
     userNo = mongodb.IntField()
     date = mongodb.DateTimeField(default=datetime.datetime.now)
+    base_url = mongodb.StringField()
     screen = mongodb.StringField()
+    method = mongodb.StringField()
     action = mongodb.StringField()
 
     param = mongodb.EmbeddedDocumentField(Param)
