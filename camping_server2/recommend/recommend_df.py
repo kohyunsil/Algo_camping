@@ -1,4 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))))
 import camping_server2.algostar.camp_api_crawling_merge as cacm
+import camping_server2.config as config
 import tag_points as tp
 import camping_server2.apis.gocamping_api as ga
 gocamping = ga.GocampingApi()
@@ -9,17 +15,17 @@ from functools import reduce
 class BeforeLogin:
 
     def __init__(self):
-        self.df = gocamping.gocampingAPI()
+        self.df = gocamping.gocampingAPI()  # config.Config.CAMP
         self.df['contentId'] = self.df['contentId'].astype('int64')
         self.cdf = cacm.ReviewCamp().review_camp_merge()
         self.tdf = tp.TagMerge().tag_merge()
 
     def thema_select(self, df, column, value):
-        data = df[df[f'{column}'].str.contains(f'{value}', na = False)].reset_index(drop=True).iloc[:, :3].dropna(subset=['firstImageUrl'])
+        data = df[df[f'{column}'].str.contains(f'{value}', na=False)].reset_index(drop=True).iloc[:, :3].dropna(subset=['firstImageUrl'])
         return data
 
     def merge_df(self, df1, df2):
-        df = pd.merge(df1, df2, how='inner', on ='contentId').reset_index(drop=True).iloc[:, :3]
+        df = pd.merge(df1, df2, how='inner', on='contentId').reset_index(drop=True).iloc[:, :3]
         return df
 
     def camp_thema(self):
@@ -28,16 +34,16 @@ class BeforeLogin:
 
         '''계절별 캠핑장'''
         # all_season = thema_select('tourEraCl','봄,여름,가을,겨울')
-        spring = self.thema_select(data_df, 'tourEraCl','봄')
-        summer = self.thema_select(data_df, 'tourEraCl','여름')
+        spring = self.thema_select(data_df, 'tourEraCl', '봄')
+        summer = self.thema_select(data_df, 'tourEraCl', '여름')
         fall = self.thema_select(data_df, 'tourEraCl', '가을')
         winter = self.thema_select(data_df, 'tourEraCl', '겨울')
 
         '''캠핑장 주변환경 별 캠핑장리스트'''
         beach = self.thema_select(data_df, 'lctCl', '해변')
-        mountain_valley = self.thema_select(data_df, 'lctCl','산|계곡')
-        lake_river = self.thema_select(data_df, 'lctCl','강|호수')
-        downtown = self.thema_select(data_df, 'lctCl','도심')
+        mountain_valley = self.thema_select(data_df, 'lctCl', '산|계곡')
+        lake_river = self.thema_select(data_df, 'lctCl', '강|호수')
+        downtown = self.thema_select(data_df, 'lctCl', '도심')
         # lake = thema_select('lctCl','호수')
         # valley = thema_select('lctCl','계곡')
         # forest = thema_select('lctCl','숲')
@@ -79,8 +85,6 @@ class ProfilePro(BeforeLogin):
         return {'with_family_df':with_family_df, 'with_couple_df':with_couple_df,'alone_df':api_value}
 
     def purpose_camp(self):
-
-
         """ 캠핑 목적 1. 아이와 함께 즐기는 캠핑 : (아이들 놀기 좋은, 물놀이, 생태교육)
                     2. 여유롭게 즐기는 감성 캠핑  : (휴양, 별 감상 등)
                     3. 체험하며 즐기는 캠핑 : (생태교육, 액티비티, 물놀이)
@@ -175,26 +179,71 @@ class ProfilePro(BeforeLogin):
         return merge_df_f
 
 
+class UserWeights(ProfilePro):
+
+    def __init__(self):
+        super().__init__()
+        self.eda_df = self.df[['contentId', 'facltNm', 'brazierCl', 'doNm', 'caravAcmpnyAt', 'induty', 'operPdCl', 'posblFcltyCl', 'themaEnvrnCl', 'tourEraCl', 'lctCl', 'lineIntro', 'intro']]
+
+    def reco_a200(self):
+        '''1. 가족 / 2. 친구동료 / 3. 부부, 연인 / 4. 혼자'''
+        family = self.together_camp('가족')['with_family_df']
+        friends = self.together_camp('친구|동료')['alone_df']
+        couple = self.together_camp('부부|커플|연인|2인')['with_couple_df']
+        alone = self.together_camp('혼자')['alone_df']
+        return {1: family, 2: friends, 3: couple, 4: alone}
+
+    def reco_a210(self):
+        '''1. 함께해요 / 2. 아니에요'''
+        animal = pd.concat([self.animal_camp()['all_animal'], self.animal_camp()['small_animal']], 0)
+        non_animal = self.animal_camp()['impossibility']
+        return {1: animal, 2: non_animal}
+
+    def reco_a300(self):
+        ''' 1. 오토캠핑 / 2. 글램핑,카라반 / 3. 오지캠핑 '''
+        auto_car = self.induty_camp()['auto_car']
+        glam_cara = self.induty_camp()['glam_cara']
+        etc = self.induty_camp()['etc']
+        return {1 : auto_car, 2: glam_cara, 3: etc}
+
+    def reco_a410(self):
+        ''' 1. 봄 / 2. 여름 / 3. 가을 / 4. 겨울 '''
+        spring = self.camp_thema()['spring']
+        summer = self.camp_thema()['summer']
+        fall = self.camp_thema()['fall']
+        winter = self.camp_thema()['winter']
+        return {'봄': spring, '여름': summer, '가을': fall, '겨울': winter}
+
+    def reco_a420(self):
+        ''' 1. 바다,해수욕장 / 2. 산,계곡 / 3. 강,호수 / 4. 도심 '''
+        beach = self.camp_thema()['beach']
+        mountain_valley = self.camp_thema()['mountain_valley']
+        lake_river = self.camp_thema()['lake_river']
+        downtown = self.camp_thema()['downtown']
+        return {1: beach, 2: mountain_valley, 3: lake_river, 4: downtown}
+
+    def reco_a500(self):
+        ''' 1. 아이와함께 / 2. 여유롭게힐링 / 3. 체험액티비티 / 4. 투어,관광지,축제 '''
+        kids_camp = self.purpose_camp()['kids_camp']
+        healing_camp = self.purpose_camp()['healing_camp']
+        field_trip = self.purpose_camp()['field_trip']
+        tour_camp = self.purpose_camp()['tour_camp']
+        return {1: kids_camp, 2: healing_camp, 3: field_trip, 4: tour_camp}
+
+    def reco_a600(self):
+        ''' 1. 수도권 / 2. 동해,강원권 / 3. 남해,영남권 / 4. 서해,충청권 / 5. 호남권 / 6. 제주도 '''
+        region_1 = self.region_camp()['region_1']
+        region_2 = self.region_camp()['region_2']
+        region_3 = self.region_camp()['region_3']
+        region_4 = self.region_camp()['region_4']
+        region_5 = self.region_camp()['region_5']
+        region_6 = self.region_camp()['region_6']
+        return {1: region_1, 2: region_2, 3: region_3, 4: region_4, 5: region_5, 6: region_6}
+
+
 if __name__ == '__main__':
     profile = ProfilePro()
     b_login = BeforeLogin()
-
-    # print(b_login.camp_thema()['downtown'])
-
-    # print(profile.animal_camp()['all_animal'])
-    # print(profile.induty_camp()['glam_cara'])
-
-    # print(profile.together_camp('가족|친구|동료')['with_family_df'])
-    # print(profile.together_camp('부부|커플|연인|2인')['with_couple_df'])
-    # print(profile.together_camp('혼자')['alone_df'])
-
-    # print(profile.purpose_camp()['kids_camp']) # 428 rows
-    # print(profile.purpose_camp()['healing_camp']) # 232 rows
-    # print(profile.purpose_camp()['field_trip']) # 237 rows
-    # print(profile.purpose_camp()['tour_camp']) # 180 rows
-
-    # print(profile.region_camp()['region_1']) #546 rows
-    # print(profile.region_camp()['region_2']) #443 rows
-
-
+    df = UserWeights()
+    print(df.reco_A600()[6])
     print(profile.final_merge('가족|친구|동료', 'with_family_df', 'all_animal', 'auto_car', 'spring', 'mountain_valley', 'field_trip', 'region_1'))
