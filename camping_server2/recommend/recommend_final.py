@@ -5,6 +5,9 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))))
 import pandas as pd
 import numpy as np
+import random
+import math
+from itertools import product
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
@@ -91,7 +94,24 @@ if __name__ == '__main__':
     # print("user polar points: ", polar.calc_final_point(answer_ls))
 
     scene = Scenario()
-    copy, df = scene.main_a500(1)
-    print(copy)
-    print(df.columns)
-    print(df)
+    # 설문 응답 경우의 수 list
+    questions = [[i for i in range(1, 5)],  #a200
+                 [i for i in range(1, 3)],  #a210
+                 [i for i in range(1, 4)],  #a300
+                 [i for i in range(1, 5)],  #a410
+                 [i for i in range(1, 5)],  #a420
+                 [i for i in range(1, 5)],  #a500
+                 [i for i in range(1, 7)]]  #a600
+    answer_ls = random.choice(list(product(*questions)))
+
+    copy200, df200 = scene.main_a200(answer_ls[0])
+    copy210, df210 = scene.main_a210(answer_ls[1])
+    copy300, df300 = scene.main_a300(answer_ls[2])
+    copy410, df410 = scene.main_a410(answer_ls[3])
+    copy420, df420 = scene.main_a420(answer_ls[4])
+    copy500, df500 = scene.main_a500(answer_ls[5])
+    copy600, df600 = scene.main_a600(answer_ls[6])
+
+    print(copy500)
+    print(df500.columns)
+    print(df500)
