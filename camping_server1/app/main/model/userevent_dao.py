@@ -6,6 +6,7 @@ class Param(mongodb.EmbeddedDocument):
     type = mongodb.StringField()
     position = mongodb.StringField()
     keyword = mongodb.ListField()
+    page = mongodb.IntField()
 
 
 class UserEventDAO(mongodb.Document):

@@ -34,14 +34,16 @@ search_model = search.model('Response Search Model',
 
 keyword_list = []
 
-@search.route('/list')
-@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
+@search.route('/pagination/<int:res_len>/<int:page>')
+@search.param('res_len', '검색 결과 개수')
+@search.param('page', '요청 페이지')
 @search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
-class SearchTags(Resource):
-    def get(self):
-        """전체 검색 결과 리스트"""
+class SearchPagination(Resource):
+    def get(self, res_len, page):
+        """페이지네이션"""
         params = request.args.to_dict()
+
         if len(params) == 0 or str(list(params.keys())[0]) != 'keywords':
             return redirect('/main', code=302)
         else:
@@ -50,20 +52,33 @@ class SearchTags(Resource):
             screen = request.path
             method = request.method
             action = 'click'
-            type = 'keyword'
+            type = 'pagination'
             keyword = params['keywords'].split(';')[1:]
 
-            main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+            main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
 
-            return jsonify(search_service.get_searchlist(params))
+        return jsonify(search_service.get_searchlist(params, res_len, page))
 
 
-@search.route('/popular')
+@search.route('/list')
+@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
+@search.response(200, 'Success', search_model)
+class SearchTags(Resource):
+    def get(self):
+        """전체 검색 수"""
+        params = request.args.to_dict()
+        return search_service.get_row_nums(params)
+
+
+@search.route('/popular/<int:res_len>/<int:page>')
+@search.param('res_len', '검색 결과 개수')
+@search.param('page', '요청 페이지')
 @search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
 @search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchPopular(Resource):
-    def get(self):
+    def get(self, res_len, page):
         """인기순 정렬"""
         params = request.args.to_dict()
 
@@ -76,20 +91,22 @@ class SearchPopular(Resource):
         screen = request.path
         method = request.method
         action = 'click'
-        type = 'button'
+        type = 'pagination'
         keyword = params['keywords'].split(';')[1:]
 
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
 
-        return search_service.get_popular_list(place_obj, algo_obj)
+        return search_service.get_popular_list(place_obj, algo_obj, page)
 
 
-@search.route('/readcount')
+@search.route('/readcount/<int:res_len>/<int:page>')
+@search.param('res_len', '검색 결과 개수')
+@search.param('page', '요청 페이지')
 @search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
 @search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchReadCount(Resource):
-    def get(self):
+    def get(self, res_len, page):
         """조회순 정렬"""
         params = request.args.to_dict()
 
@@ -102,20 +119,22 @@ class SearchReadCount(Resource):
         screen = request.path
         method = request.method
         action = 'click'
-        type = 'button'
+        type = 'pagination'
         keyword = params['keywords'].split(';')[1:]
 
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
 
-        return search_service.get_readcount_list(place_obj, algo_obj)
+        return search_service.get_readcount_list(place_obj, algo_obj, page)
 
 
-@search.route('/recent')
+@search.route('/recent/<int:res_len>/<int:page>')
+@search.param('res_len', '검색 결과 개수')
+@search.param('page', '요청 페이지')
 @search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
 @search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchRecent(Resource):
-    def get(self):
+    def get(self, res_len, page):
         """등록순 정렬"""
         params = request.args.to_dict()
 
@@ -128,9 +147,9 @@ class SearchRecent(Resource):
         screen = request.path
         method = request.method
         action = 'click'
-        type = 'button'
+        type = 'pagination'
         keyword = params['keywords'].split(';')[1:]
 
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
 
-        return search_service.get_modified_list(place_obj, algo_obj)
+        return search_service.get_modified_list(place_obj, algo_obj, page)

@@ -86,6 +86,7 @@ class UserSignup(Resource):
         values = dict(request.values)
         return user_service.signup(values)
 
+
 @user.route('/signup/survey', methods=['GET'])
 @user.doc(params={'userId': '유저 고유 아이디', 'firstAnswer': 'q1에 대한 답', 'secondAnswer': 'q2에 대한 답', 'secondSubAnswer': 'q2-1에 대한 답',
                   'thirdAnswer': 'q3에 대한 답', 'fourthAnswer': 'q4에 대한 답', 'fourthSubAnswer': 'q4-1에 대한 답',

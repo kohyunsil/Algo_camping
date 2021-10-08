@@ -76,3 +76,28 @@ div:nth-child(5) > div > div > div > img{
     display: block;
     object-fit: cover;
 }
+.col{
+    overflow: hidden;
+}
+.swiper-slide-prev, .swiper-slide-active, .mySwiper{
+    overflow: hidden;
+}
+.pagination{
+    visibility: hidden;
+    padding-bottom: 1rem;
+}
+/*--pagination--*/
+#pagination > li > a{
+    background-color: rgb(255, 255, 255, 0);
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+#pagination > li.page-item.first > a,
+#pagination > li.page-item.last > a{
+    color: #49917D;
+    font-weight: bold;
+}
+#pagination > li.page-item.active > a{
+    background-color: #49917D;
+}

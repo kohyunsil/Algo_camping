@@ -9,7 +9,7 @@ import pymongo
 import datetime
 import logging
 
-def user_event_logging(headers, base_url, screen, method, action, type, keyword, param=None):
+def user_event_logging(headers, base_url, screen, method, action, type, keyword, param=None, page=None):
     position = None
     if param is not None:
         position = param['id']
@@ -23,7 +23,7 @@ def user_event_logging(headers, base_url, screen, method, action, type, keyword,
 
     try:
         userevent = model_userevent(headers=headers, isSignin=is_signin, userNo=id, baseUrl=base_url, screen=screen, method=method, action=action)
-        userevent.param = model_param(type=type, position=position, keyword=keyword)
+        userevent.param = model_param(type=type, position=position, keyword=keyword, page=page)
         userevent.save()
 
         logging.info('----[' + str(datetime.datetime.now()) + ' user_event_logging() : 200]----')

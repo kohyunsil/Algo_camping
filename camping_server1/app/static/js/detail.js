@@ -377,7 +377,7 @@ var DetailInfo = {
         );
         // 사용자 이름 노출
         if(DetailInfo.getCookie('access_token') === undefined){
-            user = '사용자님';
+            user = '사용자';
         }else{
             user = res.user_name;
         }

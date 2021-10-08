@@ -1,8 +1,75 @@
 const MAX_TAG = 3;
+const LIMIT_RANGE = 15;
+
 var params = {
-    keywords : '',
-    res_num : '',
-    place_info : '',
+    keywords : ''
+}
+var total_row = 0;
+
+var Pagination = {
+    // 페이지 수 처리
+    pageList: function(row_nums){
+        $('#pagination').twbsPagination({
+            totalPages: row_nums / LIMIT_RANGE,
+            visiblePages: 5,
+            startPage: 1,
+            initiateStartPageClick: false,
+            first: '<<',
+            prev: false,
+            next: false,
+            last: '>>',
+            lastClass: 'page-item last',
+            firstClass: 'page-item first',
+            pageClass: 'page-item',
+            activeClass: 'active',
+            disabledClass: 'disabled',
+            anchorClass: 'page-link',
+
+            onPageClick: function (event, page) {
+                // 다음 페이지 클릭 처리
+                $.getJSON('/search/pagination/' + row_nums + '/' + page, params).done(function(response){
+                    if(response.code === 200){
+                        SearchList.getSearchData(response, row_nums);
+                    }else{
+                        alert(response.code);
+                    }
+                })
+                // 인기순
+                $('#btnradio-popular').click(function() {
+                    $.getJSON('/search/popular/' + row_nums + '/' + page, params).done(function (response) {
+                        if (response.code === 200) {
+                            SearchList.getSearchData(response, row_nums);
+                        } else {
+                            alert(response.code);
+                        }
+                    });
+                })
+
+                // 등록순
+                $('#btnradio-update').click(function() {
+                    $.getJSON('/search/recent/' + row_nums + '/' + page, params).done(function (response) {
+                        if(response.code === 200){
+                            SearchList.getSearchData(response);
+                        }else{
+                            alert(response.code);
+                        }
+                    })
+                })
+
+                // 조회순
+                $('#btnradio-readcount').click(function() {
+                    $.getJSON('/search/readcount/' + row_nums + '/' + page, params).done(function(response){
+                        if(response.code === 200){
+                            SearchList.getSearchData(response);
+                        }else{
+                            alert(response.code);
+                        }
+                    })
+                });
+
+            }
+        });
+    }
 }
 
 var SearchList = {
@@ -10,31 +77,31 @@ var SearchList = {
     sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
-            $.getJSON('/search/popular', params).done(function(response){
+            $.getJSON('/search/popular/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
-                    alert(response.msg);
+                    alert(response.code);
                 }
         });
         // 등록순
         $('#btnradio-update').click(function() {
-                $.getJSON('/search/recent', params).done(function (response) {
+                $.getJSON('/search/recent/' + total_row + '/' + 1, params).done(function (response) {
                     if(response.code === 200){
                         SearchList.getSearchData(response);
                     }else{
-                        alert(response.msg);
+                        alert(response.code);
                     }
                 })
             })
         });
         // 조회순
         $('#btnradio-readcount').click(function() {
-            $.getJSON('/search/readcount', params).done(function(response){
+            $.getJSON('/search/readcount/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
-                    alert(response.msg);
+                    alert(response.code);
                 }
             })
         });
@@ -50,11 +117,21 @@ var SearchList = {
 
         $.getJSON('/search/list', params).done(function(response){
             if(response.code === 200){
-                SearchList.getSearchData(response);
+                var row_nums = response.row_nums;
+                total_row = row_nums;
+
+                $.getJSON('/search/pagination/' + response.row_nums + '/' + 1, params).done(function(response){
+                    if(response.code === 200){
+                        SearchList.getSearchData(response, row_nums);
+                    }else{
+                        alert(response.code);
+                    }
+                })
             }else{
-                alert(response.msg);
+                alert(response.code);
             }
         })
+
     },
     showAlgoStars: function(res){
         var star = '';
@@ -73,7 +150,7 @@ var SearchList = {
             star = '';
         }
     },
-    showSearchList: function(res){
+    showSearchList: function(res, row_nums){
         var rtn_keywords = '';
         rtn_keywords = res.keywords;
 
@@ -83,10 +160,10 @@ var SearchList = {
         } catch(err){
 
         }
-
         $('.input-keyword').text(rtn_keywords);
-        $('.input-size').text(res.res_num);
+        $('.input-size').text(row_nums);
         $('.search-result').css({'visibility': 'visible'});
+        $('.pagination').css({'visibility': 'visible'});
 
         for(var i=0; i<res.place_info.length; i++){
             $('#card-layout').append(
@@ -184,16 +261,19 @@ var SearchList = {
             }
         }
     },
-    getSearchData: function(response){
+    getSearchData: function(response, row_nums){
         $('.loading-bar').css({'visibility': 'hidden'});
+        $('.page-nav').css({'visibility': 'visible'});
         $('#card-layout').empty();
         setTimeout(function(){
             $(window).lazyLoadXT();
         }, 0);
 
-        SearchList.showSearchList(response);
+        SearchList.showSearchList(response, row_nums);
         SearchList.showSwiperImg(response);
         SearchList.showAlgoStars(response);
+
+        Pagination.pageList(row_nums);
     }
 }
 SearchList.sortList()
