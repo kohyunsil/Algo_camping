@@ -32,7 +32,7 @@ class Config(object):
     JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
     SESSION_LIFETIME = datetime.timedelta(days=1)
 
-    LIMIT_LEN = 15
+    LIMIT_LEN = 16
 
     READCOUNT = 4
     STAR = 6

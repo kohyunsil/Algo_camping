@@ -1,5 +1,5 @@
 const MAX_TAG = 3;
-const LIMIT_RANGE = 15;
+const LIMIT_RANGE = 16;
 
 var params = {
     keywords : ''
@@ -27,7 +27,7 @@ var Pagination = {
 
             onPageClick: function (event, page) {
                 // 다음 페이지 클릭 처리
-                $.getJSON('/search/pagination/' + row_nums + '/' + page, params).done(function(response){
+                $.getJSON('/search/pagination/list/' + row_nums + '/' + page, params).done(function(response){
                     if(response.code === 200){
                         SearchList.getSearchData(response, row_nums);
                     }else{
@@ -36,7 +36,7 @@ var Pagination = {
                 })
                 // 인기순
                 $('#btnradio-popular').click(function() {
-                    $.getJSON('/search/popular/' + row_nums + '/' + page, params).done(function (response) {
+                    $.getJSON('/search/pagination/popular/' + row_nums + '/' + page, params).done(function (response) {
                         if (response.code === 200) {
                             SearchList.getSearchData(response, row_nums);
                         } else {
@@ -47,7 +47,7 @@ var Pagination = {
 
                 // 등록순
                 $('#btnradio-update').click(function() {
-                    $.getJSON('/search/recent/' + row_nums + '/' + page, params).done(function (response) {
+                    $.getJSON('/search/pagination/recent/' + row_nums + '/' + page, params).done(function (response) {
                         if(response.code === 200){
                             SearchList.getSearchData(response);
                         }else{
@@ -58,7 +58,7 @@ var Pagination = {
 
                 // 조회순
                 $('#btnradio-readcount').click(function() {
-                    $.getJSON('/search/readcount/' + row_nums + '/' + page, params).done(function(response){
+                    $.getJSON('/search/pagination/readcount/' + row_nums + '/' + page, params).done(function(response){
                         if(response.code === 200){
                             SearchList.getSearchData(response);
                         }else{
@@ -66,7 +66,6 @@ var Pagination = {
                         }
                     })
                 });
-
             }
         });
     }
@@ -77,7 +76,7 @@ var SearchList = {
     sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
-            $.getJSON('/search/popular/' + total_row + '/' + 1, params).done(function(response){
+            $.getJSON('/search/pagination/popular/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
@@ -86,7 +85,7 @@ var SearchList = {
         });
         // 등록순
         $('#btnradio-update').click(function() {
-                $.getJSON('/search/recent/' + total_row + '/' + 1, params).done(function (response) {
+                $.getJSON('/search/pagination/recent/' + total_row + '/' + 1, params).done(function (response) {
                     if(response.code === 200){
                         SearchList.getSearchData(response);
                     }else{
@@ -97,7 +96,7 @@ var SearchList = {
         });
         // 조회순
         $('#btnradio-readcount').click(function() {
-            $.getJSON('/search/readcount/' + total_row + '/' + 1, params).done(function(response){
+            $.getJSON('/search/pagination/readcount/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     SearchList.getSearchData(response);
                 }else{
@@ -120,7 +119,7 @@ var SearchList = {
                 var row_nums = response.row_nums;
                 total_row = row_nums;
 
-                $.getJSON('/search/pagination/' + response.row_nums + '/' + 1, params).done(function(response){
+                $.getJSON('/search/pagination/list/' + response.row_nums + '/' + 1, params).done(function(response){
                     if(response.code === 200){
                         SearchList.getSearchData(response, row_nums);
                     }else{

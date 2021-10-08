@@ -34,13 +34,14 @@ search_model = search.model('Response Search Model',
 
 keyword_list = []
 
-@search.route('/pagination/<int:res_len>/<int:page>')
+@search.route('/pagination/<string:sort_type>/<int:res_len>/<int:page>')
+@search.param('sort_type', '정렬 방식')
 @search.param('res_len', '검색 결과 개수')
 @search.param('page', '요청 페이지')
 @search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @search.response(200, 'Success', search_model)
 class SearchPagination(Resource):
-    def get(self, res_len, page):
+    def get(self, sort_type, res_len, page):
         """페이지네이션"""
         params = request.args.to_dict()
 
@@ -52,10 +53,25 @@ class SearchPagination(Resource):
             screen = request.path
             method = request.method
             action = 'click'
-            type = 'pagination'
+            if page == 1:
+                type = 'search'
+            else:
+                type = 'pagination'
             keyword = params['keywords'].split(';')[1:]
 
             main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
+
+            if sort_type in ['popular', 'readcount', 'recent']:
+                # getter
+                place_obj = place_dto.place
+                algo_obj = modeling_dto.modeling
+
+                if sort_type == 'popular':
+                    return search_service.get_popular_list(place_obj, algo_obj, page)
+                elif sort_type == 'readcount':
+                    return search_service.get_readcount_list(place_obj, algo_obj, page)
+                elif sort_type == 'recent':
+                    return search_service.get_modified_list(place_obj, algo_obj, page)
 
         return jsonify(search_service.get_searchlist(params, res_len, page))
 
@@ -69,87 +85,3 @@ class SearchTags(Resource):
         """전체 검색 수"""
         params = request.args.to_dict()
         return search_service.get_row_nums(params)
-
-
-@search.route('/popular/<int:res_len>/<int:page>')
-@search.param('res_len', '검색 결과 개수')
-@search.param('page', '요청 페이지')
-@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
-@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
-@search.response(200, 'Success', search_model)
-class SearchPopular(Resource):
-    def get(self, res_len, page):
-        """인기순 정렬"""
-        params = request.args.to_dict()
-
-        # getter
-        place_obj = place_dto.place
-        algo_obj = modeling_dto.modeling
-
-        headers = str(request.headers)
-        base_url = request.base_url
-        screen = request.path
-        method = request.method
-        action = 'click'
-        type = 'pagination'
-        keyword = params['keywords'].split(';')[1:]
-
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
-
-        return search_service.get_popular_list(place_obj, algo_obj, page)
-
-
-@search.route('/readcount/<int:res_len>/<int:page>')
-@search.param('res_len', '검색 결과 개수')
-@search.param('page', '요청 페이지')
-@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
-@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
-@search.response(200, 'Success', search_model)
-class SearchReadCount(Resource):
-    def get(self, res_len, page):
-        """조회순 정렬"""
-        params = request.args.to_dict()
-
-        # getter
-        place_obj = place_dto.place
-        algo_obj = modeling_dto.modeling
-
-        headers = str(request.headers)
-        base_url = request.base_url
-        screen = request.path
-        method = request.method
-        action = 'click'
-        type = 'pagination'
-        keyword = params['keywords'].split(';')[1:]
-
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
-
-        return search_service.get_readcount_list(place_obj, algo_obj, page)
-
-
-@search.route('/recent/<int:res_len>/<int:page>')
-@search.param('res_len', '검색 결과 개수')
-@search.param('page', '요청 페이지')
-@search.doc(params={'keywords': '검색 요청 태그 ex);지역;사용자 입력 검색 태그1;사용자 입력 검색 태그2; .. '})
-@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
-@search.response(200, 'Success', search_model)
-class SearchRecent(Resource):
-    def get(self, res_len, page):
-        """등록순 정렬"""
-        params = request.args.to_dict()
-
-        # getter
-        place_obj = place_dto.place
-        algo_obj = modeling_dto.modeling
-
-        headers = str(request.headers)
-        base_url = request.base_url
-        screen = request.path
-        method = request.method
-        action = 'click'
-        type = 'pagination'
-        keyword = params['keywords'].split(';')[1:]
-
-        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, page=page)
-
-        return search_service.get_modified_list(place_obj, algo_obj, page)
