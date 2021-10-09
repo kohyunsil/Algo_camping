@@ -1,4 +1,5 @@
 from app.main.service import detail as detail_service
+from app.main.service import main as main_service
 from flask_restx import Resource, Namespace, fields
 from flask import request
 
@@ -66,4 +67,15 @@ class DetailAll(Resource):
     def get(self):
         """상세 내용"""
         param = request.args.to_dict()
+
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
+        action = 'click'
+        type = 'card'
+        keyword = []
+
+        main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, param)
+
         return detail_service.get_detail(param)

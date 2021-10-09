@@ -2,6 +2,7 @@ from app.main.model.place_dao import PlaceDAO as model_place
 from app.main.model.search_dao import SearchDAO as model_search
 from app.main.model import *
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.expression import func
 from flask import *
 from operator import itemgetter
 from app.config import Config
@@ -11,7 +12,7 @@ import pandas as pd
 import logging
 
 # 검색결과 리스트
-def get_searchlist(params):
+def get_searchlist(params, res_len, page):
     split_params = []
 
     for param in params['keywords'].split(';'):
@@ -55,10 +56,13 @@ def get_searchlist(params):
     # WHEN place_name LIKE '%캠핑장명%' OR addr LIKE '%전체%' THEN 2
     # WHEN addr LIKE '%지역%' THEN 3
     # ELSE 4
-    # END) LIMIT 100;
+    # END) limit 조회할 시작 row, row 개수;
     '''
     Session = sessionmaker(bind=client)
     session_ = Session()
+
+    offset = (page * Config.LIMIT_LEN) - Config.LIMIT_LEN
+
     try:
         if tag_query == '':
             sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
@@ -76,8 +80,10 @@ def get_searchlist(params):
                 (model_place.addr.contains(area), 3),
                 else_=4
             )
-        ).limit(Config.LIMIT).all()
+        ).offset(offset).limit(Config.LIMIT_LEN).all()
 
+    except:
+        params['code'] = 500
     finally:
         session_.close()
 
@@ -87,6 +93,7 @@ def get_searchlist(params):
         query.detail_image = str(query.detail_image).split(',')[:5]
         content_id.append(query.content_id)
         place_info.append(query)
+        query.modified_date = str(query.modified_date)
 
     algo_stars, algo_scores = get_score(content_id)
     tags = get_top_tag(content_id, 3)
@@ -96,6 +103,7 @@ def get_searchlist(params):
     modeling_dto.modeling = {'algo_stars': algo_stars, 'tags': tags}
 
     logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
+
     params['code'] = 200
     params['keywords'] = ', '.join(split_params)
     params['res_num'] = len(main_query)
@@ -106,12 +114,91 @@ def get_searchlist(params):
 
     return params
 
+# row 수
+def get_row_nums(params):
+    split_params = []
+
+    for param in params['keywords'].split(';'):
+        if param != '':
+            split_params.append(param)
+
+    place_keyword, area = '', ''
+    category_keyword = []
+
+    # 입력 데이터 태그/캠핑장 구분
+    for i, param in enumerate(split_params):
+        if i == 0:
+            if split_params[0] == '지역':
+                continue
+            else:
+                area = '%{}%'.format(split_params[0].replace(' ', ''))
+        else:
+            search = '%{}%'.format(param.replace(' ', ''))
+            row = model_search.query.filter(model_search.tag.like(search)).all()
+
+            if len(row) == 0:
+                place_keyword = search
+            else:
+                if Config.TAGS.get(param.replace(' ', '')) is not None:
+                    category_keyword.append(Config.TAGS[param.replace(' ', '')])
+
+    # 태그 컬럼명과 동적 매칭
+    tag_query = ''
+    for tag in category_keyword:
+        tag_query += tag
+
+        if category_keyword[len(category_keyword) - 1] == tag:
+            tag_query += ' = 1'
+        else:
+            tag_query += ' = 1 or '
+
+    '''
+    # SELECT count(*) FROM place WHERE place_num = 0 AND content_id IN(
+    # SELECT content_id FROM search WHERE addr LIKE '%지역%' OR place_name LIKE '%캠핑장명%' OR (태그1=1 OR 태그2=1)) ORDER BY (CASE 
+    # WHEN place_name LIKE '%캠핑장명%' AND  addr LIKE '%전체%' THEN 1
+    # WHEN place_name LIKE '%캠핑장명%' OR addr LIKE '%전체%' THEN 2
+    # WHEN addr LIKE '%지역%' THEN 3
+    # ELSE 4
+    # END);
+    '''
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+    try:
+        if tag_query == '':
+            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
+                                                                       model_search.place_name.like(place_keyword))
+        else:
+            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
+                                                                       model_search.place_name.like(place_keyword) |
+                                                                       text(tag_query))
+
+        main_query = session_.query(func.count()).filter(
+            and_(model_place.place_num == 0, model_place.content_id.in_(sub_query))).order_by(
+            case(
+                (and_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 1),
+                (or_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 2),
+                (model_place.addr.contains(area), 3),
+                else_=4
+            )
+        ).all()
+
+    finally:
+        session_.close()
+
+    logging.info('----[' + str(datetime.datetime.now()) + ' get_row_nums() : 200]----')
+
+    res_param = dict()
+    res_param['code'] = 200
+    res_param['row_nums'] = int(main_query[0][0])
+
+    return jsonify(res_param)
+
 # 유저-캠핑장 매칭도
 def get_matching_rate():
     pass
 
 # 인기순 정렬
-def get_popular_list(place_obj, algo_obj):
+def get_popular_list(place_obj, algo_obj, page):
     place_info = []
 
     for i, obj in enumerate(place_obj):
@@ -127,10 +214,10 @@ def get_popular_list(place_obj, algo_obj):
         place_info.append(arr)
     place_info.sort(key=itemgetter(Config.STAR), reverse=True)  # star = 6
 
-    return jsonify(make_resobj(place_info))
+    return jsonify(make_resobj(place_info, page))
  
 # 조회순 정렬
-def get_readcount_list(place_obj, algo_obj):
+def get_readcount_list(place_obj, algo_obj, page):
     place_info = []
 
     for i, obj in enumerate(place_obj):
@@ -144,10 +231,10 @@ def get_readcount_list(place_obj, algo_obj):
 
     place_info.sort(key=itemgetter(Config.READCOUNT), reverse=True)  # readcount = 4
 
-    return jsonify(make_resobj(place_info))
+    return jsonify(make_resobj(place_info, page))
 
 # 등록순 정렬
-def get_modified_list(place_obj, algo_obj):
+def get_modified_list(place_obj, algo_obj, page):
     place_info = []
 
     for i, obj in enumerate(place_obj):
@@ -166,7 +253,7 @@ def get_modified_list(place_obj, algo_obj):
                         key=lambda x: datetime.datetime.strptime(x[Config.MODIFIED_DATE], '%Y-%m-%d %H:%M:%S'),
                         reverse=True)
 
-    return jsonify(make_resobj(place_info))
+    return jsonify(make_resobj(place_info, page))
 
 # 알고 점수 호출
 def get_score(content_id):
@@ -213,8 +300,15 @@ def get_top_tag(content_id, num):
         return tag.tag_priority(content_id, rank=num)
 
 # 반환되는 객체 만들기
-def make_resobj(place_info):
+def make_resobj(place_info, page):
     key_list = ['place_name', 'content_id', 'detail_image', 'tag', 'readcount', 'modified_date', 'star', 'tag']
+
+    offset = (page * Config.LIMIT_LEN) - Config.LIMIT_LEN
+
+    if page == 1:
+        start_page, offset = 0, Config.LIMIT_LEN
+    else:
+        start_page = page
 
     params, param_list = {}, []
     stars, tags = [], []
@@ -227,8 +321,8 @@ def make_resobj(place_info):
     logging.info('----[' + str(datetime.datetime.now()) + ' make_resobj() : 200]----')
 
     params['code'] = 200
-    params['place_info'] = param_list
-    params['algo_star'] = stars
-    params['tag'] = tags
+    params['place_info'] = param_list[start_page:offset]
+    params['algo_star'] = stars[start_page:offset]
+    params['tag'] = tags[start_page:offset]
 
     return params

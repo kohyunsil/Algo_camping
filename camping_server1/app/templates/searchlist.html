@@ -30,7 +30,7 @@
             </span>
             <div class="btn-group mr-3 col-md-3 sort" role="group" aria-label="Basic radio toggle button group">
 
-                <input type="radio" class="btn-check" name="btnradio" autocomplete="off">
+                <input type="radio" class="btn-check btn-popular" name="btnradio" autocomplete="off">
                 <label class="btn btn-outline-light" for="btnradio1" id="btnradio-popular">인기순</label>
 
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
@@ -45,10 +45,14 @@
 
     <div class="container">
         <div class="row row-cols-1 row-cols-md-4" id="card-layout"></div>
+        <nav class="page-nav" aria-label="Page navigation" style="visibility: hidden">
+            <ul class="pagination nav justify-content-center" id="pagination"></ul>
+        </nav>
     </div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="/static/js/jquery.twbsPagination.min.js"></script>
 <script src="/static/js/searchlist.js"></script>
 <script src="/static/js/index.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyloadxt/1.0.0/jquery.lazyloadxt.min.js"></script>

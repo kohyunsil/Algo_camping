@@ -10,6 +10,7 @@ from app.config import Config
 import logging
 from datetime import datetime
 
+
 # 로그인 여부 확인
 def is_signin():
     param = {}
@@ -35,18 +36,20 @@ def is_exist_user():
         if session['access_token']:
             param = {}
             '''
-            # select name from user where access_token = 'access_token';
+            # select id, name from user where access_token = 'access_token';
             '''
             client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
             Session = sessionmaker(bind=client)
             session_ = Session()
         try:
-            query = session_.query(model_user.id, model_user.name).filter(model_user.access_token == session['access_token']).all()
+            query = session_.query(model_user.id, model_user.name).filter(
+                model_user.access_token == session['access_token']).all()
             if len(query) == 0:
                 return False
             else:
                 param['name'] = query[0].name
                 param['id'] = query[0].id
+                param['access_token'] = session['access_token']
                 return param
         except:
             return False
@@ -237,6 +240,7 @@ def signin(param):
 
 # 토큰 삭제
 def delete_token(name):
+    param = dict()
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
@@ -252,7 +256,10 @@ def delete_token(name):
 
         session.pop('access_token')
         user_dto.user = None
+        param['code'] = 200
     except:
         session_.rollback()
+        param['code'] = 500
     finally:
         session_.close()
+        return param

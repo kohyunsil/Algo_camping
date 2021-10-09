@@ -13,15 +13,13 @@ class MainSwiper(Resource):
     def get(self):
         """메인 페이지 배너 클릭 이벤트"""
         param = request.args.to_dict()
-        return main_service.save_swiper_log(param)
 
+        headers = str(request.headers)
+        base_url = request.base_url
+        screen = request.path
+        method = request.method
+        action = 'click'
+        type = 'banner'
+        keyword = []
 
-# @main.route('/swiper/banner', methods=['GET'])
-# @main.doc(params={'click_id': '클릭한 배너 id'})
-# @main.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
-# @main.response(200, 'Success')
-# class MainBannerSwiper(Resource):
-#     def get(self):
-#         """메인 광고 영역 배너"""
-#         param = request.args.to_dict()
-#         return main_service.save_banner_log(param)
+        return main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, param)
