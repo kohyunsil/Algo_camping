@@ -12,7 +12,7 @@ var DetailInfo = {
             if (response.code === 200){
                 DetailInfo.doAfterSuccess(response);
             }else{
-                alert(response.msg);
+                alert(response.code);
             }
         })
     },
