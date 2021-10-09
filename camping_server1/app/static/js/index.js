@@ -1,5 +1,8 @@
 var count = 0;
-var items = []
+var items = [];
+var tag_arrs = [];
+var maxTags = 3;
+
 var SignoutEvent = {
     doSignout: function(){
         $('#logout-btn').on('click', function() {
@@ -85,8 +88,32 @@ var SearchTags = {
             if (count === 0){
                 $('.bootstrap-tagsinput').empty();
             }
-            $('.bootstrap-tagsinput').append(span_tag);
-            count ++;
+            if (count >= maxTags){
+                $('#alert-form').addClass('show');
+                $('#alert-form').show();
+                $('header').append(
+                  ' <div class="alert alert-warning alert-dismissible fade" id="alert-form" style="display:none;" role="alert">\n' +
+                    '<strong>🙋🏻‍♀️</strong> 최대 3개의 태그까지 입력할 수 있습니다.\n' +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
+                  '</div>'
+                );
+                return;
+            }else{
+                if (tag_arrs.includes(tag)){
+                    $('#alert-form').addClass('show');
+                    $('#alert-form').show();
+                    $('header').append(
+                      ' <div class="alert alert-warning alert-dismissible fade" id="alert-form" style="display:none;" role="alert">\n' +
+                        '<strong>🙋🏻‍♀️</strong> 이미 선택된 태그입니다.\n' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\n' +
+                      '</div>'
+                    );
+                    return;
+                }
+                $('.bootstrap-tagsinput').append(span_tag);
+                tag_arrs.push(tag);
+                count ++;
+            }
         })
     },
     // 사용자 입력 키워드

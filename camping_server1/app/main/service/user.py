@@ -98,7 +98,8 @@ def signup(param):
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
-    created_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    # created_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    created_date = datetime.today().strftime('%Y-%m-%d')
     modified_date = created_date
 
     query = model_user(email, name, password, nickname, birth_date, access_token, created_date, modified_date, _,

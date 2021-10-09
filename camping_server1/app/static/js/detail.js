@@ -202,12 +202,12 @@ var DetailInfo = {
                 data: res.algo_score,
                 pointPlacement: 'on',
                 color: '#4f9f88'
+            },
+            {
+              name: '사용자',
+              data: [80, 90, 100, 100, 90],
+              pointPlacement: 'on'
             }],
-            //{
-            //   name: '사용자',
-            //   data: [50000, 39000, 42000, 31000, 26000],
-            //   pointPlacement: 'on'
-            // }],
 
             responsive: {
               rules: [{

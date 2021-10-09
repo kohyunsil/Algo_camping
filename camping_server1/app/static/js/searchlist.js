@@ -130,7 +130,6 @@ var SearchList = {
                 alert(response.code);
             }
         })
-
     },
     showAlgoStars: function(res){
         var star = '';
