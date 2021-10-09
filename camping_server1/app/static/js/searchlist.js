@@ -5,7 +5,6 @@ var params = {
     keywords : ''
 }
 var total_row = 0;
-
 var Pagination = {
     // 페이지 수 처리
     pageList: function(row_nums){
@@ -33,7 +32,7 @@ var Pagination = {
                         var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                         $('.bootstrap-tagsinput').empty();
 
-                        for (var i=1; i<keyword_arrs.length; i++){
+                        for (var i=2; i<keyword_arrs.length; i++){
                             var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                             $('.bootstrap-tagsinput').append(span_tag);
                         }
@@ -50,7 +49,7 @@ var Pagination = {
                             var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                             $('.bootstrap-tagsinput').empty();
 
-                            for (var i=1; i<keyword_arrs.length; i++){
+                            for (var i=2; i<keyword_arrs.length; i++){
                                 var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                                 $('.bootstrap-tagsinput').append(span_tag);
                             }
@@ -68,7 +67,7 @@ var Pagination = {
                             var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                             $('.bootstrap-tagsinput').empty();
 
-                            for (var i=1; i<keyword_arrs.length; i++){
+                            for (var i=2; i<keyword_arrs.length; i++){
                                 var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                                 $('.bootstrap-tagsinput').append(span_tag);
                             }
@@ -98,13 +97,14 @@ var SearchList = {
     sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
+            // $('.input-keyword').text(params.keywords + '에 대한');
             $.getJSON('/search/pagination/popular/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     var regex = / /gi;
                     var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                     $('.bootstrap-tagsinput').empty();
 
-                    for (var i=1; i<keyword_arrs.length; i++){
+                    for (var i=2; i<keyword_arrs.length; i++){
                         var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                         $('.bootstrap-tagsinput').append(span_tag);
                     }
@@ -115,14 +115,14 @@ var SearchList = {
         });
         // 등록순
         $('#btnradio-update').click(function() {
+                // $('.input-keyword').text(params.keywords + '에 대한');
                 $.getJSON('/search/pagination/recent/' + total_row + '/' + 1, params).done(function (response) {
                     if(response.code === 200){
                         var regex = / /gi;
                         var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
-
                         $('.bootstrap-tagsinput').empty();
 
-                        for (var i=1; i<keyword_arrs.length; i++){
+                        for (var i=2; i<keyword_arrs.length; i++){
                             var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                             $('.bootstrap-tagsinput').append(span_tag);
                         }
@@ -135,13 +135,14 @@ var SearchList = {
         });
         // 조회순
         $('#btnradio-readcount').click(function() {
+            // $('.input-keyword').text(params.keywords + '에 대한');
             $.getJSON('/search/pagination/readcount/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     var regex = / /gi;
                     var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                     $('.bootstrap-tagsinput').empty();
 
-                    for (var i=1; i<keyword_arrs.length; i++){
+                    for (var i=2; i<keyword_arrs.length; i++){
                         var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                         $('.bootstrap-tagsinput').append(span_tag);
                     }
@@ -166,17 +167,19 @@ var SearchList = {
                 var row_nums = response.row_nums;
                 total_row = row_nums;
 
+                var regex = / /gi;
+                var keyword_arrs = req_param.replace(regex, '').trim().split(';');
+
+                $('#area-default-menu').text(keyword_arrs[1]);
+                $('.bootstrap-tagsinput').empty();
+
+                for (var i=2; i<keyword_arrs.length; i++){
+                    var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
+                    $('.bootstrap-tagsinput').append(span_tag);
+                }
+
                 $.getJSON('/search/pagination/list/' + response.row_nums + '/' + 1, params).done(function(response){
                     if(response.code === 200){
-                        var regex = / /gi;
-                        var keyword_arrs = req_param.replace(regex, '').trim().split(';');
-                        $('.bootstrap-tagsinput').empty();
-
-                        for (var i=1; i<keyword_arrs.length; i++){
-                            console.log(keyword_arrs[i]);
-                            var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
-                            $('.bootstrap-tagsinput').append(span_tag);
-                        }
                         SearchList.getSearchData(response, row_nums);
                     }else{
                         alert(response.code);
@@ -214,7 +217,7 @@ var SearchList = {
         } catch(err){
 
         }
-        $('.input-keyword').text(rtn_keywords);
+        $('.input-keyword').text(rtn_keywords + '에 대한');
         $('.input-size').text(row_nums);
         $('.search-result').css({'visibility': 'visible'});
         $('.pagination').css({'visibility': 'visible'});

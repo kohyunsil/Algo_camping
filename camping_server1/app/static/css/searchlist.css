@@ -8,7 +8,7 @@
 .search-result{
     visibility: hidden;
     width: 100vw;
-    margin-top: 8rem;
+    margin-top: 2.5rem;
     padding: 2px;
     background-color: rgb(0, 0, 0, 0.2);
 }
@@ -26,6 +26,9 @@ body > div.container-fluid.search-result > nav > a{
 .card-body{
     text-align: center;
     border: none;
+}
+.body > div.container-fluid.search-result > nav{
+    padding-left: 5px;
 }
 .card-body a{
     text-decoration: none;
@@ -56,7 +59,6 @@ body > div.container-fluid.search-result > nav > a{
     color: #424242;
     margin-bottom: 0.2rem;
 }
-
 .btn-tag:hover,
 .btn-tag:focus,
 .btn-tag:active{
@@ -64,7 +66,10 @@ body > div.container-fluid.search-result > nav > a{
     color: #ffffff;
 }
 div:nth-child(5) > div > div > div > img{
-    height:19rem;
+    height: 19rem;
+}
+body > div.container-fluid.search-result > nav > div.h5.navbar-brand.col-md-2.d-sm-inline.text-white{
+    padding-left: 3px;
 }
 /*swiper.js img*/
 .swiper-container {
