@@ -83,7 +83,7 @@ var SearchTags = {
         });
         // 추천 태그 선택
         $('#recommend-tag-menu li div div button').on('click', function(){
-            var tag = $(this).text();
+            var tag = $(this).attr('id');
             var span_tag = '<span class="badge badge-info">' + tag + '</span>'
             if (count === 0){
                 $('.bootstrap-tagsinput').empty();

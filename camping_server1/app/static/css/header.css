@@ -30,8 +30,7 @@
     }
 }
 .header-logo-img{
-    width: 2rem;
-    height: 2rem;
+    width: 10rem;
 }
 .form-control-dark {
     color: #fff;
@@ -152,30 +151,32 @@
 .cat-activity-5{
     margin-left: 0.5rem;
     text-align: center;
-    color: #f3f3f3;
+    color: #151515;
     font-size: 0.9rem;
-    border-radius: 1rem;
-    background-color: #1f284a;
-    width: 70%;
     font-weight: bold;
     padding: 0.3rem;
 }
-#fun-option-1, #fun-option-2, #fun-option-3, #fun-option-4,
-#comfort-option-1, #comfort-option-2, #comfort-option-3, #comfort-option-4,
-#together-option-1, #together-option-2, #together-option-3, #together-option-4,
-#healing-option-1, #healing-option-2, #healing-option-3, #healing-option-4,
-#activity-option-1, #activity-option-2, #activity-option-3, #activity-option-4{
-    font-weight: 550;
+#recommend-tag-menu > li > div > div{
+    text-align: center;
 }
 .dropdown-menu-tags{
-    width: 55%;
+    width: 35%;
+}
+@media screen and (min-width:280px) and (max-width:768px) {
+    .dropdown-menu-tags {
+        height: 100%;
+        overflow-y: auto;
+        width: 10%;
+    }
+}
+.drop-menu-icon{
+    width: 4rem;
 }
 #recommend-default-menu1{
     margin-right: 0.2rem;
 }
 hr{
-    /*border: 1px solid #c3c3c3;*/
-    border: 1px solid #84b7a3;
+    border: 1px solid #e0e0e0;
 }
 .btn-area,
 .btn-recommend{

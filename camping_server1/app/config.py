@@ -8,6 +8,7 @@ abspath = os.path.abspath('data.ini')
 config.read(abspath)
 keys = config['SECRET_KEYS']
 mongo_keys = config['MONGODB']
+aws_s3 = config['S3']
 
 
 class DBConfig(object):
@@ -27,6 +28,11 @@ class DBConfig(object):
 
 class Config(object):
     TEMPLATE_AUTO_RELOAD = True
+
+    AWS_ACCESS_KEY = aws_s3['AWS_ACCESS_KEY']
+    AWS_SECRET_KEY = aws_s3['AWS_SECRET_KEY']
+    BUCKET_NAME = aws_s3['BUCKET_NAME']
+    REGION_NAME = 'ap-northeast-2'
 
     JWT_SECRET_KEY = keys['JWT_SECRET_KEY']
     JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)

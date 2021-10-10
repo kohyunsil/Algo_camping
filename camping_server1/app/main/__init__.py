@@ -11,7 +11,6 @@ from datetime import datetime
 from .model import db, migrate
 from flask_jwt_extended import *
 
-
 warnings.filterwarnings('ignore')
 
 def create_app():
@@ -63,4 +62,5 @@ def create_app():
             'handlers': ['wsgi']
         }
     })
+
     return app
