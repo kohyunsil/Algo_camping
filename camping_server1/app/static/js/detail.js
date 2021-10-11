@@ -18,7 +18,6 @@ var DetailInfo = {
     },
     showPlaceInfo: function(res){
         var star = '';
-
         if (res.avg_star === 0){
             $('.visitor-text').css({'visibility': 'hidden'});
         }
@@ -266,9 +265,14 @@ var DetailInfo = {
             }
           },
           legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
+            // layout: 'vertical',
+            // align: 'bottom',
+            // verticalAlign: 'middle'
+               layout: 'vertical',
+               align: 'center',
+               verticalAlign: 'bottom',
+               itemMarginTop: 10,
+               itemMarginBottom: 10
           },
           plotOptions: {
             series: [{
@@ -440,7 +444,7 @@ var DetailInfo = {
     redrawLineCharts: function(){
         var width = $('#line-chart-container').css('width');
         // $('#line-chart-container').css('width', '680px');
-        $('#line-chart-container').css('width', '43rem');
+        // $('#line-chart-container').css('width', '33rem');
     }
 }
 DetailInfo.getPlaceInfo();

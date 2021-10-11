@@ -27,10 +27,10 @@ def get_detail(param):
         try:
             if req_contentid is not None:
                 place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
-                id = place_info[0].id
 
                 review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(
-                    model_review.place_id == id).all()
+                    model_review.place_id == req_contentid).all()
+
 
                 if review_query[0][0] is None:
                     avg_star = 0

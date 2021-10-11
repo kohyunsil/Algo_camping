@@ -77,6 +77,9 @@ div:nth-child(5) > div > div > div > img{
 body > div.container-fluid.search-result > nav > div.h5.navbar-brand.col-md-2.d-sm-inline.text-white{
     padding-left: 3px;
 }
+.algo-text{
+    margin-top: 15px;
+}
 /*swiper.js img*/
 .swiper-container {
     width: 100%;
@@ -88,7 +91,7 @@ body > div.container-fluid.search-result > nav > div.h5.navbar-brand.col-md-2.d-
     object-fit: cover;
 }
 .col{
-    overflow: hidden;
+    overflow: visible;
 }
 .swiper-slide-prev, .swiper-slide-active, .mySwiper{
     overflow: hidden;

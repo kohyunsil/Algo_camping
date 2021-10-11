@@ -60,7 +60,6 @@ place_model = detail.model('Specific Place Model',
                                                        description='user name')})
 
 @detail.route('/info')
-@detail.doc(params={'content_id': '캠핑장별 고유 content id'})
 @detail.doc(responses={302: 'redirect'})
 @detail.response(200, 'Success', place_model)
 class DetailAll(Resource):
@@ -76,6 +75,7 @@ class DetailAll(Resource):
         type = 'card'
         keyword = []
 
+        print(param)
         main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, param)
 
         return detail_service.get_detail(param)
