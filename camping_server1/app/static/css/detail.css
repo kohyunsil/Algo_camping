@@ -77,6 +77,10 @@ table a{
         height: 70%;
     }
 }
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl{
+    padding-left: 0;
+    padding-right: 0;
+}
 /*---map---*/
 .kakao-map{
     height: 380px;
