@@ -24,6 +24,7 @@ def get_detail(param):
         '''
         Session = sessionmaker(bind=client)
         session_ = Session()
+
         try:
             if req_contentid is not None:
                 place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
@@ -31,13 +32,13 @@ def get_detail(param):
                 review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(
                     model_review.place_id == req_contentid).all()
 
-
                 if review_query[0][0] is None:
                     avg_star = 0
                 else:
                     avg_star = round(float(review_query[0][0]), 2)
 
                 local_obj = get_local(place_info[0].sigungu_code)
+
                 past_congestion_obj = get_past_congestion(place_info[0].content_id)
                 # future_congestion_obj = get_future_congestion(place_info[0].sigungu_code)
                 # future_date, future_congestion = json_default(future_congestion_obj)
@@ -74,6 +75,7 @@ def get_detail(param):
 def get_local(sigungu_code):
     Session = sessionmaker(bind=client)
     session_ = Session()
+
     try:
         if sigungu_code is not None:
             '''

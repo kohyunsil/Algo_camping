@@ -371,12 +371,12 @@ var DetailInfo = {
         $('.mySwiper2').append(
             '<div class="col">\n' +
                 '<span>\n' +
-                    '<h5 class="text-center"><span class="h5 user-name"></span>' + '님 ' + '\n' +
+                    '<br><h5 class="text-center"><span class="h5 user-name"></span>' + '님 ' + '\n' +
                         '<span class="h5 fw-bold festival-addr" style="color: #49917D">' + res.place_info.addr.split(' ')[1] + '</span> 인근 축제/관광지는 어떠세요?\n' +
                     '</h5>\n' +
                 '</span>\n' +
             '</div>\n' +
-            '<div class="swiper-wrapper" id="swiper-local">\n' +
+            '<div class="swiper-wrapper swiper-wrapper2" id="swiper-local">\n' +
             '</div>'
         );
         // 사용자 이름 노출
@@ -395,7 +395,7 @@ var DetailInfo = {
                     res.local_info[i].line_intro = ' ';
                 }
                 $('#swiper-local').append(
-                    '<div class="swiper-slide">\n' +
+                    '<div class="swiper-slide swiper-slide2">\n' +
                         '<div class="h5 fw-bold local-title">' + res.local_info[i].place_name + '\n' +
                             '<span class="text-muted fw-normal small">'+ res.local_info[i].addr + '</span>\n' +
                         '</div>\n' +
@@ -407,6 +407,7 @@ var DetailInfo = {
             }
         }
         var swiper2 = new Swiper('.mySwiper2', {
+            spaceBetween: 10,
             autoplay: {
               delay: 2000,
               disableOnInteraction: false

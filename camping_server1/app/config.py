@@ -39,6 +39,7 @@ class Config(object):
     SESSION_LIFETIME = datetime.timedelta(days=1)
 
     LIMIT_LEN = 16
+    LIMIT = 5
 
     READCOUNT = 4
     STAR = 6
