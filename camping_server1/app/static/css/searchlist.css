@@ -18,6 +18,12 @@ body > div.container-fluid.search-result > nav > a{
 .btn-group{
   margin-right: 5rem;
 }
+body > div.container-fluid.search-result > nav > div.h5.navbar-brand.col-md-2.d-sm-inline.text-white > div{
+    margin-bottom: 5px;
+}
+body > div.container-fluid.search-result > nav{
+    margin-left: 10px;
+}
 /*search card list*/
 .tags{
     min-height: 60px;

@@ -2,11 +2,6 @@
 @media (min-width: 10px){
     body{
         background-image: url('../imgs/background_mobile.png');
-        /*background-position: center center;*/
-        /*background-repeat: no-repeat;*/
-        /*background-attachment: fixed;*/
-        /*background-size: cover;*/
-        /*height: 100%;*/
         width: 100vw;
         height: 100vh;
         background-position: center center;
@@ -149,7 +144,6 @@
 .cat-together-3,
 .cat-healing-4,
 .cat-activity-5{
-    margin-left: 0.5rem;
     text-align: center;
     color: #151515;
     font-size: 0.9rem;
@@ -164,9 +158,12 @@
 }
 @media screen and (min-width:280px) and (max-width:768px) {
     .dropdown-menu-tags {
-        height: 100%;
+        height: 70%;
         overflow-y: auto;
-        width: 10%;
+    }
+    #recommend-tag-menu{
+        width: 25%;
+        min-width: 30%;
     }
 }
 .drop-menu-icon{

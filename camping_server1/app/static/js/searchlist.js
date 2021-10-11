@@ -97,11 +97,11 @@ var SearchList = {
     sortList: function(){
         // 인기순
         $('#btnradio-popular').click(function() {
-            // $('.input-keyword').text(params.keywords + '에 대한');
             $.getJSON('/search/pagination/popular/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     var regex = / /gi;
                     var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
+                    var keyword_str = '';
                     $('.bootstrap-tagsinput').empty();
 
                     for (var i=2; i<keyword_arrs.length; i++){
@@ -164,6 +164,7 @@ var SearchList = {
 
         $.getJSON('/search/list', params).done(function(response){
             if(response.code === 200){
+                $('.input-keyword').text(params.keywords + '에 대한');
                 var row_nums = response.row_nums;
                 total_row = row_nums;
 
@@ -208,16 +209,27 @@ var SearchList = {
         }
     },
     showSearchList: function(res, row_nums){
-        var rtn_keywords = '';
-        rtn_keywords = res.keywords;
-
         try{
             $('#area-default-menu').text(rtn_keywords.substr(0, 2));
             $("#area-default-menu").val(rtn_keywords.substr(0, 2));
         } catch(err){
 
         }
-        $('.input-keyword').text(rtn_keywords + '에 대한');
+        var regex = / /gi;
+        var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
+        var keyword_str = '';
+
+        keyword_str += keyword_arrs[1].trim() + ', ';
+
+        for (var i=2; i<keyword_arrs.length; i++){
+            keyword_str += keyword_arrs[i].trim();
+
+            if (i !== keyword_arrs.length -1){
+                keyword_str += ', ';
+            }
+        }
+        $('.input-keyword').text(keyword_str + '에 대한');
+
         $('.input-size').text(row_nums);
         $('.search-result').css({'visibility': 'visible'});
         $('.pagination').css({'visibility': 'visible'});
