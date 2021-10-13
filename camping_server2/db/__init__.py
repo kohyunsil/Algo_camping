@@ -1,5 +1,5 @@
-import db.sql_create as sql_create
-import db.sql_insert as sql_insert
+import sql_create as sql_create
+import sql_insert as sql_insert
 
 
 if __name__ == '__main__':
@@ -26,6 +26,7 @@ if __name__ == '__main__':
     # create.create_visitor_past_tb(sql.DB, cursor)
     # create.create_visitor_future_tb(sql.DB, cursor)
     # create.create_review_tb(sql.DB, cursor)
+    # create.create_scenario_tb(sql.DB, cursor)
 
 
     # make data for table & sql insert
@@ -47,18 +48,18 @@ if __name__ == '__main__':
 
     # algopoint_df = content.make_algopoint_df()
     # sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
-
+    #
     # algotag_df = content.make_algotag_df()
     # sql.save_sql(engine, algotag_df, 'algotag', 'append')
 
-    # visitor_past_df = content.make_visitor_past_df(20180101, 20210910)
+    # visitor_past_df = content.make_visitor_past_df(20180101, 20211010)
     # print(visitor_past_df.columns)
     # sql.save_sql(engine, visitor_past_df, 'visitor_past', 'append')
 
-    # visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20210910, period=90)
-    # print(visitor_future_df.columns)
-    # sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
+    visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20211010, period=90)
+    print(visitor_future_df.columns)
+    sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
 
-    review_df = content.make_review_df()
-    print(review_df.columns)
-    sql.save_sql(engine, review_df, 'review', 'append')
+    # review_df = content.make_review_df()
+    # print(review_df.columns)
+    # sql.save_sql(engine, review_df, 'review', 'append')

@@ -70,49 +70,49 @@ class Scenario(AccessDb):
         super().__init__()
         self.algopoint = self.read_algopoint_db()
 
-    def main_a200(self, answer, row=20):
+    def main_a200(self, answer, row=None):
         copy = write.copy_a200(answer)
         df = rec.reco_a200()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a210(self, answer, row=20):
+    def main_a210(self, answer, row=None):
         copy = write.copy_a210(answer)
         df = rec.reco_a210()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a300(self, answer, row=20):
+    def main_a300(self, answer, row=None):
         copy = write.copy_a300(answer)
         df = rec.reco_a300()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a410(self, answer, row=20):
+    def main_a410(self, answer, row=None):
         season, copy = write.copy_a410(answer, now=True)
         df = rec.reco_a410()[season][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a420(self, answer, row=20):
+    def main_a420(self, answer, row=None):
         copy = write.copy_a420(answer)
         df = rec.reco_a420()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a500(self, answer, row=20):
+    def main_a500(self, answer, row=None):
         copy = write.copy_a500(answer)
         df = rec.reco_a500()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
         df = df.sort_values('algopoint', ascending=False)[:row]
         return [copy, df]
 
-    def main_a600(self, answer, row=20):
+    def main_a600(self, answer, row=None):
         copy = write.copy_a600(answer)
         df = rec.reco_a600()[answer][['contentId', 'facltNm', 'firstImageUrl']]
         df = pd.merge(df, self.algopoint, how='left', on='contentId')
@@ -187,25 +187,25 @@ class Scenario(AccessDb):
 
     def mix_s112(self, row=None):
         copy = write.copy_mix_scene(112)
-        merge_df = pd.merge(self.main_a420(1)[1], self.main_a600(6)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a420(1)[1], self.main_a600(6)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
     def mix_s113(self, row=None):
         copy = write.copy_mix_scene(113)
-        merge_df = pd.merge(self.main_a500(4)[1], self.main_a600(6)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a500(4)[1], self.main_a600(6)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
     def mix_s114(self, row=None):
         copy = write.copy_mix_scene(114)
-        merge_df = pd.merge(self.main_a500(3)[1], self.main_a600(6)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a500(3)[1], self.main_a600(6)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
     def mix_s115(self, row=None):
         copy = write.copy_mix_scene(115)
-        merge_df = pd.merge(self.main_a200(1)[1], self.main_a300(1)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a200(1)[1], self.main_a300(1)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
@@ -217,19 +217,19 @@ class Scenario(AccessDb):
 
     def mix_s117(self, row=None):
         copy = write.copy_mix_scene(117)
-        merge_df = pd.merge(self.main_a200(1)[1], self.main_a300(2)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a200(1)[1], self.main_a300(2)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
     def mix_s118(self, row=None):
         copy = write.copy_mix_scene(118)
-        merge_df = pd.merge(self.main_a200(2)[1], self.main_a300(2)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a200(2)[1], self.main_a300(2)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
     def mix_s119(self, row=None):
         copy = write.copy_mix_scene(119)
-        merge_df = pd.merge(self.main_a200(3)[1], self.main_a300(2)[1], how='right', on='contentId')
+        merge_df = pd.merge(self.main_a200(3)[1], self.main_a300(2)[1], how='left', on='contentId')
         df = self.mix_merge(merge_df, row=row)
         return copy, df
 
@@ -266,7 +266,7 @@ if __name__ == '__main__':
     # print(len(df200))
     # print(df200)
 
-    copy_s, df_s = scene.mix_s119()
+    copy_s, df_s = scene.mix_s119(row=20)
     print(copy_s)
     print(df_s.columns)
     print(len(df_s))

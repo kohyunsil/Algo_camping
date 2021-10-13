@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from tqdm import tqdm
-# from fbprophet import Prophet
+from fbprophet import Prophet
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
@@ -224,7 +224,7 @@ class MakeDataframe:
 
         return final_data
 
-    def make_visitor_past_df(self, startYmd=20180101, endYmd=20210910): #visitor_past_df
+    def make_visitor_past_df(self, startYmd=20180101, endYmd=20211010): #visitor_past_df
         df = tourapi.visitors_API(startYmd, endYmd)
         # df = pd.read_csv("../../datas/visitors_2018_2021.csv", index_col=[0], encoding='utf-8-sig')
         df.replace(to_replace=0, value=0.0001, inplace=True)  # 0명의 경우 근사치인 0.0001로 치환
@@ -236,7 +236,7 @@ class MakeDataframe:
         result_df['baseYmd'] = result_df['baseYmd'].astype(str)
         result_df['baseYmd'] = pd.to_datetime(result_df['baseYmd'], format='%Y-%m-%d')
         result_df.sort_values(by=['signguCode', 'baseYmd'], inplace=True)
-        result_df['signguCode'] = result_df['signguCode'].replace(28170, 28177)
+        result_df['signguCode'] = result_df['signguCode'].replace({28170: 28177})
         result_df.reset_index(drop=True, inplace=True)
 
         result_df.rename(columns={
@@ -250,13 +250,17 @@ class MakeDataframe:
     def make_visitor_future_df(self, startYmd=20180101, endYmd=20210910, period=90):
         sql = Query()
         cursor, engine, db = sql.connect_sql()
-        query = "select * from visitor_past"
+        query = f"select * from {sql.DB}.visitor_past"
         cursor.execute(query)
         result = cursor.fetchall()
         result_df = pd.DataFrame(result) #self.make_visitor_past_df(startYmd, endYmd)
+        result_df['sigungu_code'] = result_df['sigungu_code'].replace({28170: 28177})
         print(result_df.tail())
-        sgg_list = np.unique(result_df.sigungu_code).tolist()
-        ymd_list = pd.to_datetime(np.unique(result_df.base_ymd).tolist(), format='%Y-%m-%d')
+        sgg_list = np.unique(result_df.sigungu_code.tolist())
+        ymd_list = np.unique(result_df.base_ymd.tolist())
+        ymd_list = [pd.to_datetime(ymd, format='%Y-%m-%d') for ymd in ymd_list]
+        print(f"총 시군구 개수: {len(sgg_list)}")
+        print(f"기간: 총 {len(ymd_list)}일 / 시작일: {ymd_list[0]} / 종료일: {ymd_list[-1]}")
 
         final_df = pd.DataFrame(index=ymd_list)
         for sgg in tqdm(sgg_list):

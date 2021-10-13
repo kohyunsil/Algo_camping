@@ -279,7 +279,12 @@ class CreateDb:
                 A420           SMALLINT       NULL                       COMMENT '회원가입 설문 4-2번',
                 A500           SMALLINT       NULL                       COMMENT '회원가입 설문 5번',
                 A600           SMALLINT       NULL                       COMMENT '회원가입 설문 6번',
-                CONSTRAINT PK_user PRIMARY KEY (id, email)
+                comfort        FLOAT          NULL                       COMMENT '쾌적/편리', 
+                together       FLOAT          NULL                       COMMENT '함께', 
+                fun            FLOAT          NULL                       COMMENT '즐길거리', 
+                healing        FLOAT          NULL                       COMMENT '자연/힐링', 
+                clean          FLOAT          NULL                       COMMENT '깨끗한', 
+                CONSTRAINT PK_user PRIMARY KEY (id)
             );
                 ''')
         cursor.execute(qry_result)
@@ -391,7 +396,28 @@ class CreateDb:
                 action    VARCHAR(45)    NOT NULL    COMMENT 'like, unlike, visit, unvisit', 
                 datetime  TIMESTAMP      NOT NULL    COMMENT '행위 일시', 
                 CONSTRAINT PK_ PRIMARY KEY (id)
+            );
+                ''')
+        cursor.execute(qry_result)
 
+    def create_scenario_tb(self, db, cursor):
+        try:
+            qry_drop = (f'''
+                        drop table {db}.scenario;
+                        ''')
+            cursor.execute(qry_drop)
+        except:
+            pass
+
+        qry_result = (f'''
+            CREATE TABLE {db}.scenario (
+                id              INT            NOT NULL    AUTO_INCREMENT COMMENT 'Surrogate Key', 
+                scene_no        VARCHAR(4)     NOT NULL    COMMENT '유저 id', 
+                content_id      INT            NOT NULL    COMMENT '캠핑장 content_id', 
+                firstImageUrl   TEXT           NULL        COMMENT '첫번째 이미지', 
+                spot1           SMALLINT       NOT NULL    COMMENT '상단 추천 배너 (해당:1, 비해당:0)',
+                spot2           SMALLINT       NOT NULL    COMMENT '하단 롤링 배너 (해당:1, 비해당:0)', 
+                CONSTRAINT PK_ PRIMARY KEY (id)
             );
                 ''')
         cursor.execute(qry_result)
@@ -479,9 +505,10 @@ if __name__ == '__main__':
     # create.create_algotag_tb(sql.DB, cursor)
     # create.create_sigungu_tb(sql.DB, cursor)
     # create.create_dimension_tb(sql.DB, cursor)
-    create.create_user_tb(sql.DB, cursor)
+    # create.create_user_tb(sql.DB, cursor)
     # create.create_sns_info_tb(sql.DB, cursor)
     # create.create_user_action_tb(sql.DB, cursor)
     # create.create_visitor_past_tb(sql.DB, cursor)
     # create.create_visitor_future_tb(sql.DB, cursor)
     # create.create_review_tb(sql.DB, cursor)
+    # create.create_scenario_tb(sql.DB, cursor)
