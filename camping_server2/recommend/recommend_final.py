@@ -11,8 +11,8 @@ from itertools import product
 import pymysql
 from sqlalchemy import create_engine
 pymysql.install_as_MySQLdb()
-import recommend_df as rd
-import recommend_copywrite as cw
+import camping_server2.recommend.recommend_df as rd
+import camping_server2.recommend.recommend_copywrite as cw
 import camping_server2.db.sql_create as sc
 import camping_server2.algostar.user_points as up
 rec = rd.UserWeights()

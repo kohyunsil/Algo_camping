@@ -17,6 +17,7 @@ class Config:
     PUBLIC_API_KEY = keys['PUBLIC_API_KEY']
 
     # tag_points.py 의 TagMerge를 위한 파일
+    CAMP = pd.read_csv(PATH + "gocampapi_test.csv", index_col=0)
     API_DATA = pd.read_csv(PATH + "camp_api_info_210619.csv", encoding = "utf-8-sig")
     CRAWL_DATA = pd.read_csv(PATH + "crawling_data.csv", encoding='utf-8-sig')
     ALGO_DF_FINAL = pd.read_csv(PATH + "algo_df_0719.csv", encoding='utf-8-sig', index_col=0)

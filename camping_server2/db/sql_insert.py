@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from tqdm import tqdm
-from fbprophet import Prophet
+# from fbprophet import Prophet
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
@@ -16,6 +16,7 @@ import camping_server2.apis.make_sigungucode as sg
 import camping_server2.algostar.algo_points as aap
 import camping_server2.algostar.tag_points as atp
 import camping_server2.algostar.camp_api_crawling_merge as cacm
+import camping_server2.recommend.recommend_final as rf
 gocamp = ga.GocampingApi()
 tourapi = ka.KoreaTourApi()
 sgg = sg.Sigungucode()
@@ -337,6 +338,108 @@ class MakeDataframe:
         review_df = review_data_df[['platform', 'user_id', 'camp_id', 'photo_cnt', 'date', 'cat_tag', 'star', 'contents']]
         review_df = review_df.dropna(subset=['camp_id'])
         return review_df
+
+    def make_scenario_df(self, row=20):
+        scene = rf.Scenario()
+        ### Main Scenario
+        questions = [[i for i in range(1, 5)],  # a200
+                     [i for i in range(1, 3)],  # a210
+                     [i for i in range(1, 4)],  # a300
+                     [i for i in range(1, 5)],  # a410
+                     [i for i in range(1, 5)],  # a420
+                     [i for i in range(1, 5)],  # a500
+                     [i for i in range(1, 7)]]  # a600
+        ans=1
+        main_scene_dict = {'a200': scene.main_a200(ans, row),
+                           'a210': scene.main_a210(ans, row),
+                           'a300': scene.main_a300(ans, row),
+                           'a410': scene.main_a410(ans, row),
+                           'a420': scene.main_a420(ans, row),
+                           'a500': scene.main_a500(ans, row),
+                           'a600': scene.main_a600(ans, row)}
+
+        result_df1 = pd.DataFrame()
+        for idx, scene_no in enumerate(list(main_scene_dict.keys())):
+            for ans in questions[idx]:
+                df = main_scene_dict[scene_no][1][['contentId', 'facltNm', 'firstImageUrl']]
+                df['scene_no'] = scene_no
+                df['copy'] = main_scene_dict[scene_no][0]
+                df['spot1'] = 1
+                df['spot2'] = 0
+                df[f'{scene_no}'] = ans
+                result_df1 = pd.concat([result_df1, df])
+
+        ### Mix Scenario
+        scene_dict = {'s101': scene.mix_s101(row=row),
+                      's102': scene.mix_s102(row=row),
+                      's103': scene.mix_s103(row=row),
+                      's104': scene.mix_s104(row=row),
+                      's105': scene.mix_s105(row=row),
+                      's106': scene.mix_s106(row=row),
+                      's107': scene.mix_s107(row=row),
+                      's108': scene.mix_s108(row=row),
+                      's109': scene.mix_s109(row=row),
+                      's110': scene.mix_s110(row=row),
+                      's111': scene.mix_s111(row=row),
+                      's112': scene.mix_s112(row=row),
+                      's113': scene.mix_s113(row=row),
+                      's114': scene.mix_s114(row=row),
+                      's115': scene.mix_s115(row=row),
+                      's116': scene.mix_s116(row=row),
+                      's117': scene.mix_s117(row=row),
+                      's118': scene.mix_s118(row=row),
+                      's119': scene.mix_s119(row=row)}
+
+        ad_dict = {'s101': [1, 0], 's102': [1, 0], 's103': [1, 0], 's104': [1, 0], 's105': [1, 0], 's106': [1, 0],
+                   's107': [1, 0], 's108': [0, 1], 's109': [1, 0], 's110': [0, 1], 's111': [0, 1], 's112': [0, 1],
+                   's113': [1, 0], 's114': [0, 1], 's115': [1, 0], 's116': [1, 0], 's117': [1, 0], 's118': [1, 0],
+                   's119': [1, 0]}
+
+        que_dict = {'s101': [None, 1, None, None, None, None, 1, None],
+                    's102': [None, None, None, None, 2, None, None, 2],
+                    's103': [None, None, None, None, None, 2, 3, None],
+                    's104': [None, None, None, None, None, 1, None, 3],
+                    's105': [None, None, None, None, None, None, 4, 3],
+                    's106': [None, 3, None, None, None, None, 2, None],
+                    's107': [None, None, None, None, 3, None, 2, None],
+                    's108': [None, None, None, None, 3, 2, None, None],
+                    's109': [None, 1, None, None, None, None, 3, None],
+                    's110': [None, None, None, None, None, 3, 3, None],
+                    's111': [None, None, 1, None, None, None, 2, None],
+                    's112': [None, None, None, None, None, 1, None, 6],
+                    's113': [None, None, None, None, None, None, 4, 6],
+                    's114': [None, None, None, None, None, None, 3, 6],
+                    's115': [None, 1, None, 1, None, None, None, None],
+                    's116': [None, 2, None, 1, None, None, None, None],
+                    's117': [None, 1, None, 2, None, None, None, None],
+                    's118': [None, 2, None, 2, None, None, None, None],
+                    's119': [None, 3, None, 2, None, None, None, None]}
+
+        result_df2 = pd.DataFrame()
+        for scene_no in list(scene_dict.keys()):
+            df = scene_dict[scene_no][1]
+            df['scene_no'] = scene_no
+            df['copy'] = scene_dict[scene_no][0]
+            df['spot1'] = ad_dict[scene_no][0]
+            df['spot2'] = ad_dict[scene_no][1]
+            df['a100'] = que_dict[scene_no][0]
+            df['a200'] = que_dict[scene_no][1]
+            df['a210'] = que_dict[scene_no][2]
+            df['a300'] = que_dict[scene_no][3]
+            df['a410'] = que_dict[scene_no][4]
+            df['a420'] = que_dict[scene_no][5]
+            df['a500'] = que_dict[scene_no][6]
+            df['a600'] = que_dict[scene_no][7]
+            result_df2 = pd.concat([result_df2, df])
+
+        ### Main + Mix Scenario
+        result_df = pd.concat([result_df1, result_df2])
+        result_df = result_df.rename(columns={'contentId': 'content_id',
+                                              'facltNm': 'place_name',
+                                              'firstImageUrl': 'first_image'})
+        return result_df
+
+
 
 
 class Query:

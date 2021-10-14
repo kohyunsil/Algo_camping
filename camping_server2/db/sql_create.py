@@ -412,11 +412,21 @@ class CreateDb:
         qry_result = (f'''
             CREATE TABLE {db}.scenario (
                 id              INT            NOT NULL    AUTO_INCREMENT COMMENT 'Surrogate Key', 
-                scene_no        VARCHAR(4)     NOT NULL    COMMENT '유저 id', 
-                content_id      INT            NOT NULL    COMMENT '캠핑장 content_id', 
-                firstImageUrl   TEXT           NULL        COMMENT '첫번째 이미지', 
+                scene_no        VARCHAR(4)     NOT NULL    COMMENT '시나리오 일련번호',
+                copy            TEXT           NOT NULL    COMMENT '시나리오 소개 카피라이팅',
+                content_id      INT            NOT NULL    COMMENT '캠핑장 content_id',
+                place_name      VARCHAR(45)    NOT NULL    COMMENT '장소 이름',
+                a100            SMALLINT       NULL        COMMENT '가입설문 A100',
+                a200            SMALLINT       NULL        COMMENT '가입설문 A200',
+                a210            SMALLINT       NULL        COMMENT '가입설문 A210',
+                a300            SMALLINT       NULL        COMMENT '가입설문 A300',
+                a410            SMALLINT       NULL        COMMENT '가입설문 A410',
+                a420            SMALLINT       NULL        COMMENT '가입설문 A420',
+                a500            SMALLINT       NULL        COMMENT '가입설문 A500',
+                a600            SMALLINT       NULL        COMMENT '가입설문 A600',
                 spot1           SMALLINT       NOT NULL    COMMENT '상단 추천 배너 (해당:1, 비해당:0)',
-                spot2           SMALLINT       NOT NULL    COMMENT '하단 롤링 배너 (해당:1, 비해당:0)', 
+                spot2           SMALLINT       NOT NULL    COMMENT '하단 롤링 배너 (해당:1, 비해당:0)',
+                first_image     TEXT           NULL        COMMENT '첫번째 이미지',
                 CONSTRAINT PK_ PRIMARY KEY (id)
             );
                 ''')
