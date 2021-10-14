@@ -124,13 +124,37 @@ class UserSignin(Resource):
         return param
 
 
-@user.route('/detail', methods=['POST'])
-class UserDetail(Resource):
+@user.route('/profile', methods=['POST'])
+class UserProfileList(Resource):
     @user.response(200, 'Success', body=user_model)
     @user.expect(user_model)
     def post(self):
-        """사용자 정보 확인 - 추후 추가할 API입니다."""
-        pass
+        """사용자 정보 """
+        return user_service.is_exist_user()
+
+
+@user.route('/profile/update', methods=['POST'])
+class UserProfileUpdate(Resource):
+    @user.response(200, 'Success', body=user_model)
+    @user.expect(user_model)
+    def post(self):
+        """사용자 정보 업데이트"""
+        values = dict(request.values)
+        print(values)
+        return user_service.update_userinfo(values)
+
+
+@user.route('/like', methods=['POST'])
+class UserLike(Resource):
+    @user.response(200, 'Success', body=user_model)
+    @user.expect(user_model)
+    def post(self):
+        """사용자 좋아요 목록"""
+        # 1. 사용자가 like한 content_id 가져옴
+        # 2. 그 content_id place 가져오기
+        # 3. 정렬
+        # 4. 누르면 상세 페이지로 이동
+        return user_service.get_likelist()
 
 
 @user.route('/sns/signin', methods=['POST'])

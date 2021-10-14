@@ -10,7 +10,7 @@ main = Namespace('main', description='relating to main')
 
 @main.route('/download/<string:file_name>', methods=['GET'])
 @main.doc(params={'file_name': 'S3 요청 파일 명'})
-@main.doc(responses={400: 'Validation Error', 403: 'Forbidden', 302: 'Redirect'})
+@main.doc(responses={400: 'Validation Error', 403: 'Forbidden' , 302: 'Redirect'})
 class MainResource(Resource):
     def get(self, file_name):
         """메인 페이지 이미지 리소스"""
@@ -21,7 +21,7 @@ class MainResource(Resource):
         url = s3.generate_presigned_url('get_object',
                                         Params={'Bucket': AWSConfig.BUCKET_NAME, 'Key': file_name},
                                         ExpiresIn=10000)
-        return redirect(url, code=302)
+        return redirect(url)
 
 
 @main.route('/swiper', methods=['GET'])

@@ -3,6 +3,14 @@ var items = [];
 var tag_arrs = [];
 var maxTags = 3;
 
+var MyPageEvent = {
+    moveMyPage: function(){
+        $('#mypage-btn').on('click', function() {
+            var url = '/mypage';
+            location.href = url;
+        })
+    }
+}
 var SignoutEvent = {
     doSignout: function(){
         $('#logout-btn').on('click', function() {
@@ -41,7 +49,6 @@ var SignoutEvent = {
             SignoutEvent.deleteCookie('access_token');
             var url = '/auth/signout';
             location.href = url;
-
         })
     },
     deleteCookie: function(name) {
@@ -197,6 +204,7 @@ var ClickBannerEvent = {
         })
     }
 }
+MyPageEvent.moveMyPage();
 SignoutEvent.doSignout();
 SearchTags.getSearchTags();
 SearchTags.getKeywords();

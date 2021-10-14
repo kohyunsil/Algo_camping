@@ -1,0 +1,59 @@
+/*header*/
+body{
+    background-image: url('../imgs/camping_bg2.jpeg');
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
+}
+#logo{
+    color: #1f284a;
+    font-family: "Harlow Solid Italic";
+    font-size: 2rem;
+}
+.header-logo-img{
+    width: 7rem;
+}
+.navbar-brand{
+    text-align: center;
+}
+.myinfo-container{
+    margin-top: -5rem;
+}
+.mypage{
+    margin-top: 12rem;
+}
+.container-fluid{
+    height: 100%;
+    width: 100%;
+}
+.email-alert{
+    color: #838383;
+    font-size: 0.4rem;
+}
+#nav-profile-tab{
+    border: none;
+    background-color: rgb(255, 255, 255, 0);
+    border-bottom: 2px solid #27335f;
+    color: black;
+}
+#nav-like-tab{
+    color: #989898;
+}
+#check-btn,
+.btn-modifiy-ok{
+    background-color: #1f284a;
+    color: white;
+}
+.btn-modifiy-ok:hover{
+    background-color: white;
+    color: #1f284a;
+}
