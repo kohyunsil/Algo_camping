@@ -88,3 +88,12 @@ table a{
 body > div.container > div > div > div.row.row-cols-12.row-cols-md-2{
     text-align: center;
 }
+/*---like---*/
+.favorite{
+    color: #be2727;
+    font-size: 4.5rem;
+}
+.do-like-btn{
+    background-color: rgb(255, 255, 255, 0);
+    border: none;
+}

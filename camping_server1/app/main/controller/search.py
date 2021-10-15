@@ -85,3 +85,14 @@ class SearchTags(Resource):
         """전체 검색 수"""
         params = request.args.to_dict()
         return search_service.get_row_nums(params)
+
+
+@search.route('/likelist')
+@search.doc(params={'content_id_list': 'content_id 리스트', 'access_token': 'access token'})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
+@search.response(200, 'Success', search_model)
+class SearchTags(Resource):
+    def get(self):
+        """content_id 리스트에 대한 장소 리스트"""
+        params = request.args.to_dict()
+        return search_service.get_placelist(params)

@@ -33,11 +33,12 @@ class UserDAO(db.Model):
     clean = Column(db.Float, primary_key=False)
 
     like = Column(db.String(255), primary_key=False)
+    member = Column(db.Integer, primary_key=False)
 
 
     def __init__(self, email, name, password, nickname, birth_date, access_token, created_date, modified_date,
                  A100, A200, A210, A300, A410, A420, A500, A600,
-                 comfort, together, fun, healing, clean, like):
+                 comfort, together, fun, healing, clean, like, memeber):
         self.email = email
         self.name = name
         self.password = password
@@ -60,3 +61,4 @@ class UserDAO(db.Model):
         self.healing = healing
         self.clean = clean
         self.like = like
+        self.member = member

@@ -1,12 +1,53 @@
+var param = {
+    content_id: '',
+    id: '',
+    access_token: '',
+    status: 0
+}
+var like_list = [];
+
+$('#empty-like').click(function(){
+    param.status = 1; // like
+    like_list.push(param.content_id);
+
+    $.post('/user/like/update', param).done(function(response){
+        if (response.code === 200){
+            $('#empty-like').css({'display': 'none'});
+            $('#nonempty-like').css('display', '');
+        }else{
+            alert('다시 시도해주세요.');
+        }
+    })
+})
+
+$('#nonempty-like').click(function(){
+    param.status = 0 // dislike
+
+    // content_id dislike (splice)
+    var index = like_list.indexOf(param.content_id);
+    if (index !== -1){
+        like_list.splice(index, 1);
+    }
+
+    $.post('/user/like/update', param).done(function(response){
+        if (response.code === 200){
+            $('#nonempty-like').css({'display': 'none'});
+            $('#empty-like').css('display', '');
+        }else{
+            alert('다시 시도해주세요.');
+        }
+    })
+})
+
 var DetailInfo = {
     getPlaceInfo: function(){
         var p_content_id = document.location.href.split("/")[4].toString();
         var p_id = document.location.href.split("/")[5].toString();
-        var param = {
-            content_id: p_content_id,
-            id: p_id
-        }
         var access_token = DetailInfo.getCookie('access_token');
+
+        param.content_id = p_content_id;
+        param.id = p_id;
+        param.access_token = access_token;
 
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
@@ -76,6 +117,24 @@ var DetailInfo = {
             },
         });
     },
+    showLikeIcon: function(res){
+
+        if (res.like === 'None'){
+            $('#nonempty-like').css({'display': 'none'});
+        }else{
+            var like = res.like.split(',');
+            for (var i=0; i<like.length; i++){
+                like_list.push(like[i]);
+            }
+
+            // content_id가 포함되어 있는지 확인
+            if (like_list.includes(param.content_id.toString())){
+                $('#empty-like').css({'display': 'none'});
+            }else{
+                $('#nonempty-like').css({'display': 'none'});
+            }
+        }
+    },
     showMap: function(res){
         $('.kakao-map').append(
             '<div id="map" style="width:100%; height:100%;"></div>\n'
@@ -141,11 +200,14 @@ var DetailInfo = {
         }
 
         if(DetailInfo.getCookie('access_token') === undefined){
+            $('#nonempty-like').css({'display': 'none'});
+            $('#empty-like').css({'display': 'none'});
+
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
         }else{
-            var title = res.nickname + '님과 95% 일치합니다.';
-            var subtitle = res.nickname + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
+            var title = res.user_name + '님과 95% 일치합니다.';
+            var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
         }
 
         // spider web (polar) chart
@@ -436,6 +498,7 @@ var DetailInfo = {
         $('.container').css({'visibility': 'visible'});
         $('table').show();
 
+        DetailInfo.showLikeIcon(response);
         DetailInfo.showMap(response);
         DetailInfo.showPlaceInfo(response);
         DetailInfo.showHighCharts(response);

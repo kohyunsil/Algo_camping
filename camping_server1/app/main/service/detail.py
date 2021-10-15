@@ -3,6 +3,7 @@ from app.main.model.congestion_dao import CongestionDAO as model_congestion
 from app.main.model.place_dao import PlaceDAO as model_place
 from app.main.model import *
 from ..service.search import get_score, get_top_tag
+from ..service.user import get_likelist
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from app.config import Config
@@ -17,7 +18,6 @@ def get_detail(param):
     else:
         req_contentid = param['content_id']
         params = {}
-
         '''
         # SELECT AVG(star) FROM review WHERE place_id IN(
         # SELECT id FROM place WHERE content_id = 특정 장소의 content_id);
@@ -63,6 +63,8 @@ def get_detail(param):
 
             logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
             params['code'] = 200
+            params['like'] = get_likelist()['like']
+
         except:
             logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500

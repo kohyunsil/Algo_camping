@@ -126,8 +126,10 @@ class UserSignin(Resource):
 
 @user.route('/profile', methods=['POST'])
 class UserProfileList(Resource):
-    @user.response(200, 'Success', body=user_model)
-    @user.expect(user_model)
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
     def post(self):
         """사용자 정보 """
         return user_service.is_exist_user()
@@ -135,8 +137,10 @@ class UserProfileList(Resource):
 
 @user.route('/profile/update', methods=['POST'])
 class UserProfileUpdate(Resource):
-    @user.response(200, 'Success', body=user_model)
-    @user.expect(user_model)
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
     def post(self):
         """사용자 정보 업데이트"""
         values = dict(request.values)
@@ -145,21 +149,31 @@ class UserProfileUpdate(Resource):
 
 @user.route('/like', methods=['POST'])
 class UserLike(Resource):
-    @user.response(200, 'Success', body=user_model)
-    @user.expect(user_model)
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
     def post(self):
         """사용자 좋아요 목록"""
-        # 1. 사용자가 like한 content_id 가져옴
-        # 2. 그 content_id place 가져오기
-        # 3. 정렬
-        # 4. 누르면 상세 페이지로 이동
         return user_service.get_likelist()
+
+
+@user.route('/like/update', methods=['POST'])
+class UserLikeUpdate(Resource):
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
+    def post(self):
+        """사용자 좋아요 목록 업데이트"""
+        param = dict(request.values)
+        return user_service.update_like(param)
 
 
 @user.route('/sns/signin', methods=['POST'])
 class UserSNSSignin(Resource):
-    @user.doc(responses={200: 'Success'}, body=sns_user_model)
-    @user.expect(sns_user_model)
+    @user.doc(responses={200: 'Success'}, body='')
+    @user.expect('')
     def post(self):
         """플랫폼 로그인 - 추후 변경 예정인 API입니다."""
         values = dict(request.values)

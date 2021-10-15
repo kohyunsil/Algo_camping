@@ -11,7 +11,7 @@ route_api = Blueprint('main', __name__)
 def main_page():
     param = {}
     if user.is_signin():
-        param['nickname'] = user.is_signin()['nickname']
+        param['name'] = user.is_signin()['name']
     return render_template("index.html", param=param)
 
 
@@ -19,7 +19,7 @@ def main_page():
 def detail(content_id, id):
     param = {}
     if user.is_signin():
-        param['nickname'] = user.is_signin()['nickname']
+        param['name'] = user.is_signin()['name']
     return render_template('detail.html', param=param)
 
 
@@ -80,11 +80,11 @@ def survey_done():
 @route_api.route('/search')
 def search():
     if user.is_signin():
-        param['nickname'] = user.is_signin()['nickname']
+        param['name'] = user.is_signin()['name']
     return render_template('searchlist.html', param=param)
 
 @route_api.route('/mypage')
 def myinfo():
     if user.is_signin():
-        param['nickname'] = user.is_signin()['nickname']
+        param['name'] = user.is_signin()['name']
         return render_template('userinfo.html', param=param)

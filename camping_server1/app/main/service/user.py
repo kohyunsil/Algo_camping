@@ -260,7 +260,7 @@ def update_userinfo(param):
         param = dict()
         '''
         # UPDATE user SET email = param.email, name = param.name, password = param.password, 
-        # nickname = param.nickname, birth_date = param.birthdate where email = param.email;
+        # nickname = param.nickname, birth_date = param.birthdate WHERE email = param.email;
         '''
         modified_date = datetime.today().strftime('%Y-%m-%d')
 
@@ -310,6 +310,41 @@ def get_likelist():
             session_.close()
 
     return param
+
+# 좋아요 업데이트
+def update_like(param):
+    if session['access_token'] == param['access_token']:
+
+        like = get_likelist()['like'].split(',')
+        if param['status'] == '1':
+            like.append(param['content_id'])
+        else:
+            like.pop(like.index(param['content_id']))
+
+        like_str = ','.join(like)
+
+        try:
+            client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+            Session = sessionmaker(bind=client)
+            session_ = Session()
+            param = dict()
+
+            '''
+            # UPDATE user SET like = param.content_id_list WHERE access_token = 'access_token';
+            '''
+            update_like_query = session_.query(model_user).filter(model_user.access_token == session['access_token'])[0]
+            update_like_query.like = like_str
+
+            session_.add(update_like_query)
+            session_.commit()
+            param['code'] = 200
+
+        except:
+            session_.rollback()
+            param['code'] = 500
+        finally:
+            session_.close()
+        return param
 
 # 토큰 삭제
 def delete_token(name):

@@ -98,7 +98,29 @@ var MoveTabs = {
                 if (response.code === 200){
                     $.post('/user/like').done(function(response){
                         if (response.code === 200){
-                            console.log('/user/like ok!');
+
+                            var like_param = {
+                                'like': response.like,
+                                'access_token': param.access_token
+                            }
+                            $.getJSON('/search/likelist', like_param).done(function(response){
+                                if (response.code === 200){
+                                    for (var i=0; i<like_param.like.split(',').length; i++){
+                                        $('.like-list').append(
+                                            '<div class="row">\n' +
+                                                '<div class="d-grid gap-1 mx-auto col">\n' +
+                                                    '<button class="btn p-1 btn-place" type="button">\n' +
+                                                        '<img class="test-img" alt="..." src="' + response[like_param.like.split(',')[i]].first_image + '">\n' +
+                                                        '<br>\n' +
+                                                        '<span>' + response[like_param.like.split(',')[i]].place_name + '</span>\n' +
+                                                        '<span class="score" id="algo-star"><span><img class="visitor-star-img" src="/main/download/visit_star.png"></span>' + response[like_param.like.split(',')[i]].star + "점" +'</span>\n' +
+                                                    '</button>\n' +
+                                                '</div>\n' +
+                                            '</div>'
+                                        );
+                                    }
+                                }
+                            })
                         }
                     })
                 }else{
