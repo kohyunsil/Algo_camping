@@ -87,6 +87,10 @@ body{
 .like-list{
     overflow: auto;
 }
+#nav-userlike-tab:hover,
+#nav-userlike-tab:not(:hover){
+    border: none;
+}
 /* temp img*/
 .test-img{
     width: 11rem;
