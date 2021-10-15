@@ -144,8 +144,8 @@ var DetailInfo = {
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
         }else{
-            var title = res.user_name + '님과 95% 일치합니다.';
-            var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
+            var title = res.nickname + '님과 95% 일치합니다.';
+            var subtitle = res.nickname + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
         }
 
         // spider web (polar) chart

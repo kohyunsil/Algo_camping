@@ -273,6 +273,12 @@ def update_userinfo(param):
         update_query.modified_date = modified_date
 
         session_.add(update_query)
+        # 유저의 고유 아이디
+        '''
+        # SELECT id FROM user WHERE email = 유저의 이메일;
+        '''
+        id = session_.query(model_user.id).filter(model_user.email == email).all()
+
         session_.commit()
         param['code'] = 200
     except:

@@ -1,32 +1,38 @@
 var param = {
+    id: '',
+    nickname: '',
     access_token: ''
 }
 
 $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr("href");
+    console.log(target);
 
-    if (target === 'user-profile'){
-        $('#nav-like-tab').removeAttr('style');
-
-        $('#nav-profile-tab').css({'border': 'none'});
-        $('#nav-profile-tab').css({'background-color': 'rgba(255, 255, 255, 0)'});
-        $('#nav-profile-tab').css({'border-bottom': '2px solid #27335f'});
-        $('#nav-profile-tab').css({'color': 'black'});
+    if (target === '#nav-userinfo'){
+        $('#nav-userlike-tab').removeAttr('style');
+        $('#nav-userinfo-tab').css({'border': 'none'});
+        $('#nav-userinfo-tab').css({'background-color': 'rgba(255, 255, 255, 0)'});
+        $('#nav-userinfo-tab').css({'border-bottom': '2px solid #27335f'});
+        $('#nav-userinfo-tab').css({'color': 'black'});
 
         MoveTabs.getUserInfo();
-    }else if (target === 'user-like'){
-        $('#nav-profile-tab').removeAttr('style');
-        $('#nav-profile-tab').css({'border-bottom': '1px solid #dbdbdb'});
-        $('#nav-profile-tab').css({'color': '#989898'});
+    }else if (target === '#nav-userlike'){
+        $('#nav-userinfo-tab').removeAttr('style');
+        $('#nav-userinfo-tab').css({'border-bottom': '1px solid #dbdbdb'});
+        $('#nav-userinfo-tab').css({'color': '#989898'});
 
-        $('#nav-like-tab').css({'border': 'none'});
-        $('#nav-like-tab').css({'background-color': 'rgba(255, 255, 255, 0)'});
-        $('#nav-like-tab').css({'border-bottom': '2px solid #27335f'});
-        $('#nav-like-tab').css({'color': 'black'});
+        $('#nav-userlike-tab').css({'border': 'none'});
+        $('#nav-userlike-tab').css({'background-color': 'rgba(255, 255, 255, 0)'});
+        $('#nav-userlike-tab').css({'border-bottom': '2px solid #27335f'});
+        $('#nav-userlike-tab').css({'color': 'black'});
 
         MoveTabs.getUserLike();
     }
 });
+
+$('.resurvey-btn').click(function(){
+    $(location).attr('href', '/signup/survey/first?id=' + param.id);
+})
 
 var GetToken = {
     getAccessToken: function () {
@@ -48,7 +54,11 @@ var MoveTabs = {
                 if (response.code === 200){
                     $.post('/user/profile').done(function(response){
                         if (response.code === 200){
-                            $('#nav-user-profile').css({'visibility': 'visible'});
+                            param.nickname = response.nickname;
+                            param.id = response.id;
+
+                            MoveTabs.setCookie(response.id, response.nickname, 1);
+
                             // 이메일
                             $('#email-form').val(response.email);
                             $('#email-form').attr('disabled', true);
@@ -88,7 +98,6 @@ var MoveTabs = {
                 if (response.code === 200){
                     $.post('/user/like').done(function(response){
                         if (response.code === 200){
-                            $('#nav-user-profile').css({'visibility': 'hidden'});
                             console.log('/user/like ok!');
                         }
                     })
@@ -97,6 +106,11 @@ var MoveTabs = {
                 }
             })
         }
+    },
+    setCookie: function(name, value, days) {
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
     },
     getCookie: function(name){
         var x, y;

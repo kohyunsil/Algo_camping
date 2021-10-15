@@ -35,18 +35,41 @@ body{
     height: 100%;
     width: 100%;
 }
-.email-alert{
+.email-alert,
+.option-text{
     color: #838383;
-    font-size: 0.4rem;
+    font-size: 0.8rem;
 }
-#nav-profile-tab{
+#nav-userinfo-tab{
     border: none;
     background-color: rgb(255, 255, 255, 0);
     border-bottom: 2px solid #27335f;
     color: black;
 }
-#nav-like-tab{
+#nav-userlike-tab{
     color: #989898;
+}
+.logo-icon{
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+.info-text{
+    word-break: keep-all;
+}
+.resurvey-btn{
+    background-color: #dbdbdb;
+    padding: 0.45rem;
+}
+.info-icon{
+    font-size: 1.4rem;
+    vertical-align: top;
+    color: #1f284a;
+    font-weight: bold;
+}
+.resurvey-btn a{
+    text-decoration: none;
+    color: black;
 }
 #check-btn,
 .btn-modifiy-ok{
@@ -56,4 +79,20 @@ body{
 .btn-modifiy-ok:hover{
     background-color: white;
     color: #1f284a;
+}
+.withdraw{
+    color: #898989;
+    font-size: 0.9rem;
+}
+.like-list{
+    overflow: auto;
+}
+/* temp img*/
+.test-img{
+    width: 11rem;
+    height: 7rem;
+    margin-bottom: 1rem;
+}
+.like-info{
+    color: #4e4e4e;
 }

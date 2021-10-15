@@ -140,7 +140,6 @@ class UserProfileUpdate(Resource):
     def post(self):
         """사용자 정보 업데이트"""
         values = dict(request.values)
-        print(values)
         return user_service.update_userinfo(values)
 
 
