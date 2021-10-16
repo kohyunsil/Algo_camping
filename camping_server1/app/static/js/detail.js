@@ -5,6 +5,7 @@ var param = {
     status: 0
 }
 var like_list = [];
+$('.header-logo-img').attr('src', '/static/imgs/algo_logo2.png');
 
 $('#empty-like').click(function(){
     param.status = 1; // like
@@ -93,7 +94,7 @@ var DetailInfo = {
         if (res.place_info.detail_image === null){
             $('#swiper-place').append(
                 '<div class="swiper-slide">\n' +
-                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
+                        '<img src="/static/imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
                 '</div>\n'
             )
         }else{
