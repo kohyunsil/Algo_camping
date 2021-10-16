@@ -53,7 +53,7 @@ class UserValidation(Resource):
             try:
                 # getter
                 param = user_dto.user
-                user_service.delete_token(param['name'])
+                user_service.delete_token(session['access_token'])
             except:
                 pass
             finally:
@@ -124,19 +124,56 @@ class UserSignin(Resource):
         return param
 
 
-@user.route('/detail', methods=['POST'])
-class UserDetail(Resource):
-    @user.response(200, 'Success', body=user_model)
-    @user.expect(user_model)
+@user.route('/profile', methods=['POST'])
+class UserProfileList(Resource):
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
     def post(self):
-        """사용자 정보 확인 - 추후 추가할 API입니다."""
-        pass
+        """사용자 정보 """
+        return user_service.is_exist_user()
+
+
+@user.route('/profile/update', methods=['POST'])
+class UserProfileUpdate(Resource):
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
+    def post(self):
+        """사용자 정보 업데이트"""
+        values = dict(request.values)
+        return user_service.update_userinfo(values)
+
+
+@user.route('/like', methods=['POST'])
+class UserLike(Resource):
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
+    def post(self):
+        """사용자 좋아요 목록"""
+        return user_service.get_likelist()
+
+
+@user.route('/like/update', methods=['POST'])
+class UserLikeUpdate(Resource):
+    # -- 추후 수정 --
+    @user.response(200, 'Success', body='')
+    @user.expect('')
+    # -- 추후 수정 --
+    def post(self):
+        """사용자 좋아요 목록 업데이트"""
+        param = dict(request.values)
+        return user_service.update_like(param)
 
 
 @user.route('/sns/signin', methods=['POST'])
 class UserSNSSignin(Resource):
-    @user.doc(responses={200: 'Success'}, body=sns_user_model)
-    @user.expect(sns_user_model)
+    @user.doc(responses={200: 'Success'}, body='')
+    @user.expect('')
     def post(self):
         """플랫폼 로그인 - 추후 변경 예정인 API입니다."""
         values = dict(request.values)
@@ -157,9 +194,6 @@ class UserSNSSignin(Resource):
 @auth.route('/signout')
 def signout():
     """사용자 로그아웃"""
-    # getter
-    user_param = user_dto.user
-
     headers = str(request.headers)
     base_url = request.base_url
     screen = request.path
@@ -169,7 +203,7 @@ def signout():
     keyword = []
 
     main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
-    user_service.delete_token(user_param['name'])
+    user_service.delete_token(session['access_token'])
 
     return redirect(request.host_url, code=302)
 
@@ -179,5 +213,5 @@ def sns_signout():
     """플랫폼 로그아웃"""
     # getter
     param = user_dto.user
-    user_service.delete_token(param['name'])
+    user_service.delete_token(session['access_token'])
     return redirect(request.host_url, code=302)

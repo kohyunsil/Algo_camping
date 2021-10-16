@@ -36,20 +36,26 @@ def is_exist_user():
         if session['access_token']:
             param = {}
             '''
-            # select id, name from user where access_token = 'access_token';
+            # SELECT id, email, name, nickname, birth_date FROM user WHERE access_token = 'access_token';
             '''
             client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
             Session = sessionmaker(bind=client)
             session_ = Session()
         try:
-            query = session_.query(model_user.id, model_user.name).filter(
+            query = session_.query(model_user.id, model_user.email, model_user.name, model_user.nickname,
+                                   model_user.birth_date).filter(
                 model_user.access_token == session['access_token']).all()
             if len(query) == 0:
                 return False
             else:
                 param['name'] = query[0].name
                 param['id'] = query[0].id
+                param['email'] = query[0].email
+                param['nickname'] = query[0].nickname
+                param['birth_date'] = query[0].birth_date
+
                 param['access_token'] = session['access_token']
+                param['code'] = 200
                 return param
         except:
             return False
@@ -63,7 +69,7 @@ def is_duplicate(param):
     email = param['email']
     param, flag = {}, False
     '''
-    # select email from user where email = 'param['email']';
+    # SELECT email FROM user WHERE email = 'param['email']';
     '''
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
@@ -93,7 +99,7 @@ def signup(param):
 
     param, flag = {}, True
     '''
-    # insert into user (email, name, password, nickname, birth_date, access_token, created_date, modified_date) values (이메일, 이름, 패스워드, 닉네임);
+    # INSERT INTO user (email, name, password, nickname, birth_date, access_token, created_date, modified_date) VALUES (이메일, 이름, 패스워드, 닉네임);
     '''
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
@@ -103,7 +109,7 @@ def signup(param):
     modified_date = created_date
 
     query = model_user(email, name, password, nickname, birth_date, access_token, created_date, modified_date, _,
-                       _, _, _, _, _, _, _)
+                       _, _, _, _, _, _, _, _, _, _, _, _, _)
 
     try:
         session_.add(query)
@@ -117,7 +123,7 @@ def signup(param):
     finally:
         # 유저의 고유 아이디
         '''
-        # select id from user where email=유저의 이메일;
+        # SELECT id FROM user WHERE email = 유저의 이메일;
         '''
         id = session_.query(model_user.id).filter(model_user.email == email).all()
         session_.close()
@@ -149,8 +155,8 @@ def signup_survey(param):
         param = {}
 
         '''
-        # update user set A100 = answer1, A200 = answer2, A210 = answer2_sub, A300 = answer3, 
-        # A410 = answer4, A420 = answer4_sub, A500 = answer5, A600 = answer6 where id = 유저 고유 id
+        # UPDATE user SET A100 = answer1, A200 = answer2, A210 = answer2_sub, A300 = answer3, 
+        # A410 = answer4, A420 = answer4_sub, A500 = answer5, A600 = answer6 WHERE id = 유저 고유 id
         '''
         user = session_.query(model_user).filter(model_user.id == id)[0]
         user.A100 = answer1
@@ -164,7 +170,7 @@ def signup_survey(param):
 
         session_.add(user)
         session_.commit()
-
+        param['code'] = 200
     except:
         logging.error('----[' + str(datetime.now()) + ' signup_survey() : 500]----')
         session_.rollback()
@@ -172,7 +178,7 @@ def signup_survey(param):
     finally:
         logging.info('----[' + str(datetime.now()) + ' signup_survey() : 200]----')
         session_.close()
-        param['code'] = 200
+
         return param
 
 # 로그인
@@ -181,7 +187,7 @@ def signin(param):
     password = param['password']
     code, access_token, name, error_msg, param = 0, '', '', '', {}
     '''
-    # select * from user where email = '이메일';
+    # SELECT * FROM user WHERE email = '이메일';
     '''
     try:
         query = model_user.query.filter(model_user.email == email).all()
@@ -203,7 +209,7 @@ def signin(param):
                 try:
                     access_token = create_access_token(identity=email, expires_delta=Config.JWT_EXPIRATION_DELTA)
                     '''
-                    # update user set access_token = access_token값 where email = email;
+                    # UPDATE user SET access_token = access_token값 WHERE email = email;
                     '''
                     user = session_.query(model_user).filter(model_user.email == email)[0]
                     user.access_token = access_token
@@ -239,17 +245,121 @@ def signin(param):
 
     return param
 
+# 정보 업데이트
+def update_userinfo(param):
+    email = param['email']
+    password = bcrypt.hashpw(param['password'].encode('UTF-8'), bcrypt.gensalt())
+    name = param['name']
+    nickname = param['nickname']
+    birth_date = param['birthDate']
+
+    try:
+        client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+        param = dict()
+        '''
+        # UPDATE user SET email = param.email, name = param.name, password = param.password, 
+        # nickname = param.nickname, birth_date = param.birthdate WHERE email = param.email;
+        '''
+        modified_date = datetime.today().strftime('%Y-%m-%d')
+
+        update_query = session_.query(model_user).filter(model_user.email == email)[0]
+        update_query.email = email
+        update_query.password = password
+        update_query.name = name
+        update_query.nickname = nickname
+        update_query.birth_date = birth_date
+        update_query.modified_date = modified_date
+
+        session_.add(update_query)
+        # 유저의 고유 아이디
+        '''
+        # SELECT id FROM user WHERE email = 유저의 이메일;
+        '''
+        id = session_.query(model_user.id).filter(model_user.email == email).all()
+
+        session_.commit()
+        param['code'] = 200
+    except:
+        session_.rollback()
+        param['code'] = 500
+    finally:
+        session_.close()
+
+    return param
+
+# 좋아요 목록
+def get_likelist():
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+
+    try:
+        param = dict()
+        if session['access_token']:
+            try:
+                '''
+                # SELECT like FROM user WHERE access_token = 'access token';
+                '''
+                like = session_.query(model_user.like).filter(model_user.access_token == session['access_token']).all()
+                param['like'] = str(like[0][0])
+                param['code'] = 200
+            except:
+                param['code'] = 500
+            finally:
+                session_.close()
+    except:
+        param['code'] = 403
+    return param
+
+
+# 좋아요 업데이트
+def update_like(param):
+    if session['access_token'] == param['access_token']:
+
+        like = get_likelist()['like'].split(',')
+        if param['status'] == '1':
+            like.append(param['content_id'])
+        else:
+            like.pop(like.index(param['content_id']))
+
+        like_str = ','.join(like)
+
+        try:
+            client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+            Session = sessionmaker(bind=client)
+            session_ = Session()
+            param = dict()
+
+            '''
+            # UPDATE user SET like = param.content_id_list WHERE access_token = 'access_token';
+            '''
+            update_like_query = session_.query(model_user).filter(model_user.access_token == session['access_token'])[0]
+            update_like_query.like = like_str
+
+            session_.add(update_like_query)
+            session_.commit()
+            param['code'] = 200
+
+        except:
+            session_.rollback()
+            param['code'] = 500
+        finally:
+            session_.close()
+        return param
+
 # 토큰 삭제
-def delete_token(name):
+def delete_token(token):
     param = dict()
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
     try:
         '''
-        # update user set access_token = null where name = 'name';
+        # update user set access_token = null where access_token = token;
         '''
-        user = session_.query(model_user).filter(model_user.name == name)[0]
+        user = session_.query(model_user).filter(model_user.access_token == token)[0]
         user.access_token = ''
 
         session_.add(user)

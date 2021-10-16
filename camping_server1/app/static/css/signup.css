@@ -20,8 +20,7 @@ body{
     font-size: 2rem;
 }
 .header-logo-img{
-    width: 2rem;
-    height: 2.1rem;
+    width: 7rem;
 }
 .navbar-brand{
     text-align: center;
@@ -31,7 +30,7 @@ body{
     margin-top: -5rem;
 }
 .login{
-    margin-top: 16rem;
+    margin-top: 12rem;
 }
 .container-fluid{
     height: 100%;

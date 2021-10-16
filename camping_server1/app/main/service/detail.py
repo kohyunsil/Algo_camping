@@ -3,6 +3,7 @@ from app.main.model.congestion_dao import CongestionDAO as model_congestion
 from app.main.model.place_dao import PlaceDAO as model_place
 from app.main.model import *
 from ..service.search import get_score, get_top_tag
+from ..service.user import get_likelist
 from sqlalchemy.orm import sessionmaker
 from flask import *
 from app.config import Config
@@ -17,10 +18,9 @@ def get_detail(param):
     else:
         req_contentid = param['content_id']
         params = {}
-
         '''
-        # select avg(star) from review where place_id in(
-        # select id from place where content_id = 특정 장소의 content_id);
+        # SELECT AVG(star) FROM review WHERE place_id IN(
+        # SELECT id FROM place WHERE content_id = 특정 장소의 content_id);
         '''
         Session = sessionmaker(bind=client)
         session_ = Session()
@@ -63,6 +63,14 @@ def get_detail(param):
 
             logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
             params['code'] = 200
+
+            # 비로그인 시 like x
+            try:
+                if session['access_token']:
+                    params['like'] = get_likelist()['like']
+            except:
+                pass
+            
         except:
             logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500
@@ -79,8 +87,8 @@ def get_local(sigungu_code):
     try:
         if sigungu_code is not None:
             '''
-            # select * from place where (place_num = 1 or place_num = 2 )
-            # and sigungu_code = 47130 order by readcount desc limit 5;
+            # SELECT * FROM place WHERE (place_num = 1 OR place_num = 2 )
+            # AND sigungu_code = 47130 ORDER BY readcount DESC LIMIT 5;
             '''
             query = session_.query(model_place).filter(or_(model_place.place_num == 1, model_place.place_num == 2) &
                                                        (model_place.sigungu_code == int(sigungu_code))
@@ -103,8 +111,8 @@ def get_past_congestion(content_id):
             past = (datetime.datetime.now() - datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
 
             '''
-            # select * from congestion where base_ymd between date('과거일') and date('현재일')+1 and content_id=특정 content_id
-            # order by base_ymd;
+            # SELECT * FROM congestion WHERE base_ymd BETWEEN date('과거일') AND date('현재일')+1 AND content_id=특정 content_id
+            # ORDER BY base_ymd;
             '''
             query = model_congestion.query.filter(model_congestion.base_ymd.between(past, base) + 1,
                                                   model_congestion.content_id == int(content_id)).all()
@@ -127,8 +135,8 @@ def get_future_congestion(sigungu_code):
             future = (datetime.datetime.now() + datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
 
             '''
-            # select base_ymd, avg(congestion) as congestion from congestion where base_ymd 
-            between date('현재일') and date('미래일') and sigungu_code = 시군구코드 group by base_ymd;
+            # SELECT base_ymd, AVG(congestion) AS congestion FROM congestion WHERE base_ymd 
+            BETWEEN date('현재일') AND date('미래일') AND sigungu_code = 시군구코드 GROUP BY base_ymd;
             '''
             query = session_.query(model_congestion.base_ymd,
                                    func.avg(model_congestion.congestion).label('congestion')).filter(

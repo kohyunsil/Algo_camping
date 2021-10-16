@@ -26,8 +26,19 @@ class UserDAO(db.Model):
     A500 = Column(db.Integer, primary_key=False)
     A600 = Column(db.Integer, primary_key=False)
 
+    comfort = Column(db.Float, primary_key=False)
+    together = Column(db.Float, primary_key=False)
+    fun = Column(db.Float, primary_key=False)
+    healing = Column(db.Float, primary_key=False)
+    clean = Column(db.Float, primary_key=False)
+
+    like = Column(db.String(255), primary_key=False)
+    member = Column(db.Integer, primary_key=False)
+
+
     def __init__(self, email, name, password, nickname, birth_date, access_token, created_date, modified_date,
-                 A100, A200, A210, A300, A410, A420, A500, A600):
+                 A100, A200, A210, A300, A410, A420, A500, A600,
+                 comfort, together, fun, healing, clean, like, memeber):
         self.email = email
         self.name = name
         self.password = password
@@ -44,3 +55,10 @@ class UserDAO(db.Model):
         self.A420 = A420
         self.A500 = A500
         self.A600 = A600
+        self.comfort = comfort
+        self.together = together
+        self.fun = fun
+        self.healing = healing
+        self.clean = clean
+        self.like = like
+        self.member = member

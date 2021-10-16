@@ -10,7 +10,6 @@ from ..config import DBConfig, Config
 from datetime import datetime
 from .model import db, migrate
 from flask_jwt_extended import *
-
 warnings.filterwarnings('ignore')
 
 def create_app():

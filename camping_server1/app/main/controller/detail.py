@@ -1,5 +1,6 @@
 from app.main.service import detail as detail_service
 from app.main.service import main as main_service
+from app.main.service import user as user_service
 from flask_restx import Resource, Namespace, fields
 from flask import request
 
@@ -75,7 +76,6 @@ class DetailAll(Resource):
         type = 'card'
         keyword = []
 
-        print(param)
         main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, param)
 
         return detail_service.get_detail(param)

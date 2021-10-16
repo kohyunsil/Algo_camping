@@ -1,5 +1,6 @@
 /*header*/
 body{
+    /*background-image: url('main/download/camping_bg2.jpeg');*/
     background-image: url('../imgs/camping_bg2.jpeg');
     width: 100vw;
     height: 100vh;
@@ -15,22 +16,15 @@ body{
     font-weight: normal;
     src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');
 }
-#logo{
-    color: #1f284a;
-    font-family: "Harlow Solid Italic";
-    font-size: 2rem;
-    text-decoration: none;
-}
 .header-logo-img{
-    width: 2rem;
-    height: 2.1rem;
+    width: 7rem;
 }
 .navbar-brand{
     text-align: center;
 }
 /*login container*/
 .login{
-    margin-top: 16rem;
+    margin-top: 10rem;
 }
 .container-fluid{
     height: 100%;

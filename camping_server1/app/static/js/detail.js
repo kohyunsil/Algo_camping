@@ -1,12 +1,61 @@
+var param = {
+    content_id: '',
+    id: '',
+    access_token: '',
+    status: 0
+}
+var like_list = [];
+// header logo img 경로
+$('.header-logo-img').attr('src', '/static/imgs/algo_logo2.png');
+
+$('#empty-like').click(function(){
+    param.status = 1; // like
+    like_list.push(param.content_id);
+
+    $.post('/user/like/update', param).done(function(response){
+        if (response.code === 200){
+            $('#empty-like').css({'display': 'none'});
+            $('#nonempty-like').css('display', '');
+        }else{
+            alert('다시 시도해주세요.');
+        }
+    })
+})
+
+$('#nonempty-like').click(function(){
+    param.status = 0 // dislike
+
+    // content_id dislike (splice)
+    var index = like_list.indexOf(param.content_id);
+    if (index !== -1){
+        like_list.splice(index, 1);
+    }
+
+    $.post('/user/like/update', param).done(function(response){
+        if (response.code === 200){
+            $('#nonempty-like').css({'display': 'none'});
+            $('#empty-like').css('display', '');
+        }else{
+            alert('다시 시도해주세요.');
+        }
+    })
+})
+
 var DetailInfo = {
+    IsSignin: function(){
+        if (DetailInfo.getCookie('access_token') === undefined){
+            $('#empty-like').css({'display': 'none'});
+            $('#nonempty-like').css({'display': 'none'});
+        }
+    },
     getPlaceInfo: function(){
         var p_content_id = document.location.href.split("/")[4].toString();
         var p_id = document.location.href.split("/")[5].toString();
-        var param = {
-            content_id: p_content_id,
-            id: p_id
-        }
         var access_token = DetailInfo.getCookie('access_token');
+
+        param.content_id = p_content_id;
+        param.id = p_id;
+        param.access_token = access_token;
 
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
@@ -52,7 +101,7 @@ var DetailInfo = {
         if (res.place_info.detail_image === null){
             $('#swiper-place').append(
                 '<div class="swiper-slide">\n' +
-                        '<img src="../imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
+                        '<img src="/static/imgs/test_img3.jpg" class="figure-img img-fluid rounded" onError="this.onerror=null;this.src=\'/static/imgs/algo_default.png\';" alt="...">\n' +
                 '</div>\n'
             )
         }else{
@@ -75,6 +124,27 @@ var DetailInfo = {
                 loadPrevNextAmount: 1,  // 미리 로드할 이미지 개수
             },
         });
+    },
+    showLikeIcon: function(res){
+
+        if (res.like === 'None'){
+            $('#nonempty-like').css({'display': 'none'});
+        }else{
+            try{
+                var like = res.like.split(',');
+                for (var i=0; i<like.length; i++){
+                    like_list.push(like[i]);
+                }
+                // content_id가 포함되어 있는지 확인
+                if (like_list.includes(param.content_id.toString())){
+                    $('#empty-like').css({'display': 'none'});
+                }else{
+                    $('#nonempty-like').css({'display': 'none'});
+                }
+            }catch (e) {
+
+            }
+        }
     },
     showMap: function(res){
         $('.kakao-map').append(
@@ -141,6 +211,9 @@ var DetailInfo = {
         }
 
         if(DetailInfo.getCookie('access_token') === undefined){
+            $('#nonempty-like').css({'display': 'none'});
+            $('#empty-like').css({'display': 'none'});
+
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
         }else{
@@ -436,6 +509,7 @@ var DetailInfo = {
         $('.container').css({'visibility': 'visible'});
         $('table').show();
 
+        DetailInfo.showLikeIcon(response);
         DetailInfo.showMap(response);
         DetailInfo.showPlaceInfo(response);
         DetailInfo.showHighCharts(response);
@@ -450,3 +524,4 @@ var DetailInfo = {
 }
 DetailInfo.getPlaceInfo();
 DetailInfo.redrawLineCharts();
+DetailInfo.IsSignin();

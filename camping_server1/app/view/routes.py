@@ -10,6 +10,7 @@ route_api = Blueprint('main', __name__)
 @route_api.route('/main')
 def main_page():
     param = {}
+    print(user.is_signin())
     if user.is_signin():
         param['name'] = user.is_signin()['name']
     return render_template("index.html", param=param)
@@ -82,3 +83,10 @@ def search():
     if user.is_signin():
         param['name'] = user.is_signin()['name']
     return render_template('searchlist.html', param=param)
+
+
+@route_api.route('/mypage')
+def myinfo():
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+        return render_template('userinfo.html', param=param)

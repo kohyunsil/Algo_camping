@@ -8,6 +8,7 @@ from flask_mongoengine import MongoEngine
 app = create_app()
 app.register_blueprint(blueprint)
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     logging.warning('----[' + str(datetime.now()) + ' page_not_found() : 404]----')

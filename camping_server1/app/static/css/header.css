@@ -1,6 +1,7 @@
 /*!*header*!*/
 @media (min-width: 10px){
     body{
+        /*background-image: url('main/download/background_mobile.png');*/
         background-image: url('../imgs/background_mobile.png');
         width: 100vw;
         height: 100vh;
@@ -25,7 +26,7 @@
     }
 }
 .header-logo-img{
-    width: 10rem;
+    width: 9rem;
 }
 .form-control-dark {
     color: #fff;
