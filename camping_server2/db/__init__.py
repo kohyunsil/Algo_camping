@@ -1,5 +1,10 @@
-import sql_create as sql_create
-import sql_insert as sql_insert
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))))
+import db.sql_create as sql_create
+import db.sql_insert as sql_insert
 
 
 if __name__ == '__main__':

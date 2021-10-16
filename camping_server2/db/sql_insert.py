@@ -342,32 +342,67 @@ class MakeDataframe:
     def make_scenario_df(self, row=20):
         scene = rf.Scenario()
         ### Main Scenario
-        questions = [[i for i in range(1, 5)],  # a200
-                     [i for i in range(1, 3)],  # a210
-                     [i for i in range(1, 4)],  # a300
-                     [i for i in range(1, 5)],  # a410
-                     [i for i in range(1, 5)],  # a420
-                     [i for i in range(1, 5)],  # a500
-                     [i for i in range(1, 7)]]  # a600
-        ans=1
-        main_scene_dict = {'a200': scene.main_a200(ans, row),
-                           'a210': scene.main_a210(ans, row),
-                           'a300': scene.main_a300(ans, row),
-                           'a410': scene.main_a410(ans, row),
-                           'a420': scene.main_a420(ans, row),
-                           'a500': scene.main_a500(ans, row),
-                           'a600': scene.main_a600(ans, row)}
+        row = 20
+        main_scene_dict = {'a200': [i for i in range(1, 5)],  # a200
+                           'a210': [i for i in range(1, 3)],  # a210
+                           'a300': [i for i in range(1, 4)],  # a300
+                           'a410': [i for i in range(1, 5)],  # a410
+                           'a420': [i for i in range(1, 5)],  # a420
+                           'a500': [i for i in range(1, 5)],  # a500
+                           'a600': [i for i in range(1, 7)]}  # a600
 
-        result_df1 = pd.DataFrame()
-        for idx, scene_no in enumerate(list(main_scene_dict.keys())):
-            for ans in questions[idx]:
-                df = main_scene_dict[scene_no][1][['contentId', 'facltNm', 'firstImageUrl']]
-                df['scene_no'] = scene_no
-                df['copy'] = main_scene_dict[scene_no][0]
-                df['spot1'] = 1
-                df['spot2'] = 0
-                df[f'{scene_no}'] = ans
-                result_df1 = pd.concat([result_df1, df])
+        result_df2 = pd.DataFrame()
+        for ans in main_scene_dict['a200']:
+            df = scene.main_a200(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a200'
+            df['copy'] = scene.main_a200(ans, row)[0]
+            df['a200'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a210']:
+            df = scene.main_a210(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a210'
+            df['copy'] = scene.main_a210(ans, row)[0]
+            df['a210'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a300']:
+            df = scene.main_a300(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a300'
+            df['copy'] = scene.main_a300(ans, row)[0]
+            df['a300'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a410']:
+            df = scene.main_a410(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a410'
+            df['copy'] = scene.main_a410(ans, row)[0]
+            df['a410'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a420']:
+            df = scene.main_a420(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a420'
+            df['copy'] = scene.main_a420(ans, row)[0]
+            df['a420'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a500']:
+            df = scene.main_a500(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a500'
+            df['copy'] = scene.main_a500(ans, row)[0]
+            df['a500'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        for ans in main_scene_dict['a600']:
+            df = scene.main_a600(ans, row)[1][['contentId', 'facltNm', 'firstImageUrl']]
+            df['scene_no'] = 'a600'
+            df['copy'] = scene.main_a600(ans, row)[0]
+            df['a600'] = ans
+            result_df2 = pd.concat([result_df2, df])
+
+        result_df2['spot1'] = 1
+        result_df2['spot2'] = 0
 
         ### Mix Scenario
         scene_dict = {'s101': scene.mix_s101(row=row),
@@ -390,11 +425,6 @@ class MakeDataframe:
                       's118': scene.mix_s118(row=row),
                       's119': scene.mix_s119(row=row)}
 
-        ad_dict = {'s101': [1, 0], 's102': [1, 0], 's103': [1, 0], 's104': [1, 0], 's105': [1, 0], 's106': [1, 0],
-                   's107': [1, 0], 's108': [0, 1], 's109': [1, 0], 's110': [0, 1], 's111': [0, 1], 's112': [0, 1],
-                   's113': [1, 0], 's114': [0, 1], 's115': [1, 0], 's116': [1, 0], 's117': [1, 0], 's118': [1, 0],
-                   's119': [1, 0]}
-
         que_dict = {'s101': [None, 1, None, None, None, None, 1, None],
                     's102': [None, None, None, None, 2, None, None, 2],
                     's103': [None, None, None, None, None, 2, 3, None],
@@ -414,14 +444,13 @@ class MakeDataframe:
                     's117': [None, 1, None, 2, None, None, None, None],
                     's118': [None, 2, None, 2, None, None, None, None],
                     's119': [None, 3, None, 2, None, None, None, None]}
-
-        result_df2 = pd.DataFrame()
-        for scene_no in list(scene_dict.keys()):
+        result_df1 = pd.DataFrame()
+        for scene_no in ['s101', 's102', 's105', 's107', 's111', 's112', 's115', 's119']:
             df = scene_dict[scene_no][1]
             df['scene_no'] = scene_no
             df['copy'] = scene_dict[scene_no][0]
-            df['spot1'] = ad_dict[scene_no][0]
-            df['spot2'] = ad_dict[scene_no][1]
+            df['spot1'] = 0
+            df['spot2'] = 1
             df['a100'] = que_dict[scene_no][0]
             df['a200'] = que_dict[scene_no][1]
             df['a210'] = que_dict[scene_no][2]
@@ -430,10 +459,10 @@ class MakeDataframe:
             df['a420'] = que_dict[scene_no][5]
             df['a500'] = que_dict[scene_no][6]
             df['a600'] = que_dict[scene_no][7]
-            result_df2 = pd.concat([result_df2, df])
+            result_df1 = pd.concat([result_df1, df])
 
         ### Main + Mix Scenario
-        result_df = pd.concat([result_df1, result_df2])
+        result_df = pd.concat([result_df2, result_df1])
         result_df = result_df.rename(columns={'contentId': 'content_id',
                                               'facltNm': 'place_name',
                                               'firstImageUrl': 'first_image'})
