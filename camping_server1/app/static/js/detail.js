@@ -5,6 +5,7 @@ var param = {
     status: 0
 }
 var like_list = [];
+// header logo img 경로
 $('.header-logo-img').attr('src', '/static/imgs/algo_logo2.png');
 
 $('#empty-like').click(function(){
@@ -41,6 +42,12 @@ $('#nonempty-like').click(function(){
 })
 
 var DetailInfo = {
+    IsSignin: function(){
+        if (DetailInfo.getCookie('access_token') === undefined){
+            $('#empty-like').css({'display': 'none'});
+            $('#nonempty-like').css({'display': 'none'});
+        }
+    },
     getPlaceInfo: function(){
         var p_content_id = document.location.href.split("/")[4].toString();
         var p_id = document.location.href.split("/")[5].toString();
@@ -123,16 +130,19 @@ var DetailInfo = {
         if (res.like === 'None'){
             $('#nonempty-like').css({'display': 'none'});
         }else{
-            var like = res.like.split(',');
-            for (var i=0; i<like.length; i++){
-                like_list.push(like[i]);
-            }
+            try{
+                var like = res.like.split(',');
+                for (var i=0; i<like.length; i++){
+                    like_list.push(like[i]);
+                }
+                // content_id가 포함되어 있는지 확인
+                if (like_list.includes(param.content_id.toString())){
+                    $('#empty-like').css({'display': 'none'});
+                }else{
+                    $('#nonempty-like').css({'display': 'none'});
+                }
+            }catch (e) {
 
-            // content_id가 포함되어 있는지 확인
-            if (like_list.includes(param.content_id.toString())){
-                $('#empty-like').css({'display': 'none'});
-            }else{
-                $('#nonempty-like').css({'display': 'none'});
             }
         }
     },
@@ -514,3 +524,4 @@ var DetailInfo = {
 }
 DetailInfo.getPlaceInfo();
 DetailInfo.redrawLineCharts();
+DetailInfo.IsSignin();

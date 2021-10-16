@@ -95,4 +95,5 @@ class SearchTags(Resource):
     def get(self):
         """content_id 리스트에 대한 장소 리스트"""
         params = request.args.to_dict()
+
         return search_service.get_placelist(params)

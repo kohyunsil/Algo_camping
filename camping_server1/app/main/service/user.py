@@ -295,21 +295,24 @@ def get_likelist():
     Session = sessionmaker(bind=client)
     session_ = Session()
 
-    if session['access_token']:
-        try:
-            param = dict()
-            '''
-            # SELECT like FROM user WHERE access_token = 'access token';
-            '''
-            like = session_.query(model_user.like).filter(model_user.access_token == session['access_token']).all()
-            param['like'] = str(like[0][0])
-            param['code'] = 200
-        except:
-            param['code'] = 500
-        finally:
-            session_.close()
-
+    try:
+        param = dict()
+        if session['access_token']:
+            try:
+                '''
+                # SELECT like FROM user WHERE access_token = 'access token';
+                '''
+                like = session_.query(model_user.like).filter(model_user.access_token == session['access_token']).all()
+                param['like'] = str(like[0][0])
+                param['code'] = 200
+            except:
+                param['code'] = 500
+            finally:
+                session_.close()
+    except:
+        param['code'] = 403
     return param
+
 
 # 좋아요 업데이트
 def update_like(param):
@@ -347,16 +350,16 @@ def update_like(param):
         return param
 
 # 토큰 삭제
-def delete_token(name):
+def delete_token(token):
     param = dict()
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
     try:
         '''
-        # update user set access_token = null where name = 'name';
+        # update user set access_token = null where access_token = token;
         '''
-        user = session_.query(model_user).filter(model_user.name == name)[0]
+        user = session_.query(model_user).filter(model_user.access_token == token)[0]
         user.access_token = ''
 
         session_.add(user)

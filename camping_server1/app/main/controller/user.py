@@ -53,7 +53,7 @@ class UserValidation(Resource):
             try:
                 # getter
                 param = user_dto.user
-                user_service.delete_token(param['name'])
+                user_service.delete_token(session['access_token'])
             except:
                 pass
             finally:
@@ -194,9 +194,6 @@ class UserSNSSignin(Resource):
 @auth.route('/signout')
 def signout():
     """사용자 로그아웃"""
-    # getter
-    user_param = user_dto.user
-
     headers = str(request.headers)
     base_url = request.base_url
     screen = request.path
@@ -206,7 +203,7 @@ def signout():
     keyword = []
 
     main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword)
-    user_service.delete_token(user_param['name'])
+    user_service.delete_token(session['access_token'])
 
     return redirect(request.host_url, code=302)
 
@@ -216,5 +213,5 @@ def sns_signout():
     """플랫폼 로그아웃"""
     # getter
     param = user_dto.user
-    user_service.delete_token(param['name'])
+    user_service.delete_token(session['access_token'])
     return redirect(request.host_url, code=302)

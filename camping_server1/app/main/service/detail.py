@@ -63,8 +63,14 @@ def get_detail(param):
 
             logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
             params['code'] = 200
-            params['like'] = get_likelist()['like']
 
+            # 비로그인 시 like x
+            try:
+                if session['access_token']:
+                    params['like'] = get_likelist()['like']
+            except:
+                pass
+            
         except:
             logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500

@@ -333,30 +333,39 @@ def get_placelist(param):
     Session = sessionmaker(bind=client)
     session_ = Session()
 
+    print(f"session : {session['access_token']}")
+    print(f"param : {param['access_token']}")
+
     # access token , content_id 리스트
     if session['access_token'] == param['access_token']:
         try:
             like = param['like']
         except:
             like = param['like[]']
+
+        print(like)
         '''
         # SELECT first_image, place_name FROM place WHERE content_id = param.like[0];
         '''
         res_param = dict()
-        try:
-            for content_id in like.split(','):
-                obj = dict()
+        # try:
+        for content_id in like.split(','):
+            obj = dict()
 
-                query = session_.query(model_place.first_image, model_place.place_name).filter(model_place.content_id == content_id).all()
-                obj['first_image'] = str(query[0][0])
-                obj['place_name'] = str(query[0][1])
-                obj['star'], _ = get_score(int(content_id))
-                res_param[content_id] = obj
+            if content_id == 'None' or content_id == '':
+                continue
 
-            res_param['code'] = 200
-        except:
-            res_param['code'] = 500
-        finally:
-            session_.close()
+            query = session_.query(model_place.first_image, model_place.place_name).filter(model_place.content_id == content_id).all()
+            obj['first_image'] = str(query[0][0])
+            obj['place_name'] = str(query[0][1])
+            obj['star'], _ = get_score(int(content_id))
+            res_param[content_id] = obj
 
+        res_param['code'] = 200
+        # except:
+        #     res_param['code'] = 500
+        # finally:
+        #     session_.close()
+
+        print(res_param)
         return res_param
