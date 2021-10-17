@@ -22,6 +22,7 @@ $('#empty-like').click(function(){
     })
 })
 
+
 $('#nonempty-like').click(function(){
     param.status = 0 // dislike
 

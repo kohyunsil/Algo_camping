@@ -96,6 +96,7 @@ def signup(param):
     birth_date = param['birthDate']
     access_token = ''
     _ = ''
+    member = 1
 
     param, flag = {}, True
     '''
@@ -104,13 +105,11 @@ def signup(param):
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
-    # created_date = datetime.datetime.today().strftime('%Y-%m-%d')
     created_date = datetime.today().strftime('%Y-%m-%d')
     modified_date = created_date
 
     query = model_user(email, name, password, nickname, birth_date, access_token, created_date, modified_date, _,
-                       _, _, _, _, _, _, _, _, _, _, _, _, _)
-
+                       _, _, _, _, _, _, _, _, _, _, _, _, _, member)
     try:
         session_.add(query)
         session_.commit()
@@ -185,6 +184,7 @@ def signup_survey(param):
 def signin(param):
     email = param['email']
     password = param['password']
+    member = ''
     code, access_token, name, error_msg, param = 0, '', '', '', {}
     '''
     # SELECT * FROM user WHERE email = '이메일';
@@ -200,6 +200,7 @@ def signin(param):
             if bcrypt.checkpw(password.encode('UTF-8'), query[0].password.encode('UTF-8')):
                 email = query[0].email
                 name = query[0].name
+                member = query[0].member
 
                 client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
                 # 토큰 발급 & 저장
@@ -240,6 +241,7 @@ def signin(param):
         param['name'] = name
         param['error_msg'] = error_msg
         param['access_token'] = access_token
+        param['member'] = member
 
         session['access_token'] = access_token
 
@@ -357,7 +359,7 @@ def delete_token(token):
     session_ = Session()
     try:
         '''
-        # update user set access_token = null where access_token = token;
+        # UPDATE user SET access_token = null WHERE access_token = token;
         '''
         user = session_.query(model_user).filter(model_user.access_token == token)[0]
         user.access_token = ''
@@ -373,4 +375,33 @@ def delete_token(token):
         param['code'] = 500
     finally:
         session_.close()
+        return param
+
+# 회원 탈퇴
+def withdraw(token):
+    if token == session['access_token']:
+        param = dict()
+        client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+        Session = sessionmaker(bind=client)
+        session_ = Session()
+
+        try:
+            status = 0
+            '''
+            # UPDATE user SET member = 0 WHERE access_token = token;
+            '''
+            user = session_.query(model_user).filter(model_user.access_token == token)[0]
+            user.member = status
+
+            session_.add(user)
+            session_.commit()
+
+            delete_token(token)
+            user_dto.user = None
+            param['code'] = 200
+        except:
+            session_.rollback()
+            param['code'] = 500
+        finally:
+            session_.close()
         return param

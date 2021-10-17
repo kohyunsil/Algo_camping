@@ -21,6 +21,10 @@ var SigninEvent = {
             if (param.email !== '' && param.password !== ''){
                 $.post('/user/signin', param).done(function(response){
                     if (response.code === 200){
+                        if (response.member === 0){
+                            alert('탈퇴한 회원입니다.');
+                            return;
+                        }
                         if (response.error_msg !== ''){
                             alert(response.error_msg);
                         }else{

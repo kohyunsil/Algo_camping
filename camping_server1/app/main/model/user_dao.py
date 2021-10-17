@@ -38,7 +38,7 @@ class UserDAO(db.Model):
 
     def __init__(self, email, name, password, nickname, birth_date, access_token, created_date, modified_date,
                  A100, A200, A210, A300, A410, A420, A500, A600,
-                 comfort, together, fun, healing, clean, like, memeber):
+                 comfort, together, fun, healing, clean, like, member):
         self.email = email
         self.name = name
         self.password = password
