@@ -6,7 +6,9 @@ from ..service.search import get_score, get_top_tag
 from ..service.user import get_likelist
 from sqlalchemy.orm import sessionmaker
 from flask import *
+import pandas as pd
 from app.config import Config
+from .congestion import Visitor
 import datetime
 import logging
 
@@ -39,19 +41,14 @@ def get_detail(param):
 
                 local_obj = get_local(place_info[0].sigungu_code)
 
-                past_congestion_obj = get_past_congestion(place_info[0].content_id)
-                # future_congestion_obj = get_future_congestion(place_info[0].sigungu_code)
-                # future_date, future_congestion = json_default(future_congestion_obj)
+                congestion_obj = get_congestion(place_info[0].sigungu_code)
+                params['congestion_obj'] = congestion_obj
 
                 params['place_info'] = place_info[0]
                 params['place_info'].detail_image = str(place_info[0].detail_image).split(',')[:5]
 
                 params['avg_star'] = avg_star
                 params['local_info'] = local_obj if local_obj is not None else None
-
-                params['past_congestion'] = past_congestion_obj if past_congestion_obj is not None else None
-                # params['future_date'] = future_date
-                # params['future_congestion'] = future_congestion
 
                 params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
                 params['tag'] = get_top_tag(int(req_contentid), 5)
@@ -70,7 +67,7 @@ def get_detail(param):
                     params['like'] = get_likelist()['like']
             except:
                 pass
-            
+
         except:
             logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500
@@ -125,31 +122,24 @@ def get_past_congestion(content_id):
     finally:
         session_.close()
 
-# 미래 혼잡도
-def get_future_congestion(sigungu_code):
-    Session = sessionmaker(bind=client)
-    session_ = Session()
-    try:
-        if sigungu_code is not None:
-            base = datetime.datetime.today().strftime('%Y-%m-%d 00:00:00')
-            future = (datetime.datetime.now() + datetime.timedelta(days=Config.DATE_RANGE)).strftime('%Y-%m-%d 00:00:00')
+# 혼잡도 (시군구, 전체 지역 평균)
+def get_congestion(sigungu_code):
+    param = dict()
+    vs = Visitor()
 
-            '''
-            # SELECT base_ymd, AVG(congestion) AS congestion FROM congestion WHERE base_ymd 
-            BETWEEN date('현재일') AND date('미래일') AND sigungu_code = 시군구코드 GROUP BY base_ymd;
-            '''
-            query = session_.query(model_congestion.base_ymd,
-                                   func.avg(model_congestion.congestion).label('congestion')).filter(
-                model_congestion.base_ymd.between(base, future), model_congestion.sigungu_code == int(sigungu_code)
-            ).group_by(model_congestion.base_ymd).all()
+    final_df = vs.visitor_final(int(sigungu_code))
+    final_df.index = final_df.index.map(str)
 
-            return query
-        else:
-            return None
-    except:
-        pass
-    finally:
-        session_.close()
+    base_ymd = final_df.index.tolist()
+    avg_visitor = pd.to_numeric(final_df['avg_visitor']).values.tolist()
+    avg_visitor = [val * 10 for val in avg_visitor]
+    sgg_visitor = pd.to_numeric(final_df['sgg_visitor']).values.tolist()
+
+    param['base_ymd'] = base_ymd
+    param['avg_visitor'] = avg_visitor
+    param['sgg_visitor'] = sgg_visitor
+
+    return param
 
 # json serialize date to str
 def json_default(query_obj):

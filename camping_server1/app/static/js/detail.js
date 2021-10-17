@@ -177,18 +177,16 @@ var DetailInfo = {
     },
     showHighCharts: function(res){
         var base = new Date();
-        var past = new Date(res.past_congestion[0].base_ymd);
 
         var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
-        var pastdate = past.getFullYear() + '-' + ('0'+(past.getMonth()+1)).slice(-2) + '-' + ('0' + past.getDate()).slice(-2);
-        var congestion = [];
+        var avg_congestion = [];
+        var sgg_congestion = [];
         var daterange = [];
 
-        for (var i=0; i<res.past_congestion.length; i++){
-            congestion.push(res.past_congestion[i].congestion);
-            var date = new Date(res.past_congestion[i].base_ymd);
-            var ymd_date = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-            daterange.push(ymd_date);
+        for (var i=0; i<res.congestion_obj.base_ymd.length; i++){
+            sgg_congestion.push(res.congestion_obj.sgg_visitor[i]);
+            avg_congestion.push(res.congestion_obj.avg_visitor[i]);
+            daterange.push(res.congestion_obj.base_ymd[i].split(' ')[0]);
         }
 
         var tag = [];
@@ -315,7 +313,7 @@ var DetailInfo = {
           },
 
           subtitle: {
-            text: pastdate + ' ~ '+ basedate + '기준'
+            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준'
           },
           plotOptions: {
             series: {
@@ -356,15 +354,15 @@ var DetailInfo = {
             }]
           },
           series: [{
-            name: '지난' + res.past_congestion.length + '일 간 방문객 수',
-            data: congestion,
+            name: '지난' + daterange.length + '일 간 방문객 수',
+            data: sgg_congestion,
             color: '#4f9f88'
           }
-          // , {
-          //   name: '지난 1주일 간 방문율',
-          //   data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-          // }
-          ],
+          , {
+            name: '지난' + daterange.length + '일 간 지역 전체 평균 방문객 수',
+            data: avg_congestion,
+            color: '#1b4785'
+          }],
 
           responsive: {
             rules: [{

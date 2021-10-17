@@ -16,6 +16,11 @@ class DBConfig(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'super secret key'
+
+    DB = keys['DB']
+    HOST = keys['HOST']
+    PASSWORD = keys['PASSWORD']
+    
     SQLALCHEMY_DATABASE_URI = (
             'mysql://root:' + keys['PASSWORD'] + '@' + keys['HOST'] + ':3306/' + keys['DB'] + '?charset=utf8'
         # 'mysql://root:root@localhost:3306/camping?charset=utf8'
