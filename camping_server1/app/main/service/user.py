@@ -9,7 +9,8 @@ from flask import *
 from app.config import Config
 import logging
 from datetime import datetime
-
+import re
+from app.main.service.user_points import UserPoints
 
 # 로그인 여부 확인
 def is_signin():
@@ -137,6 +138,7 @@ def signup(param):
 
 # 회원가입 설문 추가
 def signup_survey(param):
+    survey_result = list()
     id = param['userId']
     answer1 = param['firstAnswer']
     answer2 = param['secondAnswer']
@@ -146,6 +148,13 @@ def signup_survey(param):
     answer4_sub = param['fourthSubAnswer']
     answer5 = param['fifthAnswer']
     answer6 = param['sixthAnswer']
+
+    answer_keys = list(param.keys())
+    regex = re.compile(r'Answer')
+
+    for key in answer_keys:
+        if regex.search(key):
+           survey_result.append(int(param[key]))
 
     try:
         client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
@@ -169,14 +178,52 @@ def signup_survey(param):
 
         session_.add(user)
         session_.commit()
-        param['code'] = 200
+        logging.info('----[' + str(datetime.now()) + ' signup_survey() : 200]----')
+
+        code = save_user_points(survey_result, id)['code']
+        if code == 200:
+            param['code'] = 200
     except:
         logging.error('----[' + str(datetime.now()) + ' signup_survey() : 500]----')
         session_.rollback()
         param['code'] = 500
     finally:
-        logging.info('----[' + str(datetime.now()) + ' signup_survey() : 200]----')
         session_.close()
+    return param
+
+# user points 저장
+def save_user_points(survey_result, id):
+    up = UserPoints()
+
+    user_points = up.calc_final_point(survey_result)
+    points_col = ['comfort', 'together', 'fun', 'healing', 'clean']
+    user_points = {points_col[i]: point for i, point in enumerate(user_points)}
+
+    if len(user_points) > 0:
+        try:
+            client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+            Session = sessionmaker(bind=client)
+            session_ = Session()
+            param = {}
+            '''
+            # UPDATE user SET comfort=유저 점수1, together=유저 점수2, fun=유저 점수3, healing=유저 점수4, clean=유저 점수5 WHERE id=유저 id;
+            '''
+            points_query = session_.query(model_user).filter(model_user.id == id)[0]
+            points_query.comfort = user_points['comfort']
+            points_query.together = user_points['together']
+            points_query.fun = user_points['fun']
+            points_query.healing = user_points['healing']
+            points_query.clean = user_points['clean']
+
+            session_.add(points_query)
+            session_.commit()
+            param['code'] = 200
+            logging.info('----[' + str(datetime.now()) + ' save_user_points() : 200]----')
+        except:
+            logging.error('----[' + str(datetime.now()) + ' save_user_points() : 500]----')
+            param['code'] = 500
+        finally:
+            session_.close()
 
         return param
 
@@ -280,10 +327,11 @@ def update_userinfo(param):
         # SELECT id FROM user WHERE email = 유저의 이메일;
         '''
         id = session_.query(model_user.id).filter(model_user.email == email).all()
-
         session_.commit()
         param['code'] = 200
+        logging.info('----[' + str(datetime.now()) + ' update_userinfo() : 200]----')
     except:
+        logging.error('----[' + str(datetime.now()) + ' update_userinfo() : 500]----')
         session_.rollback()
         param['code'] = 500
     finally:
@@ -307,11 +355,14 @@ def get_likelist():
                 like = session_.query(model_user.like).filter(model_user.access_token == session['access_token']).all()
                 param['like'] = str(like[0][0])
                 param['code'] = 200
+                logging.info('----[' + str(datetime.now()) + ' get_likelist() : 200]----')
             except:
+                logging.error('----[' + str(datetime.now()) + ' get_likelist() : 500]----')
                 param['code'] = 500
             finally:
                 session_.close()
     except:
+        logging.error('----[' + str(datetime.now()) + ' get_likelist() : 500]----')
         param['code'] = 403
     return param
 
@@ -343,8 +394,9 @@ def update_like(param):
             session_.add(update_like_query)
             session_.commit()
             param['code'] = 200
-
+            logging.info('----[' + str(datetime.now()) + ' update_like() : 200]----')
         except:
+            logging.error('----[' + str(datetime.now()) + ' update_like() : 500]----')
             session_.rollback()
             param['code'] = 500
         finally:
@@ -370,9 +422,11 @@ def delete_token(token):
         session.pop('access_token')
         user_dto.user = None
         param['code'] = 200
+        logging.info('----[' + str(datetime.now()) + ' delete_token() : 200]----')
     except:
         session_.rollback()
         param['code'] = 500
+        logging.error('----[' + str(datetime.now()) + ' delete_token() : 500]----')
     finally:
         session_.close()
         return param
@@ -399,9 +453,11 @@ def withdraw(token):
             delete_token(token)
             user_dto.user = None
             param['code'] = 200
+            logging.info('----[' + str(datetime.now()) + ' withdraw() : 200]----')
         except:
             session_.rollback()
             param['code'] = 500
+            logging.error('----[' + str(datetime.now()) + ' withdraw() : 500]----')
         finally:
             session_.close()
         return param

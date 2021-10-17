@@ -104,6 +104,14 @@ var SearchList = {
                     var keyword_str = '';
                     $('.bootstrap-tagsinput').empty();
 
+                    // 로그인 o인 경우 매칭도 노출
+                    if (SearchList.getCookie('access_token') !== undefined){
+                        for (var i=0; i<response.place_info.length; i++){
+                            $('#item-title'+ (i+1)).append(
+                                '<p class="card-text">' + response.match_pct[i] + "\% 일치" + '</p>'
+                            )
+                        }
+                    }
                     for (var i=2; i<keyword_arrs.length; i++){
                         var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                         $('.bootstrap-tagsinput').append(span_tag);
@@ -115,13 +123,20 @@ var SearchList = {
         });
         // 등록순
         $('#btnradio-update').click(function() {
-                // $('.input-keyword').text(params.keywords + '에 대한');
                 $.getJSON('/search/pagination/recent/' + total_row + '/' + 1, params).done(function (response) {
                     if(response.code === 200){
                         var regex = / /gi;
                         var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                         $('.bootstrap-tagsinput').empty();
 
+                        // 로그인 o인 경우 매칭도 노출
+                        if (SearchList.getCookie('access_token') !== undefined){
+                            for (var i=0; i<response.place_info.length; i++){
+                                $('#item-title'+ (i+1)).append(
+                                    '<p class="card-text">' + response.match_pct[i] + "\% 일치" + '</p>'
+                                )
+                            }
+                        }
                         for (var i=2; i<keyword_arrs.length; i++){
                             var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                             $('.bootstrap-tagsinput').append(span_tag);
@@ -135,13 +150,20 @@ var SearchList = {
         });
         // 조회순
         $('#btnradio-readcount').click(function() {
-            // $('.input-keyword').text(params.keywords + '에 대한');
             $.getJSON('/search/pagination/readcount/' + total_row + '/' + 1, params).done(function(response){
                 if(response.code === 200){
                     var regex = / /gi;
                     var keyword_arrs = params.keywords.replace(regex, '').trim().split(';');
                     $('.bootstrap-tagsinput').empty();
 
+                    // 로그인 o인 경우 매칭도 노출
+                    if (SearchList.getCookie('access_token') !== undefined) {
+                        for (var i = 0; i < response.place_info.length; i++) {
+                            $('#item-title' + (i + 1)).append(
+                                '<p class="card-text">' + response.match_pct[i] + "\% 일치" + '</p>'
+                            )
+                        }
+                    }
                     for (var i=2; i<keyword_arrs.length; i++){
                         var span_tag = '<span class="badge badge-info">' + keyword_arrs[i] + '</span>'
                         $('.bootstrap-tagsinput').append(span_tag);
@@ -279,7 +301,7 @@ var SearchList = {
         if (SearchList.getCookie('access_token') !== undefined){
             for (var i=0; i<res.place_info.length; i++){
                 $('#item-title'+ (i+1)).append(
-                    '<p class="card-text">95% 일치</p>'
+                    '<p class="card-text">' + res.match_pct[i] + "\% 일치" + '</p>'
                 )
             }
         }

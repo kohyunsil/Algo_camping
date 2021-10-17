@@ -119,7 +119,7 @@ var MoveTabs = {
                             $.getJSON('/search/likelist', like_param).done(function(response){
                                 if (response.code === 200){
                                     for (var i=0; i<like_param.like.split(',').length; i++){
-                                        if (like_param.like.split(',')[i] === 'None' || like_param.like.split(',')[i] === undefined){
+                                        if (like_param.like.split(',')[i] === 'None' || like_param.like.split(',')[i] === undefined || like_param.like.split(',')[i] === '' || like_param.like.split(',')[i] === ' '){
                                             continue
                                         }
                                         $('.like-content').append(
