@@ -2,7 +2,7 @@ from app.main.model.review_dao import ReviewDAO as model_review
 from app.main.model.congestion_dao import CongestionDAO as model_congestion
 from app.main.model.place_dao import PlaceDAO as model_place
 from app.main.model import *
-from ..service.search import get_score, get_top_tag
+from ..service.search import get_score, get_top_tag, get_matching_rate
 from ..service.user import get_likelist
 from sqlalchemy.orm import sessionmaker
 from flask import *
@@ -61,10 +61,11 @@ def get_detail(param):
             logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
             params['code'] = 200
 
-            # 비로그인 시 like x
+            # 비로그인 시 x
             try:
                 if session['access_token']:
                     params['like'] = get_likelist()['like']
+                    params['match_pct'], params['user_point'] = get_matching_rate(int(req_contentid))
             except:
                 pass
 

@@ -215,9 +215,11 @@ var DetailInfo = {
 
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
+            var legend_name = '사용자';
         }else{
-            var title = res.user_name + '님과 95% 일치합니다.';
+            var title = res.user_name + '님과 ' + res.match_pct + '\% 일치합니다.';
             var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
+            var legend_name = res.user_name + '님';
         }
 
         // spider web (polar) chart
@@ -275,9 +277,10 @@ var DetailInfo = {
                 color: '#4f9f88'
             },
             {
-              name: '사용자',
-              data: [80, 90, 100, 100, 90],
-              pointPlacement: 'on'
+                name: legend_name,
+                data: res.user_point,
+                pointPlacement: 'on',
+                color: '#1b4785'
             }],
 
             responsive: {

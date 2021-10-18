@@ -204,40 +204,75 @@ def get_matching_rate(content_id):
     try:
         if session['access_token']:
             match_result = []
-            for id in content_id:
+            param = dict()
+            client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+            Session = sessionmaker(bind=client)
+            session_ = Session()
+            if type(content_id) == list:
+                for id in content_id:
+                    try:
+                        '''
+                        # SELECT * FROM algopoint WHERE content_id = id;
+                        '''
+                        algopoint_query = session_.query(model_algopoint.comfort, model_algopoint.together,
+                                                         model_algopoint.fun, model_algopoint.healing, model_algopoint.clean).filter(model_algopoint.content_id == int(id)).all()
+                        '''
+                        # SELECT comfort, together, fun, healing, clean FROM user WHERE access_token = session['access_token'] 
+                        '''
+                        userpoint_query = session_.query(model_user.comfort, model_user.together,
+                                                         model_user.fun, model_user.healing, model_user.clean).filter(model_user.access_token == session['access_token']).all()
+
+                        if len(algopoint_query) == 0 or len(userpoint_query) == 0:
+                            param['code'] = 500
+                            return param
+                        else:
+                            userpoint_list = [userpoint_query[0].comfort, userpoint_query[0].together, userpoint_query[0].fun,
+                                              userpoint_query[0].healing, userpoint_query[0].clean]
+                            algopoint_list = [algopoint_query[0].comfort, algopoint_query[0].together, algopoint_query[0].fun,
+                                              algopoint_query[0].healing, algopoint_query[0].clean]
+
+                            pa = PolarArea()
+                            match_pct = pa.matching_pct(algopoint_list, userpoint_list)
+                            match_result.append(match_pct)
+                    except:
+                        match_result.append('')
+                    finally:
+                        session_.close()
+                return match_result
+            else:
                 try:
-                    param = dict()
-                    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
-                    Session = sessionmaker(bind=client)
-                    session_ = Session()
                     '''
                     # SELECT * FROM algopoint WHERE content_id = id;
                     '''
                     algopoint_query = session_.query(model_algopoint.comfort, model_algopoint.together,
-                                                     model_algopoint.fun, model_algopoint.healing, model_algopoint.clean).filter(model_algopoint.content_id == int(id)).all()
+                                                     model_algopoint.fun, model_algopoint.healing,
+                                                     model_algopoint.clean).filter(
+                        model_algopoint.content_id == int(content_id)).all()
                     '''
                     # SELECT comfort, together, fun, healing, clean FROM user WHERE access_token = session['access_token'] 
                     '''
                     userpoint_query = session_.query(model_user.comfort, model_user.together,
-                                                     model_user.fun, model_user.healing, model_user.clean).filter(model_user.access_token == session['access_token']).all()
+                                                     model_user.fun, model_user.healing, model_user.clean).filter(
+                        model_user.access_token == session['access_token']).all()
 
                     if len(algopoint_query) == 0 or len(userpoint_query) == 0:
                         param['code'] = 500
                         return param
                     else:
-                        userpoint_list = [userpoint_query[0].comfort, userpoint_query[0].together, userpoint_query[0].fun,
+                        userpoint_list = [userpoint_query[0].comfort, userpoint_query[0].together,
+                                          userpoint_query[0].fun,
                                           userpoint_query[0].healing, userpoint_query[0].clean]
-                        algopoint_list = [algopoint_query[0].comfort, algopoint_query[0].together, algopoint_query[0].fun,
+                        algopoint_list = [algopoint_query[0].comfort, algopoint_query[0].together,
+                                          algopoint_query[0].fun,
                                           algopoint_query[0].healing, algopoint_query[0].clean]
 
                         pa = PolarArea()
                         match_pct = pa.matching_pct(algopoint_list, userpoint_list)
-                        match_result.append(match_pct)
                 except:
-                    match_result.append('')
+                    match_pct = 0
                 finally:
                     session_.close()
-            return match_result
+            return match_pct, userpoint_list
     except:
         return False
 
@@ -262,7 +297,7 @@ def get_popular_list(place_obj, algo_obj, page):
     for info in place_info:
         content_id_list.append(info[1]) # 인기순 정렬된 content_id 리스트
 
-    match_pct = get_matching_rate(content_id) if get_matching_rate(content_id) else False
+    match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
 
     if match_pct is not False:
         match_status = True # ok
@@ -291,7 +326,7 @@ def get_readcount_list(place_obj, algo_obj, page):
     for info in place_info:
         content_id_list.append(info[1]) # 조회순 정렬된 content_id 리스트
 
-    match_pct = get_matching_rate(content_id) if get_matching_rate(content_id) else False
+    match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
 
     if match_pct is not False:
         match_status = True  # ok
@@ -325,7 +360,7 @@ def get_modified_list(place_obj, algo_obj, page):
     for info in place_info:
         content_id_list.append(info[1]) # 조회순 정렬된 content_id 리스트
 
-    match_pct = get_matching_rate(content_id) if get_matching_rate(content_id) else False
+    match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
 
     if match_pct is not False:
         match_status = True  # ok

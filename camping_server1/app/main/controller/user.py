@@ -55,7 +55,7 @@ class UserValidation(Resource):
                 param = user_dto.user
                 user_service.delete_token(session['access_token'])
             except:
-                param['code'] = 403
+                user_service.delete_token(session['access_token'])
 
         return param
 
