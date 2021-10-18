@@ -181,6 +181,7 @@ class CreateDb:
                 fun         FLOAT    NULL        COMMENT '즐길거리', 
                 healing     FLOAT    NULL        COMMENT '자연/힐링', 
                 clean       FLOAT    NULL        COMMENT '깨끗한', 
+                algostar    FLOAT    NULL        COMMENT '알고별점', 
                 CONSTRAINT PK_main_cat PRIMARY KEY (content_id)
             );
                 ''')
@@ -283,7 +284,9 @@ class CreateDb:
                 together       FLOAT          NULL                       COMMENT '함께', 
                 fun            FLOAT          NULL                       COMMENT '즐길거리', 
                 healing        FLOAT          NULL                       COMMENT '자연/힐링', 
-                clean          FLOAT          NULL                       COMMENT '깨끗한', 
+                clean          FLOAT          NULL                       COMMENT '깨끗한',
+                like           TEXT           NULL                       COMMENT '좋아요 리스트',
+                member         SMALLINT       NOT NULL  DEFAULT 1        COMMENT '회원 1, 탈퇴 0',
                 CONSTRAINT PK_user PRIMARY KEY (id)
             );
                 ''')

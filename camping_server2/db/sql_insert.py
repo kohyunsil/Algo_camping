@@ -8,7 +8,10 @@ from tqdm import tqdm
 # from fbprophet import Prophet
 import sys
 import os
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))))
 import camping_server2.config as config
 import camping_server2.apis.gocamping_api as ga
 import camping_server2.apis.koreatour_api as ka
@@ -129,6 +132,7 @@ class MakeDataframe:
 
     def make_algopoint_df(self):
         point_df = algo.make_algo_df()
+        point_df['algostar'] = np.round(point_df.sum(axis=0)/100, 1)
         point_df.rename(columns={
             'contentId': 'content_id'
         }, inplace=True)
