@@ -24,13 +24,13 @@ class MainResource(Resource):
         return redirect(url)
 
 
-@main.route('/swiper', methods=['GET'])
+@main.route('/swiper/list', methods=['GET'])
 @main.doc(params={'click_id': '클릭한 배너 id'})
 @main.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
 @main.response(200, 'Success')
-class MainSwiper(Resource):
+class MainSwiperList(Resource):
     def get(self):
-        """메인 페이지 배너 클릭 이벤트"""
+        """메인 페이지 배너 클릭에 대한 리스트"""
         param = request.args.to_dict()
 
         headers = str(request.headers)
@@ -42,3 +42,26 @@ class MainSwiper(Resource):
         keyword = []
 
         return main_service.user_event_logging(headers, base_url, screen, method, action, type, keyword, param)
+
+
+@main.route('/swiper/recommend/<int:refresh>', methods=['GET'])
+@main.doc(response={400: 'Validation Error', 500: 'Database Server Error'})
+@main.response(200, 'Success')
+class MainSwiperRecommend(Resource):
+    def get(self, refresh):
+        """추천 배너"""
+        param = request.args.to_dict()
+
+        # 로그인 ㅇ
+        try:
+            if session['access_token'] == param['access_token']:
+                param = main_service.get_user_recommend_swiper(param)
+                if refresh == 0:
+                    # 로그인 ㅇ + 새로고침 x
+                    init_copy = '어..?' + session['name'] + '님 이런 캠핑장 좋아하실거 같아요..!'
+                    param['copy'] = init_copy
+                param['name'] = session['name']
+                return param
+        # 로그인 x
+        except:
+            return main_service.get_recommend_swiper()

@@ -55,9 +55,8 @@ class UserValidation(Resource):
                 param = user_dto.user
                 user_service.delete_token(session['access_token'])
             except:
-                pass
-            finally:
-                param['code'] = 403
+                user_service.delete_token(session['access_token'])
+
         return param
 
 
@@ -215,3 +214,17 @@ def sns_signout():
     param = user_dto.user
     user_service.delete_token(session['access_token'])
     return redirect(request.host_url, code=302)
+
+
+@user.route('/withdraw', methods=['POST'])
+class UserWithdraw(Resource):
+    # -- 추후 수정 --
+    @user.doc(responses={200: 'Success'}, body='')
+    @user.expect('')
+    # -- 추후 수정 --
+    def post(self):
+        """회원 탈퇴"""
+        values = dict(request.values)
+        access_token = values['access_token']
+
+        return user_service.withdraw(access_token)

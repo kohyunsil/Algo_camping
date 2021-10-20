@@ -34,6 +34,18 @@ $('.resurvey-btn').click(function(){
     $(location).attr('href', '/signup/survey/first?id=' + param.id);
 });
 
+// 탈퇴하기
+$('.withdraw').click(function(){
+    $.post('/user/withdraw', param).done(function(response){
+        if (response.code === 200){
+            MoveTabs.delCookie('access_token');
+            alert('탈퇴가 완료되었습니다.');
+            location.href = '/main';
+        }else{
+            alert('다시 시도해주세요');
+        }
+    })
+})
 
 var GetToken = {
     getAccessToken: function () {
@@ -51,7 +63,7 @@ var MoveTabs = {
         GetToken.getAccessToken();
         if (param.access_token !== '') {
             // 토큰 유효성 확인
-            $.post('user/validation', param).done(function(response){
+            $.post('/user/validation', param).done(function(response){
                 if (response.code === 200){
                     $.post('/user/profile').done(function(response){
                         if (response.code === 200){
@@ -95,7 +107,7 @@ var MoveTabs = {
         GetToken.getAccessToken();
         if (param.access_token !== '') {
             // 토큰 유효성 확인
-            $.post('user/validation', param).done(function(response){
+            $.post('/user/validation', param).done(function(response){
                 if (response.code === 200){
                     $.post('/user/like').done(function(response){
                         if (response.code === 200){
@@ -107,7 +119,7 @@ var MoveTabs = {
                             $.getJSON('/search/likelist', like_param).done(function(response){
                                 if (response.code === 200){
                                     for (var i=0; i<like_param.like.split(',').length; i++){
-                                        if (like_param.like.split(',')[i] === 'None' || like_param.like.split(',')[i] === undefined){
+                                        if (like_param.like.split(',')[i] === 'None' || like_param.like.split(',')[i] === undefined || like_param.like.split(',')[i] === '' || like_param.like.split(',')[i] === ' '){
                                             continue
                                         }
                                         $('.like-content').append(
@@ -153,6 +165,10 @@ var MoveTabs = {
               return unescape(y); // unescape로 디코딩 후 값 리턴
             }
         }
+    },
+    delCookie: function(name){
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        console.log('delCookie is called!');
     }
 }
 
@@ -181,7 +197,7 @@ var SaveUserInfo = {
                     return
                 }
             }
-            $.post('user/profile/update', param).done(function(response){
+            $.post('/user/profile/update', param).done(function(response){
                 if (response.code === 200){
                     alert('수정이 완료되었습니다.');
                 }else{

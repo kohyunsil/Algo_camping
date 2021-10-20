@@ -397,6 +397,7 @@ var SignupEvent = {
         //     window.location.href = '/signup';
         //     continue
         // }
+
         $('.user-nickname').text(getCookie(id));
         delCookie(id);
         $('.btn-main-router').on('click', function(){

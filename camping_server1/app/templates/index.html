@@ -18,69 +18,57 @@
         {% include "./layout/header.html" %}
     </div>
 
-    {% if param %}
-    <h4 class="text-white fw-bolder signin-hello-user">{{ param.name }}님, 별 보기 좋은 캠핑장으로 떠나보세요</h4>
-    {% else %}
-    <h4 class="text-white fw-bolder align-items-center justify-content-center signin-hello-notuser">별 보기 좋은 캠핑장으로 떠나보세요</h4>
-    {% endif %}
+<!--    <h4 class="text-white fw-bolder signin-hello-user">어..?{{ param.name }}님 이런 캠핑장 좋아하실거 같아요..!</h4>-->
+    <h4 class="text-white fw-bolder align-items-center justify-content-center signin-hello-user"></h4>
 
     <!-- Swiper -->
     <div class="swiper mySwiper2">
         <div class="swiper-wrapper swiper-wrapper2">
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/448/thumb/thumb_720_5313TXG1EiO7SHG2oTtj21WJ.jpg">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>글램핑스토리</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>글램핑스토리</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-02">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/1337/thumb/thumb_720_5074hPiSfGlAKOR28q2hjf6V.jpg">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>별빛마루 글램핑 캠핑장</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>별빛마루 글램핑 캠핑장</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-03">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/2249/thumb/thumb_720_5391fw96QSB6ETy9pjHlr7MS.jpg">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>영천 솔롱고 글램핑</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>영천 솔롱고 글램핑</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-04">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/3348/thumb/thumb_720_0044LgzZmfUpixLAfaNG8SkN.jpg">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>하늘빛계곡</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>하늘빛계곡</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-05">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/3345/thumb/thumb_720_8180PmdrMgSnmKWgq50kpaM6.jpg">
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>해오름 관광농원</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>해오름 관광농원</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-06">
-                <div class="card swiper2-card-1">
-                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src='https://gocamping.or.kr/upload/camp/8054/thumb/thumb_720_2971QTADQwW1MWtJKuhNNEYa.jpg'>
-                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>러빙유 카라반 캠핑장</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>
-                    <div class="card-body">
-                        <h6>러빙유 카라반 캠핑장</h6>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">-->
+<!--                <div class="card swiper2-card-1">-->
+<!--                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/448/thumb/thumb_720_5313TXG1EiO7SHG2oTtj21WJ.jpg">-->
+<!--                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>글램핑스토리</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>-->
+<!--                    <div class="card-body">-->
+<!--                        <h6>글램핑스토리</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-02">-->
+<!--                <div class="card swiper2-card-1">-->
+<!--                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/1337/thumb/thumb_720_5074hPiSfGlAKOR28q2hjf6V.jpg">-->
+<!--                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>별빛마루 글램핑 캠핑장</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>-->
+<!--                    <div class="card-body">-->
+<!--                        <h6>별빛마루 글램핑 캠핑장</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-03">-->
+<!--                <div class="card swiper2-card-1">-->
+<!--                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/2249/thumb/thumb_720_5391fw96QSB6ETy9pjHlr7MS.jpg">-->
+<!--                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>영천 솔롱고 글램핑</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>-->
+<!--                    <div class="card-body">-->
+<!--                        <h6>영천 솔롱고 글램핑</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-04">-->
+<!--                <div class="card swiper2-card-1">-->
+<!--                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/3348/thumb/thumb_720_0044LgzZmfUpixLAfaNG8SkN.jpg">-->
+<!--                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>하늘빛계곡</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>-->
+<!--                    <div class="card-body">-->
+<!--                        <h6>하늘빛계곡</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="swiper-slide mySwiper2-slide" id="recommend-swiper-05">-->
+<!--                <div class="card swiper2-card-1">-->
+<!--                    <img class="lazy-load card-img-fluid swiper2-img" alt="..." src="https://gocamping.or.kr/upload/camp/3345/thumb/thumb_720_8180PmdrMgSnmKWgq50kpaM6.jpg">-->
+<!--                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="left" title="<h5 class='tooltip-header'>해오름 관광농원</h5> <br>주변경관이 아름다워 집에 가고싶지 않은 캠핑장." class="tooltip-graph recommend-info-btn">●<p class="circle">●</p></a>-->
+<!--                    <div class="card-body">-->
+<!--                        <h6>해오름 관광농원</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div class="swiper-pagination"></div>
     </div>
@@ -123,10 +111,13 @@
 {#    </div>#}
 
 <!-- Swiper JS -->
+<script src="/static/js/index.js"></script>
 <script src="/static/js/swiper.min.js"></script>
 <script src="/static/js/swiper.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="/static/js/index.js"></script>
 <script src="/static/js/userinfo.js"></script>
+<script>
+
+</script>
 </body>
 </html>

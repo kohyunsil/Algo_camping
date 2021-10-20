@@ -22,6 +22,7 @@ $('#empty-like').click(function(){
     })
 })
 
+
 $('#nonempty-like').click(function(){
     param.status = 0 // dislike
 
@@ -177,18 +178,16 @@ var DetailInfo = {
     },
     showHighCharts: function(res){
         var base = new Date();
-        var past = new Date(res.past_congestion[0].base_ymd);
 
         var basedate = base.getFullYear() + '-' + ('0'+(base.getMonth()+1)).slice(-2) + '-' + ('0' + base.getDate()).slice(-2);
-        var pastdate = past.getFullYear() + '-' + ('0'+(past.getMonth()+1)).slice(-2) + '-' + ('0' + past.getDate()).slice(-2);
-        var congestion = [];
+        var avg_congestion = [];
+        var sgg_congestion = [];
         var daterange = [];
 
-        for (var i=0; i<res.past_congestion.length; i++){
-            congestion.push(res.past_congestion[i].congestion);
-            var date = new Date(res.past_congestion[i].base_ymd);
-            var ymd_date = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-            daterange.push(ymd_date);
+        for (var i=0; i<res.congestion_obj.base_ymd.length; i++){
+            sgg_congestion.push(res.congestion_obj.sgg_visitor[i]);
+            avg_congestion.push(res.congestion_obj.avg_visitor[i]);
+            daterange.push(res.congestion_obj.base_ymd[i].split(' ')[0]);
         }
 
         var tag = [];
@@ -216,9 +215,11 @@ var DetailInfo = {
 
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
+            var legend_name = '사용자';
         }else{
-            var title = res.user_name + '님과 95% 일치합니다.';
+            var title = res.user_name + '님과 ' + res.match_pct + '\% 일치합니다.';
             var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
+            var legend_name = res.user_name + '님';
         }
 
         // spider web (polar) chart
@@ -276,9 +277,10 @@ var DetailInfo = {
                 color: '#4f9f88'
             },
             {
-              name: '사용자',
-              data: [80, 90, 100, 100, 90],
-              pointPlacement: 'on'
+                name: legend_name,
+                data: res.user_point,
+                pointPlacement: 'on',
+                color: '#1b4785'
             }],
 
             responsive: {
@@ -311,11 +313,11 @@ var DetailInfo = {
           },
 
           title: {
-            text: res.place_info.place_name + '의 혼잡도'
+            text: res.place_info.place_name + '방문객 추이'
           },
 
           subtitle: {
-            text: pastdate + ' ~ '+ basedate + '기준'
+            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준 방문객 수 추'
           },
           plotOptions: {
             series: {
@@ -356,15 +358,15 @@ var DetailInfo = {
             }]
           },
           series: [{
-            name: '지난' + res.past_congestion.length + '일 간 방문객 수',
-            data: congestion,
+            name: res.place_info.place_name + '지역 방문객수',
+            data: sgg_congestion,
             color: '#4f9f88'
           }
-          // , {
-          //   name: '지난 1주일 간 방문율',
-          //   data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-          // }
-          ],
+          , {
+            name: '전국 평균 방문객수',
+            data: avg_congestion,
+            color: '#1b4785'
+          }],
 
           responsive: {
             rules: [{
