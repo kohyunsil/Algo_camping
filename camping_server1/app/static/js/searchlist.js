@@ -231,6 +231,7 @@ var SearchList = {
         }
     },
     showSearchList: function(res, row_nums){
+        console.log(res);
         try{
             $('#area-default-menu').text(rtn_keywords.substr(0, 2));
             $("#area-default-menu").val(rtn_keywords.substr(0, 2));
@@ -299,7 +300,6 @@ var SearchList = {
         }
         // 로그인 o인 경우 매칭도 노출
         if (SearchList.getCookie('access_token') !== undefined){
-            console.log(res);
             for (var i=0; i<res.place_info.length; i++){
                 $('#item-title'+ (i+1)).append(
                     '<p class="card-text">' + res.match_pct[i] + "\% 일치" + '</p>'

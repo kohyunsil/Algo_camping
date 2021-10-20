@@ -313,11 +313,11 @@ var DetailInfo = {
           },
 
           title: {
-            text: res.place_info.place_name + '의 혼잡도'
+            text: res.place_info.place_name + '방문객 추이'
           },
 
           subtitle: {
-            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준'
+            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준 방문객 수 추'
           },
           plotOptions: {
             series: {
@@ -358,12 +358,12 @@ var DetailInfo = {
             }]
           },
           series: [{
-            name: '지난' + daterange.length + '일 간 방문객 수',
+            name: res.place_info.place_name + '지역 방문객수',
             data: sgg_congestion,
             color: '#4f9f88'
           }
           , {
-            name: '지난' + daterange.length + '일 간 지역 전체 평균 방문객 수',
+            name: '전국 평균 방문객수',
             data: avg_congestion,
             color: '#1b4785'
           }],

@@ -35,14 +35,14 @@ var SigninEvent = {
                             // 토큰 유효성 체크
                             $.post('/user/validation', param).done(function(response){
                                 if(response.code === 200){
-                                    var url = '/';
+                                    var url = '/main';
                                     location.href = url;
                                 }else{
                                     console.log(response.code);
                                 }
                             })
                         }
-                    }else{
+                    }else{ㅡ
                         alert(response.code + '다시 시도해주세요.');
                     }
                 })
