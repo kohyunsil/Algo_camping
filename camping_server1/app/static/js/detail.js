@@ -60,6 +60,7 @@ var DetailInfo = {
 
         $.getJSON('/detail/info', param).done(function(response){
             if (response.code === 200){
+                param.content_id = response.place_info.content_id;
                 DetailInfo.doAfterSuccess(response);
             }else{
                 alert(response.code);
@@ -128,7 +129,7 @@ var DetailInfo = {
     },
     showLikeIcon: function(res){
 
-        if (res.like === 'None'){
+        if (res.like === 'None' || res.like === ''){
             $('#nonempty-like').css({'display': 'none'});
         }else{
             try{
