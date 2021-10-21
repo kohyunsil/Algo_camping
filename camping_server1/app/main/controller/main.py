@@ -57,9 +57,10 @@ class MainSwiperRecommend(Resource):
             if session['access_token'] == param['access_token']:
                 param = main_service.get_user_recommend_swiper(param)
                 if refresh == 0:
-                    # 로그인 ㅇ + 새로고침 x
+                    # 최초 로그인 후 메인화면 진입 시
                     init_copy = '어..?' + session['name'] + '님 이런 캠핑장 좋아하실거 같아요..!'
                     param['copy'] = init_copy
+
                 param['name'] = session['name']
                 return param
         # 로그인 x

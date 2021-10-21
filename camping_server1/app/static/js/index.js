@@ -22,165 +22,55 @@ try{
     param.access_token = ''
 }
 
-// 새로고침 후
+// 새로고침
 if (performance.navigation.type == 1 && (param.access_token !== '' || param.access_token !== undefined)){
-    console.log('this page is reloaded');
-
-        console.log($(location).attr('host') +
-            $(location).attr('hostname') +
-            $(location).attr('pathname') +
-            $(location).attr('href') +
-            $(location).attr('port') +
-            $(location).attr('protocol'));
-
-        console.log($(location).attr('pathname'));
-
         $.getJSON('/main/swiper/recommend/1', param).done(function(response){
             if (response.code === 200){
-                console.log('ok..');
-                console.log(response);
-
                 // 비회원
                 if (param.access_token === undefined || param.access_token === 'undefined' || param.access_token === ''){
                     $('.signin-hello-user').text(response.copy[0]);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
+                    GetRecommendBanner.showRecommendBanner(response);
                 }else{
                     // 회원
-                    console.log(response);
                     $('.signin-hello-user').text(response.name + '님,' + response.copy[0]);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
+                    GetRecommendBanner.showRecommendBanner(response);
                 }
-
             }
         })
+
 }else{
     // 새로고침 x
-    console.log('this page is not reloaded');
     $.getJSON('/main/swiper/recommend/0', param).done(function(response){
-            if (response.code === 200){
-                console.log('ok..');
-                console.log(response);
-
-                // 비회원
-                if (param.access_token === undefined || param.access_token === 'undefined' || param.access_token === ''){
-                    $('.signin-hello-user').text(response.copy[0]);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
-                }else{
-                    // 회원
-                    console.log(response);
-                    $('.signin-hello-user').text(response.copy);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
-                }
-
+        if (response.code === 200){
+            // 비회원
+            if (param.access_token === undefined || param.access_token === 'undefined' || param.access_token === ''){
+                $('.signin-hello-user').text(response.copy[0]);
+                GetRecommendBanner.showRecommendBanner(response);
+            }else{
+                // 회원
+                $('.signin-hello-user').text(response.copy);
+                GetRecommendBanner.showRecommendBanner(response);
             }
-        })
+        }
+    })
 }
 
 var GetRecommendBanner = {
-    showRecommendBanner: function(res){
-        var param = {
-            access_token: SignoutEvent.getCookie('access_token')
+    showRecommendBanner: function(response){
+        for (var i=0; i<SWIPER_RECOMMEND; i++){
+            $('.swiper-wrapper2').append(
+                '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
+                '   <div class="card swiper2-card-1">\n' +
+                '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
+                '      <div class="card-body">\n' +
+                '         <h6>' + response.place_name[i] + '</h6>\n' +
+                '      </div>\n' +
+                '   </div>\n' +
+                '</div>'
+            );
+            swiper.update();
         }
-        console.log($(location).attr('host') +
-            $(location).attr('hostname') +
-            $(location).attr('pathname') +
-            $(location).attr('href') +
-            $(location).attr('port') +
-            $(location).attr('protocol'));
-
-        console.log($(location).attr('pathname'));
-
-        $.getJSON('/main/swiper/recommend', param).done(function(response){
-            if (response.code === 200){
-                console.log('ok..');
-                console.log(response);
-
-                // 비회원
-                if (param.access_token === undefined || param.access_token === 'undefined'){
-                    $('.signin-hello-user').text(response.copy[0]);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
-                }else{
-                    // 회원
-                    console.log(response);
-                    $('.signin-hello-user').text(response.name + '님,' + response.copy[0]);
-                    for (var i=0; i<SWIPER_RECOMMEND; i++){
-                        $('.swiper-wrapper2').append(
-                            '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
-                            '   <div class="card swiper2-card-1">\n' +
-                            '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
-                            '      <div class="card-body">\n' +
-                            '         <h6>' + response.place_name[i] + '</h6>\n' +
-                            '      </div>\n' +
-                            '   </div>\n' +
-                            '</div>'
-                        );
-                        swiper.update();
-                    }
-                }
-
-            }
-        })
-    },
+    }
 }
 
 var MyPageEvent = {
@@ -385,10 +275,6 @@ var ClickBannerEvent = {
     }
 }
 
-if (param.access_token === '' || param.access_token === undefined || param.access_token === 'undefined'){
-    console.log('not signin now!!');
-    GetRecommendBanner.showRecommendBanner();
-}
 MyPageEvent.moveMyPage();
 SignoutEvent.doSignout();
 SearchTags.getSearchTags();
