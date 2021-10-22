@@ -2,7 +2,8 @@ var count = 0;
 var items = [];
 var tag_arrs = [];
 var maxTags = 3;
-var SWIPER_RECOMMEND = 5;
+const SWIPER_RECOMMEND = 5;
+const SWIPER_BANNER = 3;
 var x, y;
 
 var val = document.cookie.split(';');
@@ -70,9 +71,28 @@ var GetRecommendBanner = {
             );
             swiper.update();
         }
+    },
+    showSwiperBanner: function(){
+        $.getJSON('/main/swiper/banner').done(function(response){
+            if (response.code === 200){
+                for (var i=0; i<SWIPER_BANNER; i++){
+                    $('.swiper-wrapper1').append(
+                        '<div className="swiper-slide swiper-slide-1" id="banner-swiper-01">\n' +
+                            '<div className="col-7">\n' +
+                                '<img className="img-1" alt="img" src=' + response.first_image[i] + '>\n' +
+                            '</div>\n' +
+                            '<div className="col-5 promotion-1">\n' +
+                                '<p className="h4 fw-bolder text-white promotion-title-1">' + response.copy[i] + '</p>\n' +
+                            '</div>\n' +
+                        '</div>\n'
+                    );
+                }
+            }else{
+                alert('다시 시도해주세요.');
+            }
+        })
     }
 }
-
 var MyPageEvent = {
     moveMyPage: function(){
         $('#mypage-btn').on('click', function() {
@@ -274,6 +294,32 @@ var ClickBannerEvent = {
         })
     }
 }
+
+var swiper = new Swiper(".mySwiper2", {
+    slidesPerView: 5,
+    spaceBetween: 3,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      // 320px ~
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 20
+      },
+      // 480px ~
+      480: {
+        slidesPerView: 3,
+        spaceBetween: 20
+      },
+      // 640px ~
+      640: {
+        slidesPerView: 4,
+        spaceBetween: 0
+      }
+    }
+});
 
 MyPageEvent.moveMyPage();
 SignoutEvent.doSignout();

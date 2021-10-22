@@ -11,8 +11,15 @@ route_api = Blueprint('main', __name__)
 @route_api.route('/main')
 def main_page():
     param = {}
+
+    res_param = main_service.get_swiper_banner()
+    param['copy'] = res_param['copy']
+    param['scene_no'] = res_param['scene_no']
+    param['first_image'] = res_param['first_image']
+
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+
     return render_template("index.html", param=param)
 
 

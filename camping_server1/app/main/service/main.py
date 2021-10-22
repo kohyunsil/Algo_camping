@@ -184,3 +184,64 @@ def get_user_recommend_swiper(param):
         session_.close()
 
     return param
+
+def get_swiper_banner():
+    mass_scenario = ['s101', 's102', 's105', 's107', 's111', 's112', 's115', 's119']
+
+    DEFAULT_PATH = '/static/imgs/banner_imgs/'
+    mass_img_url = [DEFAULT_PATH + 'with_child.jpeg', DEFAULT_PATH + 'ocean.jpeg',
+                    DEFAULT_PATH + 'tour.jpeg', DEFAULT_PATH + 'autumn.jpeg',
+                    DEFAULT_PATH + 'with_pet.jpeg', DEFAULT_PATH + 'jeju.jpeg',
+                    DEFAULT_PATH + 'with_family.jpeg', DEFAULT_PATH + 'with_couple.jpeg']
+
+    mass_img = {scenario: mass_img_url[i] for i, scenario in enumerate(mass_scenario)}
+
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+
+    param = dict()
+    try:
+        '''
+        # SELECT DISTINCT scene_no, copy FROM scenario WHERE spot2 = 1;
+        '''
+        banner_query = session_.query(model_scenario.scene_no, model_scenario.copy).distinct(model_scenario.scene_no, model_scenario.copy).filter(
+            model_scenario.spot2 == 1
+        ).all()
+
+        max_res_len = 3
+        rand_range = len(banner_query)
+        rand_list = list()
+
+        for _ in range(max_res_len):
+            rand_num = random.randint(0, rand_range - 1)
+            if rand_num in rand_list:
+                while True:
+                    rand_num = random.randint(0, rand_range - 1)
+                    if rand_num not in rand_list:
+                        rand_list.append(rand_num)
+                        break
+            else:
+                rand_list.append(rand_num)
+
+        copy_list, scene_no_list = list(), list()
+
+        # 반환되는 scenario list
+        for idx in rand_list:
+            copy_list.append(banner_query[idx].copy)
+            scene_no_list.append(banner_query[idx].scene_no)
+
+        first_img_list = [mass_img[no] for no in scene_no_list]
+
+        param['copy'] = copy_list
+        param['scene_no'] = scene_no_list
+        param['first_image'] = first_img_list
+        param['code'] = 200
+
+        logging.info('----[' + str(datetime.datetime.now()) + ' get_swiper_banner() : 200]----')
+    except:
+        logging.error('----[' + str(datetime.datetime.now()) + ' get_swiper_banner() : 500]----')
+        param['code'] = 500
+    finally:
+        session_.close()
+    return param

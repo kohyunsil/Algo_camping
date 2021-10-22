@@ -58,7 +58,7 @@ class MainSwiperRecommend(Resource):
                 param = main_service.get_user_recommend_swiper(param)
                 if refresh == 0:
                     # 최초 로그인 후 메인화면 진입 시
-                    init_copy = '어..?' + session['name'] + '님 이런 캠핑장 좋아하실거 같아요..!'
+                    init_copy = '어..? ' + session['name'] + '님 이런 캠핑장 좋아하실거 같아요..!'
                     param['copy'] = init_copy
 
                 param['name'] = session['name']
@@ -66,3 +66,12 @@ class MainSwiperRecommend(Resource):
         # 로그인 x
         except:
             return main_service.get_recommend_swiper()
+
+
+@main.route('/swiper/banner', methods=['GET'])
+@main.doc(response={400: 'Validation Error', 500: 'Database Server Error'})
+@main.response(200, 'Success')
+class MainSwiperRecommend(Resource):
+    def get(self):
+        """swiper 배너"""
+        return main_service.get_swiper_banner()
