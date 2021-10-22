@@ -86,7 +86,8 @@ def survey_done():
 
 
 @route_api.route('/search')
-def search():
+@route_api.route('/search/<string:banner>/<string:scene_no>')
+def search(banner=None, scene_no=None):
     if user.is_signin():
         param['name'] = user.is_signin()['name']
     return render_template('searchlist.html', param=param)

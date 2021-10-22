@@ -136,6 +136,7 @@ class PolarArea(UserPoints):
     def matching_pct(self, camp_point_ls, user_point_ls):
         pct_ls = []
         for i in range(len(camp_point_ls)):
+
             pct = camp_point_ls[i] / user_point_ls[i]
             if pct >= 1:
                 pct_ls.append(1/pct)

@@ -2,6 +2,7 @@ from app.main.model.place_dao import PlaceDAO as model_place
 from app.main.model.search_dao import SearchDAO as model_search
 from app.main.model.algopoint_dao import AlgoPointDAO as model_algopoint
 from app.main.model.user_dao import UserDAO as model_user
+from app.main.model.scenario_dao import ScenarioDAO as model_scenario
 from app.main.model import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import func
@@ -15,7 +16,7 @@ import logging
 from app.main.service.user_points import PolarArea
 
 # 검색결과 리스트
-def get_searchlist(params, res_len, page):
+def get_tag_searchlist(params, res_len, page):
     split_params = []
 
     for param in params['keywords'].split(';'):
@@ -488,3 +489,68 @@ def get_placelist(param):
             session_.close()
 
         return res_param
+
+# 롤링 배너 시나리오 검색 결과
+def get_bannerlist(param):
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+
+    scenario_copy = {'s101': '아이들과 가기 좋은 캠핑장', 's102': '동해 근처 캠핑장', 's105': '투어하기 좋은 남해 근처 캠핑장',
+                     's108': '가을 정취 가득한 캠핑장', 's111': '반려동물과 함께해서 더 좋은 캠핑장', 's112': '제주 해수욕장 근처 인기 캠핑장',
+                     's115': '가족들과 함께 하는 즐거운 오토 캠핑', 's119': '연인과 행복한 글램핑&카라반'}
+
+    try:
+        '''
+        # SELECT copy, content_id FROM scenario WHERE spot2=1 AND scene_no = param['scene_no'];
+        '''
+        bannerlist_query = session_.query(model_scenario.copy, model_scenario.content_id).filter(
+            and_(model_scenario.spot2 == 1, model_scenario.scene_no == param['scene_no'])
+        ).all()
+
+        content_id_list, copy = list(), ''
+        for query in bannerlist_query:
+            content_id_list.append(query.content_id)
+            copy = query.copy
+
+        res_param = list()
+        for content_id in content_id_list:
+            tmp_obj = get_searchlist(content_id, copy)
+            tmp_obj['copy'] = scenario_copy[param['scene_no']]
+            res_param.append(tmp_obj)
+
+        logging.info('----[' + str(datetime.datetime.now()) + ' get_bannerlist() : 200]----')
+    except:
+        logging.error('----[' + str(datetime.now()) + ' get_bannerlist() : 500]----')
+    finally:
+        session_.close()
+    return res_param
+
+# content_id에 대한 place info
+def get_searchlist(content_id, copy=None):
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+    param = dict()
+    try:
+        '''
+        # SELECT place_name, first_image FROM place WHERE place_num = 0 and content_id = param['content_id'];
+        '''
+        place_query = session_.query(model_place.place_name, model_place.first_image).filter(
+            and_(model_place.place_num == 0, model_place.content_id == content_id)
+        ).all()
+
+        param['place_name'] = place_query[0].place_name
+        param['first_image'] = place_query[0].first_image
+        param['algo_star'], _ = get_score(content_id)
+
+        if copy is not None:
+            param['copy'] = copy
+        param['code'] = 200
+
+        logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
+    except:
+        logging.error('----[' + str(datetime.now()) + ' get_searchlist() : 500]----')
+    finally:
+        session_.close()
+    return param

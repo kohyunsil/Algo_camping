@@ -73,7 +73,7 @@ class SearchPagination(Resource):
                 elif sort_type == 'recent':
                     return search_service.get_modified_list(place_obj, algo_obj, page)
 
-        return jsonify(search_service.get_searchlist(params, res_len, page))
+        return jsonify(search_service.get_tag_searchlist(params, res_len, page))
 
 
 @search.route('/list')
@@ -97,3 +97,20 @@ class SearchTags(Resource):
         params = request.args.to_dict()
 
         return search_service.get_placelist(params)
+
+
+@search.route('/banner/list')
+@search.doc(params={'scene_no': 'scenario no'})
+@search.doc(responses={400: 'Validation Error', 500: 'Database Server Error'})
+@search.response(200, 'Success', search_model)
+class SearchBannerList(Resource):
+    def get(self):
+        """scene_no에 해당되는 content_id의 장소 리스트"""
+        params = request.args.to_dict()
+        try:
+            params['access_token'] = session['access_token']
+        except:
+            params['access_token'] = ''
+
+        print(params)
+        return search_service.get_bannerlist(params)

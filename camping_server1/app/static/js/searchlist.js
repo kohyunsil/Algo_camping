@@ -1,5 +1,7 @@
 const MAX_TAG = 3;
 const LIMIT_RANGE = 16;
+// header logo img 경로
+$('.header-logo-img').attr('src', '/static/imgs/algo_logo2.png');
 
 var params = {
     keywords : ''
@@ -92,7 +94,89 @@ var Pagination = {
     }
 }
 
+console.log(window.location.pathname);
+
 var SearchList = {
+    // 배너 클릭 검색 결과 (매칭도, 롤링 썸네일, 정렬 미지원)
+    bannerList: function(){
+        // 배너 검색 결과 여부 확인
+        if (window.location.pathname.split('/')[1] === 'search' && window.location.pathname.split('/')[2] === 'banner'){
+            var param = {
+                scene_no: window.location.pathname.split('/')[3]
+            }
+            $.getJSON('/search/banner/list', param).done(function(response){
+                if (response[0].code === 200){
+                    $('.loading-bar').css({'visibility': 'hidden'});
+                    $('.sort').css({'display': 'none'});
+
+                    $('.input-keyword').text(response[0].copy + '에 대한');
+                    $('.input-size').text(response.length);
+                    $('.search-result').css({'visibility': 'visible'});
+                    $('.pagination').css({'visibility': 'visible'});
+
+                    for(var i=0; i<response.length; i++){
+                        $('#card-layout').append(
+                            '<div class="col" style="cursor: pointer;" id=' + '"' + i + '"' + '>\n' +
+                                '<div class="card border-0">\n' +
+                                    '<div class="swiper-container card mySwiper">\n' +
+                                        '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
+                                            '<div class="swiper-slide">\n' +
+                                                '<img class="lazy-load card-img-fluid" alt="..." src="' + response[i].first_image + '" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' +'>\n' +
+                                            '</div>\n' +
+                                        '</div>\n' +
+                                    '</div>\n' +
+                                    '<div class="card-body">\n' +
+                                        '<div id="item-title' + (i+1) + '">\n'+
+                                            '<a class="h5 card-title fw-bolder" href="#">'+ response[i].place_name +'</a>\n' +
+                                        '</div><br>\n' +
+                                        '<div class="col justify-content-md-center tags" id="tag' + (i+1) + '">\n' +
+                                        '</div>&nbsp;\n' +
+                                        '<p class="algo-text">\n' +
+                                            '<span class="star" id="algo-star' + (i+1) + '"></span> \n' +
+                                        '</p> \n' +
+                                    '</div> \n' +
+                                '</div> \n' +
+                                '<br><br> \n' +
+                            '</div> \n'
+                        );
+                    }
+                    var star = '';
+                    for (var i=0; i<response.length; i++){
+                        for (var j=0; j<parseInt(response[i].algo_star); j++){
+                            star += '★';
+                        }
+                        for (var j=0; j<(5 - parseInt(response[i].algo_star)); j++){
+                            star += '☆';
+                        }
+                        $('#algo-star' + (i+1)).text(star);
+                        $('#algo-star' + (i+1)).append(
+                            '<span class="detail-score">' + ' ' + response[i].algo_star + '</span>'
+                        )
+                        star = '';
+                    }
+
+                    // 장소 클릭
+                    $('.col').each(function(idx){
+                        $(this).click(function(event){
+                            var idx = $(this).attr('id');
+                            var id = response[idx].content_id;
+
+                            event.preventDefault();
+                            var param = {
+                                content_id : id,
+                                id : idx
+                            }
+
+                            location.href = '/detail/' + param.content_id + '/' + param.id;
+                        })
+                    })
+
+                }else{
+                    alert('다시 시도해주세요');
+                }
+            })
+        }
+    },
     // 검색결과 정렬
     sortList: function(){
         // 인기순
@@ -368,5 +452,10 @@ var SearchList = {
         Pagination.pageList(row_nums);
     }
 }
-SearchList.sortList()
-SearchList.getList()
+
+if (window.location.pathname.split('/')[2] !== 'banner') {
+    SearchList.sortList()
+    SearchList.getList()
+}else{
+    SearchList.bannerList()
+}

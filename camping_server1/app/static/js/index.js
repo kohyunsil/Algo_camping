@@ -33,7 +33,7 @@ if (performance.navigation.type == 1 && (param.access_token !== '' || param.acce
                     GetRecommendBanner.showRecommendBanner(response);
                 }else{
                     // 회원
-                    $('.signin-hello-user').text(response.name + '님,' + response.copy[0]);
+                    $('.signin-hello-user').text(response.name + '님, ' + response.copy[0]);
                     GetRecommendBanner.showRecommendBanner(response);
                 }
             }
@@ -55,6 +55,11 @@ if (performance.navigation.type == 1 && (param.access_token !== '' || param.acce
         }
     })
 }
+// 롤링 배너 클릭
+$('.img-1').click(function(){
+    var scene_no = $(this).attr('id');
+    location.href= '/search/banner/' + scene_no;
+})
 
 var GetRecommendBanner = {
     showRecommendBanner: function(response){

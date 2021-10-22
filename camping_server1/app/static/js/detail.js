@@ -363,11 +363,12 @@ var DetailInfo = {
             data: sgg_congestion,
             color: '#4f9f88'
           }
-          , {
-            name: '전국 평균 방문객수',
-            data: avg_congestion,
-            color: '#1b4785'
-          }],
+          // , {
+          //   name: '전국 평균 방문객수',
+          //   data: avg_congestion,
+          //   color: '#1b4785'
+          // }],
+              ],
 
           responsive: {
             rules: [{

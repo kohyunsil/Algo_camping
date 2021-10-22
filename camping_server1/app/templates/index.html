@@ -29,10 +29,10 @@
     <!-- Swiper -->
     <div class="swiper mySwiper1">
       <div class="swiper-wrapper swiper-wrapper1">
-          {% for first_image in param.first_image%}
+          {% for first_image in param.first_image %}
           <div class="swiper-slide swiper-slide-1" id="banner-swiper-01">
                 <div class="col-7">
-                    <img class="img-1" src="{{param['first_image'][loop.index -1]}}" alt="img"/>
+                    <img class="img-1" id="{{param['scene_no'][loop.index -1]}}" src="{{param['first_image'][loop.index -1]}}" alt="img"/>
                 </div>
                 <div class="col-5 promotion-1">
                     <p class="h4 fw-bolder text-white promotion-title-1">{{param['copy'][loop.index -1]}}</p>
