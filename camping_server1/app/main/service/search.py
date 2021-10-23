@@ -508,50 +508,67 @@ def get_bannerlist(param):
             and_(model_scenario.spot2 == 1, model_scenario.scene_no == param['scene_no'])
         ).all()
 
+        '''
+        # SELECT * FROM place INNER JOIN algopoint ON (place.content_id = algopoint.content_id) WHERE algopoint.content_id = content_id_list[0]
+        # UNION ALL SELECT * FROM place INNER JOIN algopoint ON (place.content_id = algopoint.content_id) WHERE algopoint.content_id = content_id_list[1]
+        # UNION ALL SELECT * FROM place INNER JOIN algopoint ON (place.content_id = algopoint.content_id) WHERE algopoint.content_id = content_id_list[2]
+        # ...
+        '''
         content_id_list, copy = list(), ''
         for query in bannerlist_query:
-            content_id_list.append(query.content_id)
+            content_id_list.append(int(query.content_id))
             copy = query.copy
 
-        res_param = list()
-        for content_id in content_id_list:
-            tmp_obj = get_searchlist(content_id, copy)
-            tmp_obj['copy'] = scenario_copy[param['scene_no']]
-            res_param.append(tmp_obj)
+        union_all_query = [session_.query(model_place, model_algopoint).filter(model_place.content_id == model_algopoint.content_id).filter(
+            model_place.content_id == content_id
+        ) for content_id in content_id_list]
+
+        query = union_all_query[0].union_all(*union_all_query).all()
+
+        res_param, place_info, algostar = dict(), list(), list()
+        for q in query:
+            place_info.append(q[0])
+            algostar.append(q[1].algostar)
+
+        res_param['place_info'] = place_info
+        res_param['algostar'] = algostar
+        res_param['copy'] = scenario_copy[param['scene_no']]
+        res_param['code'] = 200
 
         logging.info('----[' + str(datetime.datetime.now()) + ' get_bannerlist() : 200]----')
     except:
         logging.error('----[' + str(datetime.now()) + ' get_bannerlist() : 500]----')
     finally:
         session_.close()
-    return res_param
 
-# content_id에 대한 place info
-def get_searchlist(content_id, copy=None):
-    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
-    Session = sessionmaker(bind=client)
-    session_ = Session()
-    param = dict()
-    try:
-        '''
-        # SELECT place_name, first_image FROM place WHERE place_num = 0 and content_id = param['content_id'];
-        '''
-        place_query = session_.query(model_place.place_name, model_place.first_image).filter(
-            and_(model_place.place_num == 0, model_place.content_id == content_id)
-        ).all()
+    return jsonify(res_param)
 
-        param['place_name'] = place_query[0].place_name
-        param['first_image'] = place_query[0].first_image
-        param['algo_star'], _ = get_score(content_id)
-        param['content_id'] = content_id
-
-        if copy is not None:
-            param['copy'] = copy
-        param['code'] = 200
-
-        logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
-    except:
-        logging.error('----[' + str(datetime.now()) + ' get_searchlist() : 500]----')
-    finally:
-        session_.close()
-    return param
+# # content_id에 대한 place info
+# def get_searchlist(content_id, copy=None):
+#     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+#     Session = sessionmaker(bind=client)
+#     session_ = Session()
+#     param = dict()
+#     try:
+#         '''
+#         # SELECT place_name, first_image FROM place WHERE place_num = 0 and content_id = param['content_id'];
+#         '''
+#         place_query = session_.query(model_place.place_name, model_place.first_image).filter(
+#             and_(model_place.place_num == 0, model_place.content_id == content_id)
+#         ).all()
+#
+#         param['place_name'] = place_query[0].place_name
+#         param['first_image'] = place_query[0].first_image
+#         param['algo_star'], _ = get_score(content_id)
+#         param['content_id'] = content_id
+#
+#         if copy is not None:
+#             param['copy'] = copy
+#         param['code'] = 200
+#
+#         logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
+#     except:
+#         logging.error('----[' + str(datetime.now()) + ' get_searchlist() : 500]----')
+#     finally:
+#         session_.close()
+#     return param

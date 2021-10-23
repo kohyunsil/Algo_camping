@@ -93,7 +93,6 @@ var Pagination = {
         });
     }
 }
-
 var SearchList = {
     // 배너 클릭 검색 결과 (매칭도, 롤링 썸네일, 정렬 미지원)
     bannerList: function(){
@@ -103,29 +102,29 @@ var SearchList = {
                 scene_no: window.location.pathname.split('/')[3]
             }
             $.getJSON('/search/banner/list', param).done(function(response){
-                if (response[0].code === 200){
+                if (response.code === 200){
                     $('.loading-bar').css({'visibility': 'hidden'});
                     $('.sort').css({'display': 'none'});
 
-                    $('.input-keyword').text(response[0].copy + '에 대한');
-                    $('.input-size').text(response.length);
+                    $('.input-keyword').text(response.copy + '에 대한');
+                    $('.input-size').text(response.algostar.length);
                     $('.search-result').css({'visibility': 'visible'});
                     $('.pagination').css({'visibility': 'visible'});
 
-                    for(var i=0; i<response.length; i++){
+                    for(var i=0; i<response.algostar.length; i++){
                         $('#card-layout').append(
-                            '<div class="col" style="cursor: pointer;" name="' + response[i].content_id + '" id=' + '"' + i + '"' + '>\n' +
-                                '<div class="card border-0" id="' + response[i].content_id + '" >\n' +
+                            '<div class="col" style="cursor: pointer;" name="' + response.place_info[i].content_id + '" id=' + '"' + i + '"' + '>\n' +
+                                '<div class="card border-0" id="' + response.place_info[i].content_id + '" >\n' +
                                     '<div class="swiper-container card mySwiper">\n' +
                                         '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
                                             '<div class="swiper-slide">\n' +
-                                                '<img class="lazy-load card-img-fluid" alt="..." src="' + response[i].first_image + '" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' +'>\n' +
+                                                '<img class="lazy-load card-img-fluid" alt="..." src="' + response.place_info[i].first_image + '" onError="this.onerror=null;this.src=\'/static/imgs/error_logo.png\';"' +'>\n' +
                                             '</div>\n' +
                                         '</div>\n' +
                                     '</div>\n' +
                                     '<div class="card-body">\n' +
                                         '<div id="item-title' + (i+1) + '">\n'+
-                                            '<a class="h5 card-title fw-bolder" href="#">'+ response[i].place_name +'</a>\n' +
+                                            '<a class="h5 card-title fw-bolder" href="#">'+ response.place_info[i].place_name +'</a>\n' +
                                         '</div><br>\n' +
                                         '<div class="col justify-content-md-center tags" id="tag' + (i+1) + '">\n' +
                                         '</div>&nbsp;\n' +
@@ -139,16 +138,16 @@ var SearchList = {
                         );
                     }
                     var star = '';
-                    for (var i=0; i<response.length; i++){
-                        for (var j=0; j<parseInt(response[i].algo_star); j++){
+                    for (var i=0; i<response.algostar.length; i++){
+                        for (var j=0; j<parseInt(response.algostar[i]); j++){
                             star += '★';
                         }
-                        for (var j=0; j<(5 - parseInt(response[i].algo_star)); j++){
+                        for (var j=0; j<(5 - parseInt(response.algostar[i])); j++){
                             star += '☆';
                         }
                         $('#algo-star' + (i+1)).text(star);
                         $('#algo-star' + (i+1)).append(
-                            '<span class="detail-score">' + ' ' + response[i].algo_star + '</span>'
+                            '<span class="detail-score">' + ' ' + response.algostar[i] + '</span>'
                         )
                         star = '';
                     }
@@ -305,7 +304,6 @@ var SearchList = {
         }
     },
     showSearchList: function(res, row_nums){
-        console.log(res);
         try{
             $('#area-default-menu').text(rtn_keywords.substr(0, 2));
             $("#area-default-menu").val(rtn_keywords.substr(0, 2));
