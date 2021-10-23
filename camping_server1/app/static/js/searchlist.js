@@ -94,8 +94,6 @@ var Pagination = {
     }
 }
 
-console.log(window.location.pathname);
-
 var SearchList = {
     // 배너 클릭 검색 결과 (매칭도, 롤링 썸네일, 정렬 미지원)
     bannerList: function(){
@@ -116,8 +114,8 @@ var SearchList = {
 
                     for(var i=0; i<response.length; i++){
                         $('#card-layout').append(
-                            '<div class="col" style="cursor: pointer;" id=' + '"' + i + '"' + '>\n' +
-                                '<div class="card border-0">\n' +
+                            '<div class="col" style="cursor: pointer;" name="' + response[i].content_id + '" id=' + '"' + i + '"' + '>\n' +
+                                '<div class="card border-0" id="' + response[i].content_id + '" >\n' +
                                     '<div class="swiper-container card mySwiper">\n' +
                                         '<div class="swiper-wrapper" id="swiper'+ (i+1) + '">\n' +
                                             '<div class="swiper-slide">\n' +
@@ -154,23 +152,15 @@ var SearchList = {
                         )
                         star = '';
                     }
-
                     // 장소 클릭
                     $('.col').each(function(idx){
                         $(this).click(function(event){
                             var idx = $(this).attr('id');
-                            var id = response[idx].content_id;
+                            var content_id = $(this).attr('name');
 
-                            event.preventDefault();
-                            var param = {
-                                content_id : id,
-                                id : idx
-                            }
-
-                            location.href = '/detail/' + param.content_id + '/' + param.id;
+                            location.href = '/detail/' + content_id + '/' + idx;
                         })
                     })
-
                 }else{
                     alert('다시 시도해주세요');
                 }

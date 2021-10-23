@@ -452,7 +452,7 @@ def make_resobj(place_info, page, match_status):
 
     return params
 
-# content_id 리스트에 대한 장소 리스트
+# content_id 문자열 리스트(,)에 대한 장소 리스트
 def get_placelist(param):
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
@@ -543,6 +543,7 @@ def get_searchlist(content_id, copy=None):
         param['place_name'] = place_query[0].place_name
         param['first_image'] = place_query[0].first_image
         param['algo_star'], _ = get_score(content_id)
+        param['content_id'] = content_id
 
         if copy is not None:
             param['copy'] = copy
