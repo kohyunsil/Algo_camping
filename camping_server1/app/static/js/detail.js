@@ -71,6 +71,7 @@ var DetailInfo = {
         var star = '';
         if (res.avg_star === 0){
             $('.visitor-text').css({'visibility': 'hidden'});
+            $('.visitoravg-info-btn').css({'display': 'none'});
         }
         $('.point').text(res.avg_star);
         $('#title').text(res.place_info.place_name);
@@ -216,7 +217,7 @@ var DetailInfo = {
 
             var title = res.place_info.place_name + '에 대한 분석결과입니다.';
             var subtitle = '로그인을 통해 내 캠핑장 선호도를 파악하고 나와 캠핑장 매칭도를 확인해보세요.';
-            var legend_name = '사용자';
+            var legend_name = '캠퍼';
         }else{
             var title = res.user_name + '님과 ' + res.match_pct + '\% 일치합니다.';
             var subtitle = res.user_name + '님과 ' + res.place_info.place_name + '에 대한 분석결과입니다.';
@@ -458,7 +459,7 @@ var DetailInfo = {
         );
         // 사용자 이름 노출
         if(DetailInfo.getCookie('access_token') === undefined){
-            user = '사용자';
+            user = '캠퍼';
         }else{
             user = res.user_name;
         }

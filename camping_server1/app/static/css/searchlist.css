@@ -3,7 +3,9 @@
     background-color: white;
 }
 .loading-text{
-    margin-left: -13px;
+    margin-top: 5px;
+    margin-left: -160px;
+    font-weight: 550;
 }
 .search-result{
     visibility: hidden;
