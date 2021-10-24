@@ -20,6 +20,7 @@ mySwiper.update();
 var swiper = new Swiper(".mySwiper2", {
     slidesPerView: 5,
     spaceBetween: 3,
+    preventClicks: false,
     pagination: {
       el: ".swiper-pagination",
       clickable: true,

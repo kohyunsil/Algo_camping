@@ -23,6 +23,15 @@ try{
     param.access_token = ''
 }
 
+// $('.swiper2-card-1').each(function (){
+//     $(this).click(function(event){
+//         alert($(this).attr('class'));
+//     })
+// })
+//
+// $('#recommend-swiper-01x').click(function(){
+//     alert('clickkkk');
+// })
 // 새로고침
 if (performance.navigation.type == 1 && (param.access_token !== '' || param.access_token !== undefined)){
         $.getJSON('/main/swiper/recommend/1', param).done(function(response){
@@ -67,7 +76,7 @@ var GetRecommendBanner = {
             $('.swiper-wrapper2').append(
                 '<div class="swiper-slide mySwiper2-slide" id="recommend-swiper-01">\n' +
                 '   <div class="card swiper2-card-1">\n' +
-                '      <img class="lazy-load card-img-fluid swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
+                '      <img class="swiper2-img" alt="..." src=' + response.first_image[i] + '>\n' +
                 '      <div class="card-body">\n' +
                 '         <h6>' + response.place_name[i] + '</h6>\n' +
                 '      </div>\n' +
@@ -258,6 +267,7 @@ var SearchTags = {
 var ClickBannerEvent = {
     clickRecommendSwiper : function(){
         $('.mySwiper2-slide').on('click', function(){
+            alert('click..!');
             var click_id = $(this).attr('id');
             var access_token = SignoutEvent.getCookie('access_token');
             if (access_token === undefined){

@@ -537,10 +537,9 @@ def get_bannerlist(param):
 
         logging.info('----[' + str(datetime.datetime.now()) + ' get_bannerlist() : 200]----')
     except:
-        logging.error('----[' + str(datetime.now()) + ' get_bannerlist() : 500]----')
+        logging.error('----[' + str(datetime.datetime.now()) + ' get_bannerlist() : 500]----')
     finally:
         session_.close()
-
     return jsonify(res_param)
 
 # # content_id에 대한 place info

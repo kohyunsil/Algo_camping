@@ -48,6 +48,11 @@ table a{
 .polar-chart{
     margin: 1em auto;
 }
+.help-icon{
+    float: right;
+    color: #9b9b9b;
+    margin-top: 5px;
+}
 /*line chart*/
 .line-chart{
     margin: 1em auto;
@@ -96,4 +101,44 @@ body > div.container > div > div > div.row.row-cols-12.row-cols-md-2{
 .do-like-btn{
     background-color: rgb(255, 255, 255, 0);
     border: none;
+}
+/*---tooltip---*/
+/*.tooltip-graph{*/
+/*    width:100%;*/
+/*    right:100%;*/
+/*}*/
+.tooltip-inner{
+    background-color: white;
+    color: #545454;
+    word-break: keep-all;
+    padding-top: 10px;
+
+    margin-left: 10%;
+    max-width: 50%;
+    width: 60%;
+    min-width: 200px;
+}
+.tooltip-tag{
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #49917D;
+}
+.tooltip-header{
+    color: #49917D;
+    font-weight: bold;
+}
+.tooltip-body{
+    font-size: 0.8rem;
+}
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, .bs-tooltip-top .tooltip-arrow::before{
+    border-top-color: white;
+}
+.bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, .bs-tooltip-bottom .tooltip-arrow::before{
+    border-bottom-color: white;
+}
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, .bs-tooltip-right .tooltip-arrow::before{
+    border-right-color: white;
+}
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, .bs-tooltip-left .tooltip-arrow::before{
+    border-left-color: white;
 }

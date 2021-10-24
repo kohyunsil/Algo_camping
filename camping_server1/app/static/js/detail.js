@@ -318,7 +318,7 @@ var DetailInfo = {
           },
 
           subtitle: {
-            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준 방문객 수 추'
+            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준 방문객 수 추이'
           },
           plotOptions: {
             series: {

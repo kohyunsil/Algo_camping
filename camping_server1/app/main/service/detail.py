@@ -27,53 +27,55 @@ def get_detail(param):
         Session = sessionmaker(bind=client)
         session_ = Session()
 
-        try:
-            if req_contentid is not None:
-                place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
+        # try:
+        if req_contentid is not None:
+            place_info = session_.query(model_place).filter(model_place.content_id == int(req_contentid)).all()
 
-                review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(
-                    model_review.place_id == req_contentid).all()
+            review_query = model_review.query.with_entities(func.avg(model_review.star).label('avg_star')).filter(
+                model_review.place_id == req_contentid).all()
 
-                if review_query[0][0] is None:
-                    avg_star = 0
-                else:
-                    avg_star = round(float(review_query[0][0]), 2)
+            if review_query[0][0] is None:
+                avg_star = 0
+            else:
+                avg_star = round(float(review_query[0][0]), 2)
 
-                local_obj = get_local(place_info[0].sigungu_code)
+            local_obj = get_local(place_info[0].sigungu_code)
 
-                congestion_obj = get_congestion(place_info[0].sigungu_code)
-                params['congestion_obj'] = congestion_obj
+            congestion_obj = get_congestion(place_info[0].sigungu_code)
+            params['congestion_obj'] = congestion_obj
 
-                params['place_info'] = place_info[0]
-                params['place_info'].detail_image = str(place_info[0].detail_image).split(',')[:5]
+            params['place_info'] = place_info[0]
+            params['place_info'].detail_image = str(place_info[0].detail_image).split(',')[:5]
 
-                params['avg_star'] = avg_star
-                params['local_info'] = local_obj if local_obj is not None else None
+            params['avg_star'] = avg_star
+            params['local_info'] = local_obj if local_obj is not None else None
 
-                params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
-                params['tag'] = get_top_tag(int(req_contentid), 5)
+            params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
+            params['tag'] = get_top_tag(int(req_contentid), 5)
 
-                try:
-                    params['user_name'] = session['name']
-                except KeyError:
-                    params['user_name'] = '사용자'
-
-            logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
-            params['code'] = 200
-
-            # 비로그인 시 x
             try:
-                if session['access_token']:
-                    params['like'] = get_likelist()['like']
-                    params['match_pct'], params['user_point'] = get_matching_rate(int(req_contentid))
-            except:
-                pass
+                params['user_name'] = session['name']
+            except KeyError:
+                params['user_name'] = '사용자'
 
+        logging.info('----[' + str(datetime.datetime.now()) + ' get_detail() : 200]----')
+        params['code'] = 200
+
+        # 비로그인 시 x
+        try:
+            if session['access_token']:
+                params['like'] = get_likelist()['like']
+                params['match_pct'], params['user_point'] = get_matching_rate(int(req_contentid))
         except:
-            logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
-            params['code'] = 500
+            pass
         finally:
             session_.close()
+
+        # except:
+        #     logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
+        #     params['code'] = 500
+        # finally:
+        #     session_.close()
 
     return jsonify(params)
 

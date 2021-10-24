@@ -8,6 +8,9 @@ body {
     margin: 0;
     padding: 0;
 }
+.signin-hello-user {
+    line-height: 25px;
+}
 
  /*--swiper1 (promotion banner)--*/
  .mySwiper1{
@@ -70,6 +73,10 @@ body {
     .promotion-title-2,
     .promotion-title-3{
         margin-top: 35px;
+    }
+    #banner-swiper-01 > div.col-5.promotion-1 > p{
+        line-height: 25px;
+        font-weight: normal;
     }
 }
 
@@ -140,11 +147,7 @@ h6{
     color: white;
     text-decoration: none;
 }
-.circle,
-.circle-info-btn:hover{
-    margin-top: -10px;
-    color: white;
-}
+
 .tooltip-inner{
     background-color: white;
     color: #545454;

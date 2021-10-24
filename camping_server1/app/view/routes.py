@@ -2,6 +2,7 @@ from flask import *
 from app.main.service import user
 from app.main.service import main as main_service
 from flask import Blueprint
+
 param = {}
 
 route_api = Blueprint('main', __name__)
@@ -12,10 +13,13 @@ route_api = Blueprint('main', __name__)
 def main_page():
     param = {}
 
-    res_param = main_service.get_swiper_banner()
-    param['copy'] = res_param['copy']
-    param['scene_no'] = res_param['scene_no']
-    param['first_image'] = res_param['first_image']
+    try:
+        res_param = main_service.get_swiper_banner()
+        param['copy'] = res_param['copy']
+        param['scene_no'] = res_param['scene_no']
+        param['first_image'] = res_param['first_image']
+    except:
+        pass
 
     if user.is_signin():
         param['name'] = user.is_signin()['name']
