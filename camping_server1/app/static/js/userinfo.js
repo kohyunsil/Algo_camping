@@ -88,13 +88,19 @@ var MoveTabs = {
                             $('#nickname-form').val(response.nickname);
 
                             // 생년월일
-                            var year = response.birth_date.substr(0, 2);
-                            var month = response.birth_date.substr(2, 2);
-                            var day = response.birth_date.substr(4, 2);
+                            try {
+                                var year = response.birth_date.substr(0, 2);
+                                var month = response.birth_date.substr(2, 2);
+                                var day = response.birth_date.substr(4, 2);
 
-                            $('#input-year').val(year);
-                            $('#input-month').val(month);
-                            $('#input-day').val(day);
+                                $('#input-year').val(year);
+                                $('#input-month').val(month);
+                                $('#input-day').val(day);
+                            }catch (e) {
+                                $('#input-year').val('');
+                                $('#input-month').val('');
+                                $('#input-day').val('');
+                            }
                         }
                     })
                 }else{

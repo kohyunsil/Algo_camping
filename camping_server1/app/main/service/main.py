@@ -127,6 +127,10 @@ def get_user_recommend_swiper(param):
             A500_u = int(user_survey_obj.A500)
             A600_u = int(user_survey_obj.A600)
 
+        # 설문결과가 0인 경우 (kakao login)
+        # if A100_u == 0 and A200_u == 0 and A210_u == 0 and A300_u == 0 and A410_u == 0 and A420_u == 0 and A500_u == 0 and A600_u == 0:
+        #     return get_recommend_swiper()
+        # else:
         '''
         # SELECT * FROM scenario WHERE spot1 = 1 and a100 = user a100
         # UNION ALL SELECT * FROM scenario WHERE spot1 = 1 and a200 = user a200
@@ -148,6 +152,7 @@ def get_user_recommend_swiper(param):
         a600_query = session_.query(model_scenario).filter(and_(model_scenario.spot1 == 1, model_scenario.a600 == A600_u))
 
         user_recommend_query = a100_query.union_all(a200_query, a210_query, a300_query, a410_query, a420_query, a500_query, a600_query).all()
+
         max_res_len = 5
         query_res_len = len(user_recommend_query)
         rand_list = list()

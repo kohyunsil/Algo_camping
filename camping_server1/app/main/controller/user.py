@@ -4,6 +4,8 @@ from app.main.service import main as main_service
 from flask_restx import Resource, Namespace, fields
 from flask import jsonify, request, session, redirect
 from flask import Blueprint
+import requests
+from app.config import Config
 
 user = Namespace('user', description='relating to user')
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -83,7 +85,8 @@ class UserSignup(Resource):
     def post(self):
         """회원가입"""
         values = dict(request.values)
-        return user_service.signup(values)
+        return user_service.signup(param['email'], param['password'], param['name'], param['nickname'],
+                                   param['birthDate'])
 
 
 @user.route('/signup/survey', methods=['GET'])
@@ -187,7 +190,40 @@ class UserSNSSignin(Resource):
         session['name'] = name
         session['platform'] = platform
         session['id'] = id
+
+        print(session['name'])
+        print(session['id'])
+
         return jsonify({'code': 200})
+
+
+@auth.route('/kakao/callback')
+def kakao_signin_callback():
+    try:
+        code = request.args.get("code")  # callback 뒤 request token 가져오기
+        client_id = Config.CLIENT_ID
+        redirect_uri = f"{Config.BASE_URL}/auth/kakao/callback"
+
+        token_request = requests.get(
+            f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
+        )
+        token_json = token_request.json()  # access token json
+        error = token_json.get("error", None)
+
+        if error is not None:
+            return make_response({"message": "INVALID_CODE"}, 400)
+
+        access_token = token_json.get("access_token")
+
+        # access token으로 user 정보 요청
+        profile_request = requests.get(
+            "https://kapi.kakao.com/v2/user/me", headers={"Authorization": f"Bearer {access_token}"},
+        )
+        data = profile_request.json()
+    except:
+        pass
+
+    return user_service.social_signin(data=data)
 
 
 @auth.route('/signout')

@@ -23,6 +23,7 @@ try{
     param.access_token = ''
 }
 
+console.log(param.access_token);
 // $('.swiper2-card-1').each(function (){
 //     $(this).click(function(event){
 //         alert($(this).attr('class'));

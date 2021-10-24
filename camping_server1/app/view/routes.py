@@ -2,15 +2,20 @@ from flask import *
 from app.main.service import user
 from app.main.service import main as main_service
 from flask import Blueprint
+from flask_cors import CORS, cross_origin
+import flask
+from ..config import Config
 
 param = {}
 
 route_api = Blueprint('main', __name__)
 
-
 @route_api.route('/')
 @route_api.route('/main')
+@cross_origin()
 def main_page():
+    res = Response('block')
+    res.headers['Access-Control-Allow-Origin'] = '*'
     param = {}
 
     try:
@@ -102,3 +107,15 @@ def myinfo():
     if user.is_signin():
         param['name'] = user.is_signin()['name']
         return render_template('userinfo.html', param=param)
+
+
+@route_api.route('/auth/kakao', methods=['GET', 'OPTIONS'])
+@cross_origin()
+def kakaoSignin():
+    res = Response('block')
+    res.headers['Access-Control-Allow-Origin'] = '*'
+
+    client_id = Config.CLIENT_ID
+    redirect_uri = f'{Config.BASE_URL}/auth/kakao/callback'
+    kakao_oauth_url = f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
+    return redirect(kakao_oauth_url, code=302)

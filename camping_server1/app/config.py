@@ -9,6 +9,7 @@ config.read(abspath)
 keys = config['SECRET_KEYS']
 mongo_keys = config['MONGODB']
 aws_s3 = config['S3']
+kakao = config['KAKAO']
 
 
 class DBConfig(object):
@@ -72,3 +73,6 @@ class Config(object):
     TAG_DM.dropna(axis=0, inplace=True)
 
     RANDOM_RANGE = 10000000
+
+    CLIENT_ID = kakao['CLIENT_ID']
+    BASE_URL = 'http://127.0.0.1:5000'

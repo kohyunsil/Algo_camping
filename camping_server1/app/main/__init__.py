@@ -10,6 +10,8 @@ from ..config import DBConfig, Config
 from datetime import datetime
 from .model import db, migrate
 from flask_jwt_extended import *
+from flask_cors import CORS
+
 warnings.filterwarnings('ignore')
 
 def create_app():

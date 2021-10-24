@@ -11,6 +11,7 @@ import logging
 from datetime import datetime
 import re
 from app.main.service.user_points import UserPoints
+from flask import redirect
 
 # 로그인 여부 확인
 def is_signin():
@@ -89,12 +90,12 @@ def is_duplicate(param):
     return param
 
 # 회원가입
-def signup(param):
-    email = param['email']
-    password = bcrypt.hashpw(param['password'].encode('UTF-8'), bcrypt.gensalt())
-    name = param['name']
-    nickname = param['nickname']
-    birth_date = param['birthDate']
+def signup(req_email=None, req_password=None, req_name=None, req_nickname=None, req_birthDate=None):
+    email = req_email
+    password = bcrypt.hashpw(req_password.encode('UTF-8'), bcrypt.gensalt())
+    name = req_name
+    nickname = req_nickname
+    birth_date = req_birthDate
     access_token = ''
     _ = ''
     member = 1
@@ -366,7 +367,6 @@ def get_likelist():
         param['code'] = 403
     return param
 
-
 # 좋아요 업데이트
 def update_like(param):
     if session['access_token'] == param['access_token']:
@@ -461,3 +461,57 @@ def withdraw(token):
         finally:
             session_.close()
         return param
+
+# kakao 유저 회원가입, 로그인
+def social_signin(data):
+    kakao_account = data.get('properties')
+    email = kakao_account.get('nickname', None)
+    kakao_id = str(data.get('id'))
+
+    param = dict()
+    client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+    # 가입 여부 확인
+    # try:
+    '''
+    # SELECT * FROM user WHERE email = email;
+    '''
+    user_query = session_.query(model_user).filter(model_user.email == email).all()
+    if not user_query:
+        # 회원가입
+        signup(email, kakao_id, email, email, None)
+
+    # 로그인
+    try:
+        access_token = create_access_token(identity=email, expires_delta=Config.JWT_EXPIRATION_DELTA)
+        '''
+        # UPDATE user SET access_token = access_token값 WHERE email = email;
+        '''
+        user = session_.query(model_user).filter(model_user.email == email)[0]
+        user.access_token = access_token
+
+        session_.add(user)
+        session_.commit()
+
+        session['access_token'] = access_token
+    except:
+        session_.rollback()
+    finally:
+        session_.close()
+
+    session.permanent = True
+    app.permanent_session_lifetime = Config.SESSION_LIFETIME
+
+    session['name'] = email
+    # except:
+    #     param['code'] = 403
+    # finally:
+    #     print(param)
+    #     session_.close()
+
+
+    response = make_response(redirect('/'))
+    response.set_cookie('access_token', access_token)
+
+    return response
