@@ -51,13 +51,6 @@ var SigninEvent = {
     },
     kakaoSignIn: function(){
         $('.btn-kakao').on('click', function(){
-            // $.getJSON('/auth/kakao').done(function(response){
-            //     if (response.code === 200){
-            //         console.log(response);
-            //     }else{
-            //         alert(response.code);
-            //     }
-            // })
             location.href = '/auth/kakao';
         })
     },

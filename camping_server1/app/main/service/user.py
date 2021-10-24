@@ -468,50 +468,71 @@ def social_signin(data):
     email = kakao_account.get('nickname', None)
     kakao_id = str(data.get('id'))
 
-    param = dict()
+    A100_u, A200_u, A210_u, A300_u, A410_u, A420_u, A500_u, A600_u = 0, 0, 0, 0, 0, 0, 0, 0
+
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)
     session_ = Session()
     # 가입 여부 확인
-    # try:
-    '''
-    # SELECT * FROM user WHERE email = email;
-    '''
-    user_query = session_.query(model_user).filter(model_user.email == email).all()
-    if not user_query:
-        # 회원가입
-        signup(email, kakao_id, email, email, None)
-
-    # 로그인
     try:
-        access_token = create_access_token(identity=email, expires_delta=Config.JWT_EXPIRATION_DELTA)
         '''
-        # UPDATE user SET access_token = access_token값 WHERE email = email;
+        # SELECT * FROM user WHERE email = email;
         '''
-        user = session_.query(model_user).filter(model_user.email == email)[0]
-        user.access_token = access_token
+        user_query = session_.query(model_user).filter(model_user.email == email).all()
+        if not user_query:
+            # 회원가입
+            signup(email, kakao_id, email, email, None)
 
-        session_.add(user)
-        session_.commit()
+        # 로그인
+        try:
+            access_token = create_access_token(identity=email, expires_delta=Config.JWT_EXPIRATION_DELTA)
+            '''
+            # UPDATE user SET access_token = access_token값 WHERE email = email;
+            '''
+            user = session_.query(model_user).filter(model_user.email == email)[0]
+            user.access_token = access_token
 
-        session['access_token'] = access_token
+            session_.add(user)
+            session_.commit()
+
+            session['access_token'] = access_token
+
+            # 유저 고유 id, 설문 내용 얻기
+            '''
+            # SELECT id, A100, A200, A210, A300, A410, A420, A500, A600 FROM user WHERE email = 유저의 이메일;
+            '''
+            query = session_.query(model_user.id).filter(model_user.email == email).all()
+            id = query[0].id
+            A100_u = query[0].A100
+            A200_u = query[0].A200
+            A210_u = query[0].A210
+            A300_u = query[0].A300
+            A410_u = query[0].A410
+            A420_u = query[0].A420
+            A500_u = query[0].A500
+            A600_u = query[0].A600
+        except:
+            session_.rollback()
+            logging.error('----[' + str(datetime.now()) + ' social_signin() line 516 : 500]----')
+        finally:
+            session_.close()
+
+        session.permanent = True
+        app.permanent_session_lifetime = Config.SESSION_LIFETIME
+        session['name'] = email
+
+        logging.info('----[' + str(datetime.now()) + ' social_signin() line 524 : 200]----')
     except:
-        session_.rollback()
+        logging.error('----[' + str(datetime.now()) + ' social_signin() line 527 : 500]----')
     finally:
         session_.close()
 
-    session.permanent = True
-    app.permanent_session_lifetime = Config.SESSION_LIFETIME
+    if A100_u == 0 and A200_u == 0 and A210_u == 0 and A300_u == 0 and A410_u == 0 and A420_u == 0 and A500_u == 0 and A600_u == 0:
+        response = make_response(redirect('/signup/survey/first?id=' + str(id)))
+    else:
+        response = make_response(redirect('/'))
 
-    session['name'] = email
-    # except:
-    #     param['code'] = 403
-    # finally:
-    #     print(param)
-    #     session_.close()
-
-
-    response = make_response(redirect('/'))
     response.set_cookie('access_token', access_token)
+    response.set_cookie('id', email)
 
     return response

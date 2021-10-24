@@ -17,7 +17,7 @@ def page_not_found(error):
     return redirect(url_for('main.main_page'))
 
 
-@blueprint.after_request # blueprint can also be app~~
+@blueprint.after_request
 def after_request(response):
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
