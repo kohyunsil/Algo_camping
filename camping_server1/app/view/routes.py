@@ -61,7 +61,9 @@ def signup():
 
 @route_api.route('/signup/survey/first')
 def survey_first():
-    return render_template('join/survey1.html')
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+    return render_template('join/survey1.html', param=param)
 
 
 @route_api.route('/signup/survey/second')
@@ -71,17 +73,23 @@ def survey_second():
 
 @route_api.route('/signup/survey/third')
 def survey_third():
-    return render_template('join/survey3.html')
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+    return render_template('join/survey3.html', param=param)
 
 
 @route_api.route('/signup/survey/fourth')
 def survey_fourth():
-    return render_template('join/survey4.html')
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+    return render_template('join/survey4.html', param=param)
 
 
 @route_api.route('/signup/survey/fifth')
 def survey_fifth():
-    return render_template('join/survey5.html')
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+    return render_template('join/survey5.html', param=param)
 
 
 @route_api.route('/signup/survey/sixth')
@@ -91,7 +99,9 @@ def survey_sixth():
 
 @route_api.route('/signup/survey/done')
 def survey_done():
-    return render_template('join/done.html')
+    if user.is_signin():
+        param['name'] = user.is_signin()['name']
+    return render_template('join/done.html', param=param)
 
 
 @route_api.route('/search')

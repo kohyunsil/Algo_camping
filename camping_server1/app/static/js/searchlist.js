@@ -108,6 +108,7 @@ var SearchList = {
 
                     $('.input-keyword').text(response.copy + '에 대한');
                     $('.input-size').text(response.algostar.length);
+                    $('.input-size').text(response.algostar.length);
                     $('.search-result').css({'visibility': 'visible'});
                     $('.pagination').css({'visibility': 'visible'});
 
@@ -276,6 +277,7 @@ var SearchList = {
 
                 $.getJSON('/search/pagination/list/' + response.row_nums + '/' + 1, params).done(function(response){
                     if(response.code === 200){
+                        console.log(response);
                         SearchList.getSearchData(response, row_nums);
                     }else{
                         alert(response.code);
@@ -325,6 +327,11 @@ var SearchList = {
         }
         $('.input-keyword').text(keyword_str + '에 대한');
 
+        if (res.flag === true){
+            console.log(res.algo_star.length);
+            $('.input-size').empty();
+            $('.input-size').text(res.algo_star.length);
+        }
         $('.input-size').text(row_nums);
         $('.search-result').css({'visibility': 'visible'});
         $('.pagination').css({'visibility': 'visible'});

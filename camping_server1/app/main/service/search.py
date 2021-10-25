@@ -14,6 +14,7 @@ import datetime
 import pandas as pd
 import logging
 from app.main.service.user_points import PolarArea
+from ..model.connect import Query
 
 # 검색결과 리스트
 def get_tag_searchlist(params, res_len, page):
@@ -23,7 +24,7 @@ def get_tag_searchlist(params, res_len, page):
         if param != '':
             split_params.append(param)
 
-    place_keyword, area = '', ''
+    place_keyword, area = ' ', ' '
     category_keyword = []
 
     # 입력 데이터 태그/캠핑장 구분
@@ -32,7 +33,8 @@ def get_tag_searchlist(params, res_len, page):
             if split_params[0] == '지역':
                 continue
             else:
-                area = '%{}%'.format(split_params[0].replace(' ', ''))
+                area = '%{}%'.format(split_params[0].replace(' ', '')).split('%')[1].strip()
+                area = ' ' if area == '지역전체' else area
         else:
             search = '%{}%'.format(param.replace(' ', ''))
             row = model_search.query.filter(model_search.tag.like(search)).all()
@@ -45,59 +47,41 @@ def get_tag_searchlist(params, res_len, page):
 
     # 태그 컬럼명과 동적 매칭
     tag_query = ''
-    for tag in category_keyword:
-        tag_query += tag
+    if len(category_keyword) == 0:
+        tag_query = ' '
+    else:
+        for tag in category_keyword:
+            tag_query += 'or' + tag
 
-        if category_keyword[len(category_keyword) - 1] == tag:
-            tag_query += ' = 1'
-        else:
-            tag_query += ' = 1 or '
-
-    '''
-    # SELECT * FROM place WHERE place_num = 0 AND content_id IN(
-    # SELECT content_id FROM search WHERE addr LIKE '%지역%' OR place_name LIKE '%캠핑장명%' OR (태그1=1 OR 태그2=1)) ORDER BY (CASE 
-    # WHEN place_name LIKE '%캠핑장명%' AND  addr LIKE '%전체%' THEN 1
-    # WHEN place_name LIKE '%캠핑장명%' OR addr LIKE '%전체%' THEN 2
-    # WHEN addr LIKE '%지역%' THEN 3
-    # ELSE 4
-    # END) limit 조회할 시작 row, row 개수;
-    '''
-    Session = sessionmaker(bind=client)
-    session_ = Session()
+            if category_keyword[len(category_keyword) - 1] == tag:
+                tag_query += ' = 1'
+            else:
+                tag_query += ' = 1 or '
 
     offset = (page * Config.LIMIT_LEN) - Config.LIMIT_LEN
-
+    db = Query()
     try:
-        if tag_query == '':
-            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                       model_search.place_name.like(place_keyword))
-        else:
-            sub_query = session_.query(model_search.content_id).filter(model_search.addr.like(area) |
-                                                                       model_search.place_name.like(place_keyword) |
-                                                                       text(tag_query))
+        cursor, engine, mydb = db.connect_sql()
+        query = f"(select * from place where content_id in(\
+                select content_id from search where addr like '%{area}%' or place_name like '%{place_keyword}%' or '%{tag_query}%') and place_num = 0 order by (case \
+                when place_name like '%{place_keyword}%' and addr like '%{area}%' then 1\
+                when place_name like '%{place_keyword}%' or addr like '%{area}%' then 2\
+                when addr like '%{area}%' then 3\
+                else 4\
+                end) limit {offset}, {Config.LIMIT_LEN});"
 
-        main_query = session_.query(model_place).filter(
-            and_(model_place.place_num == 0, model_place.content_id.in_(sub_query))).order_by(
-            case(
-                (and_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 1),
-                (or_(model_place.place_name.contains(place_keyword), model_place.addr.contains(area)), 2),
-                (model_place.addr.contains(area), 3),
-                else_=4
-            )
-        ).offset(offset).limit(Config.LIMIT_LEN).all()
+        cursor.execute(query)
+        result = cursor.fetchall()
 
+        content_id, place_info = [], []
+        for res in result:
+            res['tag'] = str(res['tag']).split('#')[1:4]
+            res['detail_image'] = str(res['detail_image']).split(',')[:5]
+            content_id.append(res['content_id'])
+            place_info.append(res)
+            res['modified_date'] = str(res['modified_date'])
     except:
         params['code'] = 500
-    finally:
-        session_.close()
-
-    place_info, content_id = [], []
-    for query in main_query:
-        query.tag = str(query.tag).split('#')[1:4]
-        query.detail_image = str(query.detail_image).split(',')[:5]
-        content_id.append(query.content_id)
-        place_info.append(query)
-        query.modified_date = str(query.modified_date)
 
     algo_stars, algo_scores = get_score(content_id)
     tags = get_top_tag(content_id, 3)
@@ -109,9 +93,14 @@ def get_tag_searchlist(params, res_len, page):
 
     logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
 
+    # 지역만 검색 시
+    params['flag'] = False
+    if len(tag_query) == 1 and len(place_keyword) == 1:
+        params['flag'] = True
+
     params['code'] = 200
     params['keywords'] = ', '.join(split_params)
-    params['res_num'] = len(main_query)
+    params['res_num'] = len(result)
     params['place_info'] = place_info
     params['algo_star'] = algo_stars
     params['algo_score'] = algo_scores
@@ -289,8 +278,8 @@ def get_popular_list(place_obj, algo_obj, page):
         star = algo_obj['algo_stars'][i]
         tag = algo_obj['tags'][i]
 
-        arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
+        arr = [obj['place_name'], obj['content_id'], obj['detail_image'],
+               obj['tag'], obj['readcount'], str(obj['modified_date']), star, tag]
 
         place_info.append(arr)
     place_info.sort(key=itemgetter(Config.STAR), reverse=True)  # star = 6
@@ -317,8 +306,8 @@ def get_readcount_list(place_obj, algo_obj, page):
         star = algo_obj['algo_stars'][i]
         tag = algo_obj['tags'][i]
 
-        arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
+        arr = [obj['place_name'], obj['content_id'], obj['detail_image'],
+               obj['tag'], obj['readcount'], str(obj['modified_date']), star, tag]
 
         place_info.append(arr)
 
@@ -346,11 +335,11 @@ def get_modified_list(place_obj, algo_obj, page):
         star = algo_obj['algo_stars'][i]
         tag = algo_obj['tags'][i]
 
-        if obj.modified_date is None:
-            obj.modified_date = str('2000-01-01 00:00:00')
+        if obj['modified_date'] is None:
+            obj['modified_date'] = str('2000-01-01 00:00:00')
 
-        arr = [obj.place_name, obj.content_id, obj.detail_image,
-               obj.tag, obj.readcount, str(obj.modified_date), star, tag]
+        arr = [obj['place_name'], obj['content_id'], obj['detail_image'],
+               obj['tag'], obj['readcount'], str(obj['modified_date']), star, tag]
 
         place_info.append(arr)
 

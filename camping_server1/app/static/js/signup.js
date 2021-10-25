@@ -147,7 +147,6 @@ var SignupEvent = {
         var first_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey1').bind('click', function(){
            if ($('.btn-survey1').not(this).prop('disabled') === true){
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -179,7 +178,6 @@ var SignupEvent = {
         var second_sub_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey2').bind('click', function(){
            if ($('.btn-survey2').not(this).prop('disabled') === true){
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -223,7 +221,6 @@ var SignupEvent = {
         var third_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey3').bind('click', function(){
            if ($('.btn-survey3').not(this).prop('disabled') === true){
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -257,7 +254,6 @@ var SignupEvent = {
         var fourth_sub_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey4-1').bind('click', function(){
            if ($('.btn-survey4-1').not(this).prop('disabled') === true){
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -303,7 +299,6 @@ var SignupEvent = {
         var fifth_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey5').bind('click', function () {
             if ($('.btn-survey5').not(this).prop('disabled') === true) {
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -336,7 +331,6 @@ var SignupEvent = {
         var sixth_answer = '';
         var id = getQueryString('id');
 
-        $('.user-nickname').text(getCookie(id));
         $('.btn-survey6').bind('click', function(){
             if ($('.btn-survey6').not(this).prop('disabled') === true){
                 $(this).css('backgroundColor', '#dbdbdb');
@@ -398,7 +392,6 @@ var SignupEvent = {
         //     continue
         // }
 
-        $('.user-nickname').text(getCookie(id));
         delCookie(id);
         $('.btn-main-router').on('click', function(){
             location.href = '/';
