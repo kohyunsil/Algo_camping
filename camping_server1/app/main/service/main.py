@@ -127,10 +127,10 @@ def get_user_recommend_swiper(param):
             A500_u = int(user_survey_obj.A500)
             A600_u = int(user_survey_obj.A600)
 
-        # 설문결과가 0인 경우 (kakao login)
-        # if A100_u == 0 and A200_u == 0 and A210_u == 0 and A300_u == 0 and A410_u == 0 and A420_u == 0 and A500_u == 0 and A600_u == 0:
-        #     return get_recommend_swiper()
-        # else:
+        # 유저 설문결과가 0인 경우
+        if A100_u == 0 and A200_u == 0 and A210_u == 0 and A300_u == 0 and A410_u == 0 and A420_u == 0 and A500_u == 0 and A600_u == 0:
+            return get_recommend_swiper()
+
         '''
         # SELECT * FROM scenario WHERE spot1 = 1 and a100 = user a100
         # UNION ALL SELECT * FROM scenario WHERE spot1 = 1 and a200 = user a200
