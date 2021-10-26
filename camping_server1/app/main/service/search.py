@@ -486,9 +486,10 @@ def get_bannerlist(param):
     session_ = Session()
 
     scenario_copy = {'s101': '아이들과 가기 좋은 캠핑장', 's102': '동해 근처 캠핑장', 's105': '투어하기 좋은 남해 근처 캠핑장',
-                     's108': '가을 정취 가득한 캠핑장', 's111': '반려동물과 함께해서 더 좋은 캠핑장', 's112': '제주 해수욕장 근처 인기 캠핑장',
+                     's107': '가을 정취 가득한 캠핑장', 's111': '반려동물과 함께해서 더 좋은 캠핑장', 's112': '제주 해수욕장 근처 인기 캠핑장',
                      's115': '가족들과 함께 하는 즐거운 오토 캠핑', 's119': '연인과 행복한 글램핑&카라반'}
 
+    res_param, place_info, algostar = dict(), list(), list()
     try:
         '''
         # SELECT copy, content_id FROM scenario WHERE spot2=1 AND scene_no = param['scene_no'];
@@ -514,7 +515,6 @@ def get_bannerlist(param):
 
         query = union_all_query[0].union_all(*union_all_query).all()
 
-        res_param, place_info, algostar = dict(), list(), list()
         for q in query:
             place_info.append(q[0])
             algostar.append(q[1].algostar)
@@ -529,34 +529,5 @@ def get_bannerlist(param):
         logging.error('----[' + str(datetime.datetime.now()) + ' get_bannerlist() : 500]----')
     finally:
         session_.close()
-    return jsonify(res_param)
 
-# # content_id에 대한 place info
-# def get_searchlist(content_id, copy=None):
-#     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
-#     Session = sessionmaker(bind=client)
-#     session_ = Session()
-#     param = dict()
-#     try:
-#         '''
-#         # SELECT place_name, first_image FROM place WHERE place_num = 0 and content_id = param['content_id'];
-#         '''
-#         place_query = session_.query(model_place.place_name, model_place.first_image).filter(
-#             and_(model_place.place_num == 0, model_place.content_id == content_id)
-#         ).all()
-#
-#         param['place_name'] = place_query[0].place_name
-#         param['first_image'] = place_query[0].first_image
-#         param['algo_star'], _ = get_score(content_id)
-#         param['content_id'] = content_id
-#
-#         if copy is not None:
-#             param['copy'] = copy
-#         param['code'] = 200
-#
-#         logging.info('----[' + str(datetime.datetime.now()) + ' get_searchlist() : 200]----')
-#     except:
-#         logging.error('----[' + str(datetime.now()) + ' get_searchlist() : 500]----')
-#     finally:
-#         session_.close()
-#     return param
+    return jsonify(res_param)

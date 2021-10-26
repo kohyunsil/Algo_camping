@@ -162,7 +162,7 @@ var SearchList = {
                         })
                     })
                 }else{
-                    alert('다시 시도해주세요');
+                    console.log(response);
                 }
             })
         }
@@ -277,7 +277,6 @@ var SearchList = {
 
                 $.getJSON('/search/pagination/list/' + response.row_nums + '/' + 1, params).done(function(response){
                     if(response.code === 200){
-                        console.log(response);
                         SearchList.getSearchData(response, row_nums);
                     }else{
                         alert(response.code);
@@ -328,7 +327,6 @@ var SearchList = {
         $('.input-keyword').text(keyword_str + '에 대한');
 
         if (res.flag === true){
-            console.log(res.algo_star.length);
             $('.input-size').empty();
             $('.input-size').text(res.algo_star.length);
         }

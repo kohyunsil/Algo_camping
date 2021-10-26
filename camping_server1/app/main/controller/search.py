@@ -112,5 +112,4 @@ class SearchBannerList(Resource):
         except:
             params['access_token'] = ''
 
-        print(params)
         return search_service.get_bannerlist(params)
