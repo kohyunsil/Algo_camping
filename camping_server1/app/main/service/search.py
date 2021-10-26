@@ -184,8 +184,10 @@ def get_row_nums(params):
 
     res_param = dict()
     res_param['code'] = 200
-    res_param['row_nums'] = int(main_query[0][0])
-
+    if place_keyword == '' and area != '' and len(category_keyword) == 0:
+        res_param['row_nums'] = 16
+    else:
+        res_param['row_nums'] = int(main_query[0][0])
     return jsonify(res_param)
 
 # 유저-캠핑장 매칭도
