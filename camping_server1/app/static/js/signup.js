@@ -132,6 +132,8 @@ var SignupEvent = {
                     $.post('user/signup', param).done(function(response){
                         if (response.code === 200){
                             setCookie(response.id, response.nickname, 1);
+                            answerParam.userNickname = response.nickname;
+
                             var url = '/signup/survey/first?id=' + response.id;
                             location.href = url;
                         }else{
@@ -146,6 +148,7 @@ var SignupEvent = {
     surveyFirst: function(){
         var first_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey1').bind('click', function(){
            if ($('.btn-survey1').not(this).prop('disabled') === true){
@@ -177,6 +180,7 @@ var SignupEvent = {
         var second_answer = '';
         var second_sub_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey2').bind('click', function(){
            if ($('.btn-survey2').not(this).prop('disabled') === true){
@@ -220,6 +224,7 @@ var SignupEvent = {
     surveyThird: function(){
         var third_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey3').bind('click', function(){
            if ($('.btn-survey3').not(this).prop('disabled') === true){
@@ -253,6 +258,7 @@ var SignupEvent = {
         var fourth_answer = '';
         var fourth_sub_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey4-1').bind('click', function(){
            if ($('.btn-survey4-1').not(this).prop('disabled') === true){
@@ -298,6 +304,7 @@ var SignupEvent = {
     surveyFifth: function() {
         var fifth_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey5').bind('click', function () {
             if ($('.btn-survey5').not(this).prop('disabled') === true) {
@@ -330,6 +337,7 @@ var SignupEvent = {
     surveySixth: function(){
         var sixth_answer = '';
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
 
         $('.btn-survey6').bind('click', function(){
             if ($('.btn-survey6').not(this).prop('disabled') === true){
@@ -385,6 +393,7 @@ var SignupEvent = {
     },
     surveyDone: function(){
         var id = getQueryString('id');
+        $('.user-nickname').text(getCookie(id));
         // if (id === '' || getQueryString('q1') === '' || getQueryString('q2') === '' || getQueryString('q2sub') === '' ||
         //             getQueryString('q3') === '' || getQueryString('q4') === '' || getQueryString('q4sub') === '' || getQueryString('q5') === ''){
         //     window.alert('비정상적인 접근입니다.');

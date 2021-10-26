@@ -23,16 +23,6 @@ try{
     param.access_token = ''
 }
 
-console.log(param.access_token);
-// $('.swiper2-card-1').each(function (){
-//     $(this).click(function(event){
-//         alert($(this).attr('class'));
-//     })
-// })
-//
-// $('#recommend-swiper-01x').click(function(){
-//     alert('clickkkk');
-// })
 // 새로고침
 if (performance.navigation.type == 1 && (param.access_token !== '' || param.access_token !== undefined)){
         $.getJSON('/main/swiper/recommend/1', param).done(function(response){

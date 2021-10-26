@@ -135,6 +135,7 @@ def signup(req_email=None, req_password=None, req_name=None, req_nickname=None, 
         param['id'] = str(id[0][0])
         param['nickname'] = nickname
 
+        print(param)
     return param
 
 # 회원가입 설문 추가

@@ -84,7 +84,7 @@ class UserSignup(Resource):
     @user.expect(user_model)
     def post(self):
         """회원가입"""
-        values = dict(request.values)
+        param = dict(request.values)
         return user_service.signup(param['email'], param['password'], param['name'], param['nickname'],
                                    param['birthDate'])
 
