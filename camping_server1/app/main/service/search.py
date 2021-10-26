@@ -105,8 +105,7 @@ def get_tag_searchlist(params, res_len, page):
     params['algo_star'] = algo_stars
     params['algo_score'] = algo_scores
     params['tag'] = tags
-    if match_pct is not False:
-        params['match_pct'] = match_pct
+    params['match_pct'] = match_pct # 유저 설문 응답이 없을 경우 False
 
     return params
 
@@ -212,9 +211,14 @@ def get_matching_rate(content_id):
                         userpoint_query = session_.query(model_user.comfort, model_user.together,
                                                          model_user.fun, model_user.healing, model_user.clean).filter(model_user.access_token == session['access_token']).all()
 
-                        if len(algopoint_query) == 0 or len(userpoint_query) == 0:
-                            param['code'] = 500
-                            return param
+                        if len(algopoint_query) == 0:
+                            return False
+
+                        # 유저 응답이 없을 경우
+                        if userpoint_query[0].comfort == 0 and userpoint_query[0].together == 0 and userpoint_query[0].fun == 0 and \
+                                userpoint_query[0].healing == 0 and userpoint_query[0].clean == 0:
+                            return False
+
                         else:
                             userpoint_list = [userpoint_query[0].comfort, userpoint_query[0].together, userpoint_query[0].fun,
                                               userpoint_query[0].healing, userpoint_query[0].clean]
@@ -246,8 +250,13 @@ def get_matching_rate(content_id):
                         model_user.access_token == session['access_token']).all()
 
                     if len(algopoint_query) == 0 or len(userpoint_query) == 0:
-                        param['code'] = 500
-                        return param
+                        return False
+
+                    # 유저 응답이 없을 경우
+                    if userpoint_query[0].comfort == 0 and userpoint_query[0].together == 0 and userpoint_query[0].fun == 0 and \
+                            userpoint_query[0].healing == 0 and userpoint_query[0].clean == 0:
+                        return False, False
+
                     else:
                         userpoint_list = [userpoint_query[0].comfort, userpoint_query[0].together,
                                           userpoint_query[0].fun,
@@ -264,7 +273,7 @@ def get_matching_rate(content_id):
                     session_.close()
             return match_pct, userpoint_list
     except:
-        return False
+        return False, False
 
 # 인기순 정렬
 def get_popular_list(place_obj, algo_obj, page):
