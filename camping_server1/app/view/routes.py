@@ -63,7 +63,6 @@ def signup():
 def survey_first():
     if user.is_signin():
         param['name'] = user.is_signin()['name']
-        print(param)
     return render_template('join/survey1.html', param=param)
 
 

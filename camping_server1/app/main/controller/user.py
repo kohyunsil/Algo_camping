@@ -190,10 +190,6 @@ class UserSNSSignin(Resource):
         session['name'] = name
         session['platform'] = platform
         session['id'] = id
-
-        print(session['name'])
-        print(session['id'])
-
         return jsonify({'code': 200})
 
 

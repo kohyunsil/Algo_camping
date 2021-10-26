@@ -42,7 +42,7 @@ var SigninEvent = {
                                 }
                             })
                         }
-                    }else{ㅡ
+                    }else{
                         alert(response.code + '다시 시도해주세요.');
                     }
                 })
