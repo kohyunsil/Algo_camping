@@ -6,8 +6,8 @@ import logging
 from flask_mongoengine import MongoEngine
 from flask_cors import CORS, cross_origin
 
-app = create_app()
 app.register_blueprint(blueprint)
+app = create_app()
 CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -16,9 +16,9 @@ def page_not_found(error):
     logging.warning('----[' + str(datetime.now()) + ' page_not_found() : 404]----')
     return redirect(url_for('main.main_page'))
 
-
 @blueprint.after_request
 def after_request(response):
+
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
     return response
