@@ -129,7 +129,6 @@ var DetailInfo = {
         });
     },
     showLikeIcon: function(res){
-
         if (res.like === 'None' || res.like === ''){
             $('#nonempty-like').css({'display': 'none'});
         }else{

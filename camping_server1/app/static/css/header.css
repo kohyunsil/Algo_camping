@@ -28,6 +28,9 @@
 .header-logo-img{
     width: 9rem;
 }
+#logout-menu{
+    margin-left: 30%;
+}
 .form-control-dark {
     color: #fff;
     border-color: gray;

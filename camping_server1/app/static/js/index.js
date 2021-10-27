@@ -141,7 +141,9 @@ var SignoutEvent = {
             //         location.href = url;
             //     }
             // }
+
             SignoutEvent.deleteCookie('access_token');
+            console.log(SignoutEvent.getCookie('access_token'));
             var url = '/auth/signout';
             location.href = url;
         })
