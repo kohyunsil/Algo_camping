@@ -10,7 +10,7 @@ main = Namespace('main', description='relating to main')
 
 @main.route('/download/<string:file_name>', methods=['GET'])
 @main.doc(params={'file_name': 'S3 요청 파일 명'})
-@main.doc(responses={400: 'Validation Error', 403: 'Forbidden' , 302: 'Redirect'})
+@main.doc(responses={400: 'Validation Error', 403: 'Forbidden', 302: 'Redirect'})
 class MainResource(Resource):
     def get(self, file_name):
         """메인 페이지 이미지 리소스"""

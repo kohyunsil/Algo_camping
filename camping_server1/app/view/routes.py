@@ -34,9 +34,11 @@ def main_page():
 
 @route_api.route('/detail/<int:content_id>/<int:id>')
 def detail(content_id, id):
-    param = {}
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('detail.html', param=param)
 
 
@@ -61,8 +63,11 @@ def signup():
 
 @route_api.route('/signup/survey/first')
 def survey_first():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('join/survey1.html', param=param)
 
 
@@ -73,22 +78,31 @@ def survey_second():
 
 @route_api.route('/signup/survey/third')
 def survey_third():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('join/survey3.html', param=param)
 
 
 @route_api.route('/signup/survey/fourth')
 def survey_fourth():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('join/survey4.html', param=param)
 
 
 @route_api.route('/signup/survey/fifth')
 def survey_fifth():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('join/survey5.html', param=param)
 
 
@@ -99,24 +113,33 @@ def survey_sixth():
 
 @route_api.route('/signup/survey/done')
 def survey_done():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('join/done.html', param=param)
 
 
 @route_api.route('/search')
 @route_api.route('/search/<string:banner>/<string:scene_no>')
 def search(banner=None, scene_no=None):
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
+    else:
+        param = None
     return render_template('searchlist.html', param=param)
 
 
 @route_api.route('/mypage')
 def myinfo():
+    param = dict()
     if user.is_signin():
         param['name'] = user.is_signin()['name']
-        return render_template('userinfo.html', param=param)
+    else:
+        param = None
+    return render_template('userinfo.html', param=param)
 
 
 @route_api.route('/auth/kakao', methods=['GET', 'OPTIONS'])

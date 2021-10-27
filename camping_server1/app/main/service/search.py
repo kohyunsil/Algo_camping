@@ -199,6 +199,7 @@ def get_matching_rate(content_id):
             client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
             Session = sessionmaker(bind=client)
             session_ = Session()
+            # 전체 검색 결과 리스트 content_id
             if type(content_id) == list:
                 for id in content_id:
                     try:
@@ -235,6 +236,7 @@ def get_matching_rate(content_id):
                     finally:
                         session_.close()
                 return match_result
+            # 특정 장소 content_id
             else:
                 try:
                     '''
@@ -271,11 +273,12 @@ def get_matching_rate(content_id):
                         match_pct = pa.matching_pct(algopoint_list, userpoint_list)
                 except:
                     match_pct = 0
+                    return match_pct, [0, 0, 0, 0, 0]
                 finally:
                     session_.close()
             return match_pct, userpoint_list
     except:
-        return False, False
+        return False if type(content_id) == list else False, False
 
 # 인기순 정렬
 def get_popular_list(place_obj, algo_obj, page):
@@ -299,13 +302,17 @@ def get_popular_list(place_obj, algo_obj, page):
         content_id_list.append(info[1]) # 인기순 정렬된 content_id 리스트
 
     match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
+    match_status = False
 
-    if match_pct is not False:
-        match_status = True # ok
-        for i, info in enumerate(place_info):
-            info.append(match_pct[i])
-    else:
-        match_status = False # no
+    if type(match_pct) != tuple:
+        if match_pct is not False:
+            match_status = True # ok
+
+            for i, info in enumerate(place_info):
+                info.append(match_pct[i])
+        else:
+            match_status = False # no
+
     return jsonify(make_resobj(place_info, page, match_status))
  
 # 조회순 정렬
@@ -328,13 +335,17 @@ def get_readcount_list(place_obj, algo_obj, page):
         content_id_list.append(info[1]) # 조회순 정렬된 content_id 리스트
 
     match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
+    match_status = False
 
-    if match_pct is not False:
-        match_status = True  # ok
-        for i, info in enumerate(place_info):
-            info.append(match_pct[i])
-    else:
-        match_status = False  # no
+    if type(match_pct) != tuple:
+        if match_pct is not False:
+            match_status = True # ok
+
+            for i, info in enumerate(place_info):
+                info.append(match_pct[i])
+        else:
+            match_status = False # no
+
     return jsonify(make_resobj(place_info, page, match_status))
 
 # 등록순 정렬
@@ -362,13 +373,17 @@ def get_modified_list(place_obj, algo_obj, page):
         content_id_list.append(info[1]) # 조회순 정렬된 content_id 리스트
 
     match_pct = get_matching_rate(content_id_list) if get_matching_rate(content_id_list) else False
+    match_status = False
 
-    if match_pct is not False:
-        match_status = True  # ok
-        for i, info in enumerate(place_info):
-            info.append(match_pct[i])
-    else:
-        match_status = False  # no
+    if type(match_pct) != tuple:
+        if match_pct is not False:
+            match_status = True # ok
+
+            for i, info in enumerate(place_info):
+                info.append(match_pct[i])
+        else:
+            match_status = False # no
+
     return jsonify(make_resobj(place_info, page, match_status))
 
 # 알고 점수 호출
