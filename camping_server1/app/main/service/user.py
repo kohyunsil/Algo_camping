@@ -469,7 +469,7 @@ def social_signin(data):
     email = kakao_account.get('nickname', None)
     kakao_id = str(data.get('id'))
 
-    A100_u, A200_u, A210_u, A300_u, A410_u, A420_u, A500_u, A600_u = 0, 0, 0, 0, 0, 0, 0, 0
+    id, A100_u, A200_u, A210_u, A300_u, A410_u, A420_u, A500_u, A600_u = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
     client = create_engine(DBConfig.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=client)

@@ -25,7 +25,11 @@
                     </div>
                     <br>
                     <span>거의 다 왔어요,<br>
+                    {% if param.name %}
                     <span class="user-nickname">{{param.name}}</span>님에게 캠핑이 어떤 즐거움을 주는지 생각해보세요</span>
+                    {% else %}
+                    <span class="user-nickname">캠퍼</span>님에게 캠핑이 어떤 즐거움을 주는지 생각해보세요</span>
+                    {% endif %}
                     <br><br>
                     <div class="mb-3 "><br>
                         <h5>4-1. 캠핑가기 딱 좋은 계절은 언제인가요?</h5><br>
