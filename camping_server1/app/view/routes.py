@@ -139,7 +139,7 @@ def myinfo():
         param['name'] = user.is_signin()['name']
     else:
         param = None
-        return render_template('userinfo.html', param=param)
+    return render_template('userinfo.html', param=param)
 
 
 @route_api.route('/auth/kakao', methods=['GET', 'OPTIONS'])

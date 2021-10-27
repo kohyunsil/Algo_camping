@@ -8,17 +8,6 @@ var like_list = [];
 // header logo img 경로
 $('.header-logo-img').attr('src', '/static/imgs/algo_logo2.png');
 
-// header signout
-// $('#logout-btn').on('click', function(){
-//     var token_name = 'access_token';
-//     document.cookie = token_name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-//
-//     console.log(SignoutEvent.getCookie('access_token'));
-//     // var url = '/auth/signout';
-//     // location.href = url;
-// });
-
-
 $('#empty-like').click(function(){
     param.status = 1; // like
     like_list.push(param.content_id);
