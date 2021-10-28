@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from tqdm import tqdm
-# from fbprophet import Prophet
+from fbprophet import Prophet
 import sys
 import os
 
@@ -131,12 +131,14 @@ class MakeDataframe:
         return self.SIGUNGU
 
     def make_algopoint_df(self):
-        point_df = algo.make_algo_df()
-        point_df['algostar'] = np.round(point_df.sum(axis=0)/100, 1)
+        point_df = algo.algo_log_scale()
+        point_df.drop('camp', axis=1, inplace=True)
+        point_df.set_index('contentId', inplace=True)
+        point_df['algostar'] = np.round(point_df.sum(axis=1)/100, 1)
+        point_df.reset_index(inplace=True)
         point_df.rename(columns={
             'contentId': 'content_id'
         }, inplace=True)
-        point_df.drop('camp', axis=1, inplace=True)
         print(point_df.columns)
         return point_df
 
@@ -229,9 +231,9 @@ class MakeDataframe:
 
         return final_data
 
-    def make_visitor_past_df(self, startYmd=20180101, endYmd=20211010): #visitor_past_df
-        df = tourapi.visitors_API(startYmd, endYmd)
-        # df = pd.read_csv("../../datas/visitors_2018_2021.csv", index_col=[0], encoding='utf-8-sig')
+    def make_visitor_past_df(self, startYmd=20180101, endYmd=20211019): #visitor_past_df
+        # df = tourapi.visitors_API(startYmd, endYmd)
+        df = pd.read_csv("../../datas/past_visitors_20211028.csv", index_col=[0], encoding='utf-8-sig')
         df.replace(to_replace=0, value=0.0001, inplace=True)  # 0명의 경우 근사치인 0.0001로 치환
         result_df = df[['baseYmd', 'signguCode', 'signguNm', 'touDivNm', 'touNum']].copy()
         idx = df[df['touDivNm'] == '현지인(a)'].index
@@ -252,13 +254,13 @@ class MakeDataframe:
         result_df = result_df[['base_ymd', 'sigungu_code', 'visitor']].copy()
         return result_df
 
-    def make_visitor_future_df(self, startYmd=20180101, endYmd=20210910, period=90):
-        sql = Query()
-        cursor, engine, db = sql.connect_sql()
-        query = f"select * from {sql.DB}.visitor_past"
-        cursor.execute(query)
-        result = cursor.fetchall()
-        result_df = pd.DataFrame(result) #self.make_visitor_past_df(startYmd, endYmd)
+    def make_visitor_future_df(self, startYmd, endYmd, period=90):
+        # sql = Query()
+        # cursor, engine, db = sql.connect_sql()
+        # query = f"select * from {sql.DB}.visitor_past"
+        # cursor.execute(query)
+        # result = cursor.fetchall()
+        result_df = self.make_visitor_past_df(startYmd, endYmd)  # pd.DataFrame(result)
         result_df['sigungu_code'] = result_df['sigungu_code'].replace({28170: 28177})
         print(result_df.tail())
         sgg_list = np.unique(result_df.sigungu_code.tolist())
@@ -272,7 +274,7 @@ class MakeDataframe:
             final_df[sgg] = result_df[result_df['sigungu_code'] == sgg]['visitor'].tolist()
         print(f"기간: 총 {len(final_df.index)}일, 시군구 개수: {len(final_df.columns)}")
 
-        predict_df = pd.DataFrame(columns=['ds', 'trend', 'sigungu_code'])
+        predict_df = pd.DataFrame(columns=['ds', 'yhat', 'sigungu_code'])
         for sigungu in tqdm(final_df.columns.tolist()):
             train_data = final_df[[sigungu]].copy().reset_index()
             train_data.rename(columns={'index': 'ds', sigungu: 'y'}, inplace=True)
@@ -280,16 +282,16 @@ class MakeDataframe:
             m.fit(train_data)
             future = m.make_future_dataframe(periods=period)
             forecast = m.predict(future)
-            new_df = forecast[['ds', 'trend']][-period:].reset_index(drop=True)
+            new_df = forecast[['ds', 'yhat']][-period:].reset_index(drop=True)
             new_df['sigungu_code'] = sigungu
             predict_df = pd.concat([predict_df, new_df], axis=0)
             predict_df.reset_index(drop=True, inplace=True)
 
-        predict_df = predict_df[['sigungu_code', 'ds', 'trend']].copy()
+        predict_df = predict_df[['sigungu_code', 'ds', 'yhat']].copy()
         predict_df['created_date'] = datetime.now()
         predict_df.rename(columns={
             'ds': 'base_ymd',
-            'trend': 'visitor'
+            'yhat': 'visitor'
         }, inplace=True)
 
         return predict_df
@@ -348,7 +350,7 @@ class MakeDataframe:
         ### Main Scenario
         row = 20
         main_scene_dict = {'a200': [i for i in range(1, 5)],  # a200
-                           'a210': [i for i in range(1, 3)],  # a210
+                           'a210': [1],  # a210 - 반려동물 동반 O만 대상
                            'a300': [i for i in range(1, 4)],  # a300
                            'a410': [i for i in range(1, 5)],  # a410
                            'a420': [i for i in range(1, 5)],  # a420
@@ -470,6 +472,7 @@ class MakeDataframe:
         result_df = result_df.rename(columns={'contentId': 'content_id',
                                               'facltNm': 'place_name',
                                               'firstImageUrl': 'first_image'})
+        result_df.dropna(axis=0, subset=['first_image', 'copy'], inplace=True)
         return result_df
 
 

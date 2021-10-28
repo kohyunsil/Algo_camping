@@ -164,4 +164,5 @@ class KoreaTourApi:
             print("API response success")
             past_df = json_normalize(rDD['response']['body']['items']['item'])
             print("API normalize & making dataframe success")
+            past_df.to_csv(config.Config.PATH + f"past_visitors_{endYmd}.csv", encoding='utf-8-sig')
             return past_df

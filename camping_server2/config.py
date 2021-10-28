@@ -54,7 +54,7 @@ class Config:
             '익스트림' : '액티비티',
             '반려견' : '함께'}
 
-    CAMP = pd.read_csv(PATH + "camp_api_info_210619.csv", index_col=0)
+    CAMP = pd.read_csv(PATH + "gocampapi_test.csv", index_col=0)
     FESTIVAL = pd.read_csv(PATH + "festival_210613.csv", index_col=0)
     TOUR = pd.read_csv(PATH + "tour_list_210612.csv", index_col=0)
     CAMP_DETAILS = pd.read_csv(PATH + "crawling_data.csv", encoding='utf-8-sig')

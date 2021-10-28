@@ -29,9 +29,9 @@ if __name__ == '__main__':
     # create.create_sns_info_tb(sql.DB, cursor)
     # create.create_user_action_tb(sql.DB, cursor)
     # create.create_visitor_past_tb(sql.DB, cursor)
-    # create.create_visitor_future_tb(sql.DB, cursor)
+    create.create_visitor_future_tb(sql.DB, cursor)
     # create.create_review_tb(sql.DB, cursor)
-    create.create_scenario_tb(sql.DB, cursor)
+    # create.create_scenario_tb(sql.DB, cursor)
 
 
     # make data for table & sql insert
@@ -61,14 +61,14 @@ if __name__ == '__main__':
     # print(visitor_past_df.columns)
     # sql.save_sql(engine, visitor_past_df, 'visitor_past', 'append')
 
-    # visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20211010, period=90)
-    # print(visitor_future_df.columns)
-    # sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
+    visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20211010, period=90)
+    print(visitor_future_df.columns)
+    sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
 
     # review_df = content.make_review_df()
     # print(review_df.columns)
     # sql.save_sql(engine, review_df, 'review', 'append')
 
-    scenario_df = content.make_scenario_df()
-    print(scenario_df)
-    sql.save_sql(engine, scenario_df, 'scenario', 'append')
+    # scenario_df = content.make_scenario_df()
+    # print(scenario_df)
+    # sql.save_sql(engine, scenario_df, 'scenario', 'append')

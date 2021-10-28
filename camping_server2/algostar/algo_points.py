@@ -59,12 +59,12 @@ class AlgoPoints(cp.Cat5Points):
 
     def algo_log_scale(self):
 
-        data = self.make_algo_df(just_load_file='max')
+        data = self.make_algo_df()
         scale = data.iloc[:, 2:]
         log_df1 = np.log1p(scale)
         dec_max = 100 / (log_df1.max().max())
         log_df2 = np.log1p(scale) * dec_max
 
         scaled_algo_df = pd.concat([data.iloc[:, :2], log_df2], 1)
-        print(scaled_algo_df)
+        print(scaled_algo_df.columns)
         return scaled_algo_df
