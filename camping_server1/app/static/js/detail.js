@@ -193,7 +193,8 @@ var DetailInfo = {
 
         var tag = [];
         var colors = ['#49917d', '#e7cb01', '#c4c4c4'];
-        const SIZE = [1300, 900, 600, 300, 100]
+        // const SIZE = res.size;
+        const SIZE = [1300, 900, 600, 300, 100];
 
         for (var i=0; i<res.tag.length; i++){
             var bubbleinfo = {

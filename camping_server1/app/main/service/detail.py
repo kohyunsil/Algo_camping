@@ -51,7 +51,7 @@ def get_detail(param):
                 params['local_info'] = local_obj if local_obj is not None else None
 
                 params['algo_star'], params['algo_score'] = get_score(place_info[0].content_id)
-                params['tag'] = get_top_tag(int(req_contentid), 5)
+                params['tag'], params['size'] = get_top_tag(int(req_contentid), 5)
 
                 try:
                     params['user_name'] = session['name']
@@ -70,7 +70,6 @@ def get_detail(param):
                 pass
             finally:
                 session_.close()
-
         except:
             logging.error('----[' + str(datetime.datetime.now()) + ' get_detail() : 500]----')
             params['code'] = 500

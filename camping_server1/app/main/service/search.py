@@ -3,6 +3,7 @@ from app.main.model.search_dao import SearchDAO as model_search
 from app.main.model.algopoint_dao import AlgoPointDAO as model_algopoint
 from app.main.model.user_dao import UserDAO as model_user
 from app.main.model.scenario_dao import ScenarioDAO as model_scenario
+from app.main.model.algotag_dao import AlgoTagDAO as model_algotag
 from app.main.model import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import func
@@ -15,6 +16,7 @@ import pandas as pd
 import logging
 from app.main.service.user_points import PolarArea
 from ..model.connect import Query
+# from ..service.detail import get_bubble_size
 
 # 검색결과 리스트
 def get_tag_searchlist(params, res_len, page):
@@ -417,6 +419,27 @@ def get_algo_points(content_id):
         return 0.0, []
     return algo_star, cat_points_list
 
+# 버블 차트 크기
+def get_bubble_size(content_id, top5_tag):
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+    bubble_size = list()
+    try:
+        '''
+        # SELECT point FROM algotag WHERE content_id= [content_id] AND tag= [top5_tag1] UNION ALL ...
+        '''
+        union_all_query = [session_.query(model_algotag.point).filter(and_(model_algotag.content_id == content_id,
+                                                                     model_algotag.tag == tag)) for tag in top5_tag]
+        query = union_all_query[0].union_all(*union_all_query).all()
+
+        for q in query:
+            bubble_size.append(q.point)
+    except:
+        pass
+    finally:
+        session_.close()
+    return bubble_size
+
 # top3,5 특성
 def get_top_tag(content_id, num):
     tags = []
@@ -428,7 +451,9 @@ def get_top_tag(content_id, num):
             tags.append(top3_tag)
         return tags
     else:
-        return tag.tag_priority(content_id, rank=num)
+        top5_tag = tag.tag_priority(content_id, rank=num)
+        bubble_size = get_bubble_size(content_id, top5_tag)
+        return top5_tag, bubble_size
 
 # 반환되는 객체 만들기
 def make_resobj(place_info, page, match_status):
