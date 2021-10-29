@@ -3,6 +3,7 @@ from app.main.model.search_dao import SearchDAO as model_search
 from app.main.model.algopoint_dao import AlgoPointDAO as model_algopoint
 from app.main.model.user_dao import UserDAO as model_user
 from app.main.model.scenario_dao import ScenarioDAO as model_scenario
+from app.main.model.algotag_dao import AlgoTagDAO as model_algotag
 from app.main.model import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import func
@@ -15,6 +16,7 @@ import pandas as pd
 import logging
 from app.main.service.user_points import PolarArea
 from ..model.connect import Query
+# from ..service.detail import get_bubble_size
 
 # 검색결과 리스트
 def get_tag_searchlist(params, res_len, page):
@@ -386,36 +388,63 @@ def get_modified_list(place_obj, algo_obj, page):
 
     return jsonify(make_resobj(place_info, page, match_status))
 
-# 알고 점수 호출
+# 알고 점수, 알고 별점 호출
 def get_score(content_id):
-    algostars, algoscores = [], []
-
-    if type(content_id) == list:
-        for target_id in content_id:
-            star, score = get_algo_points(target_id)
-            algostars.append(star)
-            algoscores.append(score)
-        return algostars, algoscores
-    else:
-        return get_algo_points(content_id)
-
-# 알고 별점, 알고 점수 계산
-def get_algo_points(content_id):
-    algo_df = pd.read_csv(Config.ALGO_POINTS)
+    Session = sessionmaker(bind=client)
+    session_ = Session()
     try:
-        algo_df.set_index(['contentId', 'camp'], inplace=True)
-        comfort_point = float(algo_df.loc[content_id]['comfort'])
-        together_point = float(algo_df.loc[content_id]['together'])
-        fun_point = float(algo_df.loc[content_id]['fun'])
-        healing_point = float(algo_df.loc[content_id]['healing'])
-        clean_point = float(algo_df.loc[content_id]['clean'])
+        if type(content_id) == list:
+            algostars, algoscores = [], []
 
-        cat_points_list = [comfort_point, together_point, fun_point, healing_point, clean_point]
-        algo_star = round(sum(cat_points_list) / 100, 1)
+            '''
+            # SELECT comfort, together, fun, healing, clean, algostar FROM algopoint WHERE content_id = 'content id' UNION ALL..;
+            '''
+            union_all_query = [session_.query(model_algopoint.comfort, model_algopoint.together, model_algopoint.fun, model_algopoint.healing,
+                                              model_algopoint.clean, model_algopoint.algostar).filter(model_algopoint.content_id == target_id) for target_id in content_id]
+            query = union_all_query[0].union_all(*union_all_query).all()
+
+            for q in query:
+                algostars.append(q.algostar)
+                algoscores.append([q.comfort, q.together, q.fun, q.healing, q.clean])
+
+            return algostars, algoscores
+        else:
+            algostars, algoscores = 0, []
+            '''
+            # SELECT comfort, together, fun, healing, clean, algostar FROM algopoint WHERE content_id = 'content id';
+            '''
+            query = session_.query(model_algopoint.comfort, model_algopoint.together, model_algopoint.fun, model_algopoint.healing,
+                           model_algopoint.clean, model_algopoint.algostar).filter(model_algopoint.content_id == content_id).all()
+            for q in query:
+                algostars = q.algostar
+                algoscores = [q.comfort, q.together, q.fun, q.healing, q.clean]
+            return algostars, algoscores
     except:
         # content_id에 대한 별점, 점수 산출 불가인 경우
         return 0.0, []
-    return algo_star, cat_points_list
+    finally:
+        session_.close()
+
+# 버블 차트 크기
+def get_bubble_size(content_id, top5_tag):
+    Session = sessionmaker(bind=client)
+    session_ = Session()
+    bubble_size = list()
+    try:
+        '''
+        # SELECT point FROM algotag WHERE content_id= [content_id] AND tag= [top5_tag1] UNION ALL ...
+        '''
+        union_all_query = [session_.query(model_algotag.point).filter(and_(model_algotag.content_id == content_id,
+                                                                     model_algotag.tag == tag)) for tag in top5_tag]
+        query = union_all_query[0].union_all(*union_all_query).all()
+
+        for q in query:
+            bubble_size.append(q.point)
+    except:
+        pass
+    finally:
+        session_.close()
+    return bubble_size
 
 # top3,5 특성
 def get_top_tag(content_id, num):
@@ -428,7 +457,9 @@ def get_top_tag(content_id, num):
             tags.append(top3_tag)
         return tags
     else:
-        return tag.tag_priority(content_id, rank=num)
+        top5_tag = tag.tag_priority(content_id, rank=num)
+        bubble_size = get_bubble_size(content_id, top5_tag)
+        return top5_tag, bubble_size
 
 # 반환되는 객체 만들기
 def make_resobj(place_info, page, match_status):

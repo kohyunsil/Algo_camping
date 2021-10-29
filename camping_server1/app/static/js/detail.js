@@ -193,7 +193,13 @@ var DetailInfo = {
 
         var tag = [];
         var colors = ['#49917d', '#e7cb01', '#c4c4c4'];
-        const SIZE = [1300, 900, 600, 300, 100]
+        // const SIZE = res.size;
+        const SIZE = [1300, 900, 600, 300, 100];
+
+        var algo_score_round = [];
+        for (var i=0; i<res.algo_score.length; i++){
+            algo_score_round.push(Math.round(res.algo_score[i] * 100) / 100);
+        }
 
         for (var i=0; i<res.tag.length; i++){
             var bubbleinfo = {
@@ -279,7 +285,7 @@ var DetailInfo = {
 
             series: [{
                 name: res.place_info.place_name,
-                data: res.algo_score,
+                data: algo_score_round,
                 pointPlacement: 'on',
                 color: '#4f9f88'
             },
@@ -320,11 +326,11 @@ var DetailInfo = {
           },
 
           title: {
-            text: res.place_info.place_name + '방문객 추이'
+            text: res.place_info.place_name + ' 방문객 추이'
           },
 
           subtitle: {
-            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + '기준 방문객 수 추이'
+            text: daterange[0] + ' ~ '+ daterange[daterange.length -1] + ' 기준 방문객 수 추이'
           },
           plotOptions: {
             series: {
@@ -343,7 +349,7 @@ var DetailInfo = {
             tickInterval: 1,
             labels: {
               enabled: true,
-              formatter: function() { return daterange[this.value]},
+              formatter: function() { return daterange[this.value].split('2021-')[1]},
             }
           },
           legend: {
@@ -365,17 +371,15 @@ var DetailInfo = {
             }]
           },
           series: [{
-            name: res.place_info.place_name + '지역 방문객수',
+            name: res.place_info.place_name + ' 지역 방문객수',
             data: sgg_congestion,
             color: '#4f9f88'
           }
-          // , {
-          //   name: '전국 평균 방문객수',
-          //   data: avg_congestion,
-          //   color: '#1b4785'
-          // }],
-              ],
-
+          , {
+            name: '전국 평균 방문객수',
+            data: avg_congestion,
+            color: '#1b4785'
+          }],
           responsive: {
             rules: [{
               condition: {
