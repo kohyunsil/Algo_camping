@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="shorcut icon" href="../../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="logo align-items-center" href="/main"> <img class="header-logo-img" src="/static/imgs/algo_logo2.png"></a>
+            </div>
+        </nav>
+    </div>
+    <div class="container col-md-7 login">
+            <div class="signin-container p-4 bg-light col-md-auto rounded-3 outer-2">
+                <div class="container-fluid">
+                    <h3 class=" display-12 fw-bold py-2">캠핑 취향 설문</h3>
+                    <div class="progress">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 90%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    <span>드디어 마지막 질문이에요!</span><br>
+                    <br>
+                    <div class="mb-3 "><br>
+                        <h5>6. 선호하는 지역이 어디인가요?</h5><br>
+                        <div class="row">
+                            <div class="d-grid gap-3 mx-auto col-6">
+                                <button class="btn p-2 btn-survey6" type="button" id="option-1">수도권</button>
+                                <button class="btn p-2 btn-survey6" type="button" id="option-3">남해/영남권</button>
+                                <button class="btn p-2 btn-survey6" type="button" id="option-5">호남권</button>
+                            </div>
+                            <div class="d-grid gap-3 mx-auto col-6">
+                                <button class="btn p-2 btn-survey6" type="button" id="option-2">동해/강원권</button>
+                                <button class="btn p-2 btn-survey6" type="button" id="option-4">서해/충청권</button>
+                                <button class="btn p-2 btn-survey6" type="button" id="option-6">제주도</button>
+                            </div>
+                        </div><br><br>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn me-md-2 btn-survey6-prev" style="background-color: #dbdbdb;" type="button">Prev</button>
+                            <button class="btn me-md-2 btn-survey6-next" style="background-color: #1f284a; color:white;" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup.js"></script>
+</body>
+</html>

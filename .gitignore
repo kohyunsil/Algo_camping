@@ -45,4 +45,9 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
--- INSERT --
+
+data.ini
+
+.idea/
+
+*.log

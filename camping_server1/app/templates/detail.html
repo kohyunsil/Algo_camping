@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/detail.css">
+    <link rel="shorcut icon" href="/static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container-fluid" style="background-color: white;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <div class="position-absolute top-50 start-50 loading-bar">
+        <div class="loading spinner-border text-white" role="status"></div>
+        <p class="text-white loading-text">캠퍼님이 좋아하실 만한 캠핑장을 열심히 찾고 있어요</p>
+    </div>
+
+    <div class="container">
+        <div class="p-5 bg-light rounded-3 outer-2">
+            <div class="container-fluid">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-11">
+                            <h2 class="fw-bold col-12" id="title"></h2>
+                        </div>
+                        <button class="do-like-btn col-1">
+                            <i class="material-icons favorite_border-icon favorite outlined" id="empty-like" style="font-size: 35px;">favorite_border</i>
+                            <i class="material-icons favorite_border-icon favorite" id="nonempty-like" style="font-size: 35px;">favorite</i>
+                        </button>
+                        <div class="row">
+                            <div class="col-12 col-md-6 tooltip-graph algostar-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto" title="<h6 class='tooltip-header'>알고별점<h6><br><p class='tooltip-body'>알고별점은 방문객 별점을 토대로 알고캠핑 알고리즘을 거쳐 재탄생된 별점이에요.</p>">
+                                <span class="fs-6 fw-normal algo-star-text">알고별점
+                                    <span class="algo-star col-5"></span>
+                                </span>
+                            </div>
+                            <div class="col-12 col-md-6 tooltip-graph visitoravg-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto" title="<h6 class='tooltip-header'>방문객 별점<h6><br><p class='tooltip-body'>방문객 별점은 포털 사용자 후기 평균 별점이에요.</p>">
+                                <span class="fs-6 fw-normal visitor-text">방문객 평균
+                                    <span><img class="visitor-star-img" src="/static/imgs/visit_star.png"></span>
+                                    <span class="point"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <p class="col-md-12 fs-7 text-black-50 addr"></p>
+                <p class="col-md-12 fs-7 line-intro"></p>
+                <div class="row row-cols-1 row-cols-md-2">
+                    <div class="col">
+                        <div class="row swiper-banner">
+                        </div>
+                        <div class="row" id="line-chart-container">
+                            <figure class="line-chart tooltip-graph linechart-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto" title="<h6 class='tooltip-header'>혼잡도<h6><br><p class='tooltip-body'>캠핑장이 위치한 지역의 과거 방문객 수를 기반으로 예상 방문객 수를 보여줘요.</p>">
+                                <div id="line-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <figure class="polar-chart">
+<!--                            {% if param %}-->
+<!--                            <figure class="polar-chart polarchart-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<h6 class='tooltip-header'>캠핑장의 주요 특성 5가지의 점수를 한 눈에 보여주는 폴라차트<h6><br><p class='tooltip-body'>알고캠핑의 독자적인 알고리즘을 거쳐 산출된 점수로, {{param.name}}님의 캠핑 선호도를 분석하여 매칭도를 알려드려요.</p>">-->
+<!--                            {% else %}-->
+<!--                            <figure class="polar-chart polarchart-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<h6 class='tooltip-header'>캠핑장의 주요 특성 5가지의 점수를 한 눈에 보여주는 폴라차트<h6><br><p class='tooltip-body'>알고캠핑의 독자적인 알고리즘을 거쳐 산출된 점수입니다. 로그인 하고 나와의 매칭도를 살펴봐요.</p>">-->
+<!--                            {% endif %}-->
+                              <i class="material-icons help-icon tooltip-graph" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto" title="<p class='tooltip-tag'>COMFORT: 캠핑도 편리하게<p><p class='tooltip-body'>• 주변 이용시설 및 인프라가 잘 갖춰져 있어 캠핑 초보도 문제 없어요.</p>
+                                <p class='tooltip-tag'>TOGETHER: 함께라서 더 즐거운<p><p class='tooltip-body'>• 가족, 친구, 연인 그리고 반려동물까지 여럿이 즐길 수 있어요.</p>
+                                <p class='tooltip-tag'>FUN: 뻔한 캠핑보다는 FUN한 캠핑<p><p class='tooltip-body'>• 액티비티, 생태교육 등 캠핑장 즐길거리가 많아요.</p>
+                                <p class='tooltip-tag'>HEALING: 캠핑 속 여유<p><p class='tooltip-body'>• 낮에는 트래킹, 밤에는 별을 보며 여유로움을 즐겨요.</p>
+                                <p class='tooltip-tag'>CLEAN: 보다 쾌적한 캠핑<p><p class='tooltip-body'>• 깔끔한 캠핑장에서 보다 쾌적하게 쉬어요.</p>">help</i>
+                              <div id="polar-container">
+                              </div>
+                            </figure>
+                        </div>
+                        <div class="row">
+                            <figure class="bubble-chart bubblechart-info-btn" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto" title="<h6 class='tooltip-header'>버블차트<h6><br><p class='tooltip-body'>버블이 클 수록 캠핑장을 대표하는 주요 특성이에요.</p>">
+                              <div id="bubble-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="col-12 table table-bordered" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">운영기간</th>
+                                    <td class="oper-date"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">연락처</th>
+                                    <td class="tel"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">주요시설</th>
+                                    <td class="facility"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">홈페이지 주소</th>
+                                    <td><a href="#" class="homepage"></a></td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <br><br>
+                        <div class="kakao-map"></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="col local-banner">
+                            <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper-container mySwiper2">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><br><br>
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=30d72d58b0b7ddc0a4ebd7fba31f8052"></script>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/detail.js"></script>
+<script>
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+</html>

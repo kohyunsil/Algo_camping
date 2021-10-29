@@ -1,0 +1,195 @@
+/*!*header*!*/
+@media (min-width: 10px){
+    body{
+        /*background-image: url('main/download/background_mobile.png');*/
+        background-image: url('../imgs/background_mobile.png');
+        width: 100vw;
+        height: 100vh;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+}
+@media (min-width:768px){
+
+}
+@media (min-width:960px){
+    body{
+        background-image: url('../imgs/camping_bg2.jpeg');
+        width: 100vw;
+        height: 100vh;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+}
+.header-logo-img{
+    width: 9rem;
+}
+#logout-menu{
+    margin-left: 30%;
+}
+.form-control-dark {
+    color: #fff;
+    border-color: gray;
+    background-color: white;
+}
+.form-control-dark:focus {
+    color: #fff;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 .25rem rgba(226, 226, 226, 0.25);
+}
+.bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+}
+.text-small {
+    font-size: 85%;
+}
+.dropdown-toggle {
+    outline: 0;
+}
+@font-face {
+    font-family: 'Harlow Solid Italic';
+    font-style: normal;
+    font-weight: normal;
+    /*src: local('Harlow Solid Italic'), url('/static/font/HARLOWSI_1.woff') format('woff');*/
+    src: local('Harlow Solid Italic'), url('HARLOWSI.TTF') format('ttf');
+}
+.logo{
+    margin-left: 2.5rem;
+    color: #1f284a;
+    font-weight: bold;
+    font-size: 1.6rem;
+    border: none;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0);
+    font-family: "Harlow Solid Italic";
+}
+.username{
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+.user{
+    font-size: 2.5em;
+    vertical-align: center;
+}
+
+/*--search button--*/
+.custom-search {
+    position: relative;
+}
+.bootstrap-tagsinput {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 100px;
+    padding: 10px 100px 10px 20px;
+    line-height: 1;
+    box-sizing: border-box;
+    outline: none;
+}
+.custom-search-botton {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    bottom: 3px;
+    border: 0;
+    background : rgb(255, 255, 255, 0);
+    outline: none;
+    margin: 0;
+    padding: 0 10px;
+    border-radius: 100px;
+    z-index: 2;
+}
+.btn-area{
+    background-color: #ffffff;
+}
+
+/*--input tag--*/
+.badge-info{
+    border-radius: 0.8rem;
+    background-color: #bababa;
+    margin-left: 0.2rem;
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    color: #454545;
+}
+.bootstrap-tagsinput input {
+    border: none;
+    width: 40%;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0 6px;
+    margin: 0;
+}
+
+/*--input tag remove icon--*/
+.bootstrap-tagsinput .badge [data-role="remove"] {
+    margin-left: 8px;
+    cursor: pointer;
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:after {
+    content: "×";
+    padding: 0px 4px;
+    border-radius:50%;
+    font-size:14px;
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:hover:after {
+    background-color:rgba(0, 0, 0, 0.62);
+}
+.bootstrap-tagsinput .badge [data-role="remove"]:hover:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.cat-fun-1,
+.cat-comfort-2,
+.cat-together-3,
+.cat-healing-4,
+.cat-activity-5{
+    text-align: center;
+    color: #151515;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0.3rem;
+}
+#recommend-tag-menu > li > div > div{
+    text-align: center;
+}
+.dropdown-menu-tags{
+    width: 35%;
+}
+@media screen and (min-width:280px) and (max-width:768px) {
+    .dropdown-menu-tags {
+        height: 70%;
+        overflow-y: auto;
+    }
+    #recommend-tag-menu{
+        width: 25%;
+        min-width: 30%;
+    }
+}
+.drop-menu-icon{
+    width: 4rem;
+}
+#recommend-default-menu1{
+    margin-right: 0.2rem;
+}
+hr{
+    border: 1px solid #e0e0e0;
+}
+.btn-area,
+.btn-recommend{
+    background-color: #49917D;
+    color: white;
+    border: 0;
+}
+.btn-recommend{
+    margin-right: 0.3rem;
+}
+.btn-recommend:hover,
+.btn-area:hover{
+    background-color: #326457;
+    color: white;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="logo align-items-center" href="/main"> <img class="header-logo-img" src="../static/imgs/algo_logo2.png"></a>
+            </div>
+        </nav>
+    </div>
+    <div class="container col-md-7 login">
+            <div class="signin-container p-4 bg-light col-md-auto rounded-3 outer-2">
+                <div class="container-fluid">
+                    <h3 class=" display-12 fw-bold py-2">회원가입</h3>
+                    <div class="progress">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    <span>만나서 반가워요<br>
+                    알고캠핑을 찾아주신 캠퍼님</span>
+                    <br><br>
+                    <div class="row display-12">
+                        <div class="mb-2">
+                            <label class="form-label">이메일</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="email-form" placeholder="email@example.com" arial-label="" aria-describedby="button-addon2">
+                                <button class="btn col-md-2" type="button" id="check-btn">확인</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">패스워드</label>
+                        <input type="password" class="form-control" id="password-form" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">패스워드 확인</label>
+                        <input type="password" class="form-control" id="password-check-form" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">이름</label>
+                        <input type="text" class="form-control" id="name-form" placeholder="Name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>
+                        <input type="text" class="form-control" id="nickname-form" placeholder="Nickname">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">생년월일<span class="option-text">&nbsp;&nbsp;•선택</span></label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="input-year" placeholder="Year">
+                                  <span class="input-group-text">년</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="input-month" placeholder="Month">
+                                  <span class="input-group-text">월</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="input-day" placeholder="Day">
+                                  <span class="input-group-text">일</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn col-md-2 btn-signin py-2" id="signin-btn">Next</button><br>
+                </div><br>
+            </div><br>
+        </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="shorcut icon" href="../../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="logo align-items-center" href="/main"> <img class="header-logo-img" src="/static/imgs/algo_logo2.png"></a>
+            </div>
+        </nav>
+    </div>
+    <div class="container col-md-7 login">
+            <div class="signin-container p-4 bg-light col-md-auto rounded-3 outer-2">
+                <div class="container-fluid">
+                    <h3 class=" display-12 fw-bold py-2">캠핑 취향 설문</h3>
+                    <div class="progress">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 80%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    {% if param.name %}
+                    <span>
+                    저희도 이제 <span class="user-nickname">{{param.name}}</span>님을 조금 알 것 같아요!</span>
+                    {% else %}
+                    <span>
+                    저희도 이제 <span class="user-nickname">캠퍼</span>님을 조금 알 것 같아요!</span>
+                    {% endif %}
+                    <br><br>
+                    <div class="mb-3 "><br>
+                        <h5>5. 캠핑을 가는 가장 큰 목적은 무엇인가요?</h5><br>
+                        <div class="d-grid gap-3 col-11 mx-auto">
+                            <button class="btn btn-survey5" id="option-1" type="button">아이와 함께 즐기는 캠핑<br><span class="sub-text5">아이들이 즐기기 좋은 즐길거리가 한 가득!</span></button>
+                            <button class="btn btn-survey5" id="ogption-2" type="button">여유롭게 즐기는 감성 캠핑<br><span class="sub-text5">낮엔 트래킹, 밤엔 별 보러 가지 않을래~</span></button>
+                            <button class="btn btn-survey5" id="option-3" type="button">체험하며 즐기는 캠핑<br><span class="sub-text5">각종 액티비티, 생태교육으로 지루할 틈 없이!</span></button>
+                            <button class="btn btn-survey5" id="option-4" type="button">방방곡곡 투어형 캠핑<br><span class="sub-text5">캠핑은 거들 뿐! 주변 관광지, 축제도 즐겨야지~</span></button>
+                        </div>
+                        <br>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn me-md-2 btn-survey5-prev" style="background-color: #dbdbdb;" type="button">Prev</button>
+                            <button class="btn me-md-2 btn-survey5-next" style="background-color: #1f284a; color:white;" type="button">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signup.js"></script>
+</body>
+</html>

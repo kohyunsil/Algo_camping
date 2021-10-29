@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/signin.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="logo align-items-center" href="/main"> <img class="header-logo-img" src="../static/imgs/algo_logo2.png"></a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container col-md-5 login">
+        <div class="p-5 bg-light col-md-auto rounded-3 outer-2">
+            <div class="container-fluid">
+                <h2 class="border-bottom display-12 fw-bold py-2">로그인</h2>
+                <br>
+                <div class="row">
+                    <button type="submit" class="btn col-md-12 btn-kakao py-2">카카오 아이디로 로그인</button>
+                </div>
+                <br>
+<!--                <div class="row">-->
+<!--                    <button type="submit" class="btn col-md-12 btn-naver py-2" id="naverIdLogin_loginButton">네이버 아이디로 로그인</button>-->
+<!--                </div>-->
+                <div class="row justify-content-md-center">
+                    <p class="border-bottom col-md-4 pt-4"></p>
+                    <span class="col-md-3 text-secondary text-or">또는</span>
+                    <p class="border-bottom col-md-4 pt-4"></p>
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleDropdownFormEmail2" class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="email-form" placeholder="email@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleDropdownFormPassword2" class="form-label">패스워드</label>
+                    <input type="password" class="form-control" id="password-form" placeholder="Password">
+                </div>
+                <button type="submit" class="btn col-md-2 py-2 btn-signin" id="signin-btn">OK</button>
+            </div><br>
+            &nbsp;&nbsp;<a class="signup-href" href="/signup">아직 알고캠핑의 회원이 아니신가요?</a>
+        </div><br>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/signin.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+<script>
+    Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
+    var naverLogin = new naver.LoginWithNaverId(
+		{
+            clientId: "GvWWne4vMn3VAUr0DNrG",
+            callbackUrl: "http://127.0.0.1:5000/signin",
+            isPopup: false,
+            callbackHandle: true
+		}
+	);
+naverLogin.init();
+</script>
+</body>
+</html>

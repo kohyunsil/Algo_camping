@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/userinfo.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+   <div class="container">
+        <nav class="navbar fixed-top navbar-light bg-light p-4">
+            <div class="container-fluid">
+                <a class="logo align-items-center" href="/main"> <img class="header-logo-img" src="../static/imgs/algo_logo2.png"></a>
+            </div>
+        </nav>
+    </div>
+   <div class="container col-md-7 mypage">
+        <div class="myinfo-container p-4 bg-light col-md-auto rounded-3 outer-2">
+            <div class="container-fluid">
+                <h3 class=" display-12 fw-bold py-2">마이페이지</h3>
+
+                <div class="row">
+                    <div class="col-12 resurvey-btn">
+                        <a href="#"><img class="logo-icon" src="../static/imgs/logo_icon.png" alt="logo icon"/>&nbsp;&nbsp;{{ param.name }}님의 캠핑 취향, 1분만에 알고 가요
+                        <i class="material-icons info-icon">info</i></a>
+                    </div>
+                </div><br>
+
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-link active" id="nav-userinfo-tab" data-bs-toggle="tab" href="#nav-userinfo" role="tab" aria-controls="nav-userinfo" aria-selected="true">내 정보</a>
+                        <a class="nav-link" id="nav-userlike-tab" data-bs-toggle="tab" href="#nav-userlike" role="tab" aria-controls="nav-userlike" aria-selected="false">좋아요</a>
+                    </div>
+                </nav>
+
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-userinfo" role="tabpanel" aria-labelledby="nav-userinfo-tab">
+                        <div class="row display-12">
+                            <div class="mb-2">
+                                <br>
+                                <label class="form-label">이메일<span class="email-alert"> •이메일은 변경할 수 없습니다.</span></label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="email-form" placeholder="email@example.com" arial-label="" aria-describedby="button-addon2">
+                                    <button class="btn col-md-2" type="button" id="check-btn">확인</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">패스워드</label>
+                            <input type="password" class="form-control" id="password-form" placeholder="Password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">패스워드 확인</label>
+                            <input type="password" class="form-control" id="password-check-form" placeholder="Password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">이름</label>
+                            <input type="text" class="form-control" id="name-form" placeholder="Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">닉네임</label>
+                            <input type="text" class="form-control" id="nickname-form" placeholder="Nickname">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">생년월일<span class="option-text">&nbsp;&nbsp;•선택</span></label>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                      <input type="text" class="form-control" id="input-year" placeholder="Year">
+                                      <span class="input-group-text">년</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                      <input type="text" class="form-control" id="input-month" placeholder="Month">
+                                      <span class="input-group-text">월</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                      <input type="text" class="form-control" id="input-day" placeholder="Day">
+                                      <span class="input-group-text">일</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn col-md-2 btn-modifiy-ok py-2" id="ok-btn">OK</button><br><br>
+                        <a class="withdraw " href="#">탈퇴하기</a>
+                </div>
+
+                <div class="tab-pane fade" id="nav-userlike" role="tabpanel" aria-labelledby="nav-userlike-tab">
+                        <br><p class="like-info">내가 관심있는 캠핑장 목록이에요.</p><br>
+                        <div class="row like-content"></div>
+                </div>
+        </div>
+    </div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="/static/js/userinfo.js"></script>
+
+</body>
+</html>

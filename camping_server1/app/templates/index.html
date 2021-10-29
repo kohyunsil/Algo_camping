@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="#"/>
+    <meta property="og:image" content="/static/imgs/algo_public_img.png">
+    <meta property="og:title" content="알고캠핑">
+    <meta property="og:description" content="캠핑, 알고캠핑으로 알고가자!">
+    <title>알고캠핑, 가장 나 다운 캠핑</title>
+    <!-- Bootstrap 5.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js" integrity="sha512-sH8JPhKJUeA9PWk3eOcOl8U+lfZTgtBXD41q6cO/slwxGHCxKcW45K4oPCUhHG7NMB4mbKEddVmPuTXtpbCbFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- material icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- swiper.js -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="shorcut icon" href="../static/imgs/favicon.ico" type="image/x-icon" sizes="16x16">
+</head>
+<body>
+    <div class="container-fluid" style="background-color: white;">
+        {% include "./layout/header.html" %}
+    </div>
+
+    <h4 class="text-white fw-bolder align-items-center justify-content-center signin-hello-user"></h4>
+    <!-- Swiper -->
+    <div class="swiper mySwiper2">
+        <div class="swiper-wrapper swiper-wrapper2">
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Swiper -->
+    <div class="swiper mySwiper1">
+      <div class="swiper-wrapper swiper-wrapper1">
+          {% for first_image in param.first_image %}
+          <div class="swiper-slide swiper-slide-1" id="banner-swiper-01">
+                <div class="col-7">
+                    <img class="img-1" id="{{param['scene_no'][loop.index -1]}}" src="{{param['first_image'][loop.index -1]}}" alt="img"/>
+                </div>
+                <div class="col-5 promotion-1">
+                    <p class="h4 fw-bolder text-white promotion-title-1">{{param['copy'][loop.index -1]}}</p>
+                </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+
+{#    <div id="footer" class="container text-white">#}
+{#        <div id="footers">{% include "./layout/footer.html" %}</div>#}
+{#    </div>#}
+
+<!-- Swiper JS -->
+<script src="/static/js/swiper.min.js"></script>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/swiper.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/userinfo.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1VLX2TK27D"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-1VLX2TK27D');
+</script>
+</body>
+</html>

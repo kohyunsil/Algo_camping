@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+
+        <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+      </head>
+    <body>
+    <main>
+        <header class="p-3 bg-light text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <div class="row">
+                        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                            <a class="logo" href="/main"> <img class="header-logo-img" src="../static/imgs/algo_logo2.png"></a>
+                        </a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="text-end">
+                        <span>
+                            <button class="btn dropdown-toggle btn-area" type="button" id="area-default-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                             지역전체
+                            </button>
+                            <ul class="dropdown-menu" id="area-menu">
+                                <li><a class="dropdown-item" href="#">지역전체</a></li>
+                                <li><a class="dropdown-item" href="#">서울</a></li>
+                                <li><a class="dropdown-item" href="#">경기</a></li>
+                                <li><a class="dropdown-item" href="#">인천</a></li>
+                                <li><a class="dropdown-item" href="#">강원</a></li>
+                                <li><a class="dropdown-item" href="#">충남</a></li>
+                                <li><a class="dropdown-item" href="#">대전</a></li>
+                                <li><a class="dropdown-item" href="#">충북</a></li>
+                                <li><a class="dropdown-item" href="#">부산</a></li>
+                                <li><a class="dropdown-item" href="#">울산</a></li>
+                                <li><a class="dropdown-item" href="#">대구</a></li>
+                                <li><a class="dropdown-item" href="#">경북</a></li>
+                                <li><a class="dropdown-item" href="#">경남</a></li>
+                                <li><a class="dropdown-item" href="#">전남</a></li>
+                                <li><a class="dropdown-item" href="#">광주</a></li>
+                                <li><a class="dropdown-item" href="#">전북</a></li>
+                                <li><a class="dropdown-item" href="#">제주</a></li>
+                            </ul>
+                        </span>
+                        <span>
+                            <button class="btn dropdown-toggle btn-recommend" type="button" id="recommend-default-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                             추천태그
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-tags" id="recommend-tag-menu">
+                                <li>
+                                    <div class="row">
+                                        <div class="col-sm d-flex flex-wrapalign-items-center justify-content-center">
+                                            <a class="dropdown-item cat-fun-1" href="#">#즐길거리</a>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-1" type="button" id="#생태교육">
+                                                <img class="drop-menu-icon" src="/static/imgs/ecological.png">
+                                            </button>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-1" type="button" id="#둘레길">
+                                                <img class="drop-menu-icon" src="/static/imgs/trail.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-1" type="button" id="#축제">
+                                                <img class="drop-menu-icon" src="/static/imgs/festival.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-1" type="button" id="#문화유적">
+                                                <img class="drop-menu-icon" src="/static/imgs/cultural.png">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <hr>
+                                <li>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <a class="dropdown-item cat-comfort-2" href="#">#쾌적/편리</a>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-2" type="button" id="#온수 잘 나오는">
+                                                <img class="drop-menu-icon" src="/static/imgs/hot_water.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-2" type="button" id="#깨끗한">
+                                                <img class="drop-menu-icon" src="/static/imgs/clean.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-2" type="button" id="#차 대기 편한">
+                                                <img class="drop-menu-icon" src="/static/imgs/parking.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-2" type="button" id="#사이트 간격이 넓은">
+                                                <img class="drop-menu-icon" src="/static/imgs/spacious.png">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <hr>
+                                <li>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <a class="dropdown-item cat-together-3" href="#">#함께</a>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-3" type="button" id="#아이들 놀기 좋은">
+                                                <img class="drop-menu-icon" src="/static/imgs/with_child.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-3" type="button" id="#가족">
+                                                <img class="drop-menu-icon" src="/static/imgs/with_family.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-3" type="button" id="#커플">
+                                                <img class="drop-menu-icon" src="/static/imgs/with_couple.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-3" type="button" id="#반려견">
+                                                <img class="drop-menu-icon" src="/static/imgs/with_pet.png">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <hr>
+                                <li>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <a class="dropdown-item cat-healing-4" href="#">#자연/힐링</a>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-4" type="button" id="#계곡 옆">
+                                                <img class="drop-menu-icon" src="/static/imgs/valley.png"></button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-4" type="button" id="#물맑은">
+                                                <img class="drop-menu-icon" src="/static/imgs/pure_water.png"></button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-4" type="button" id="#별보기 좋은">
+                                                <img class="drop-menu-icon" src="/static/imgs/star.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-4" type="button" id="#힐링">
+                                                <img class="drop-menu-icon" src="/static/imgs/healing.png">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <hr>
+                                <li>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <a class="dropdown-item cat-activity-5" href="#">#액티비티</a>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-5" type="button" id="#물놀이 하기 좋은">
+                                                <img class="drop-menu-icon" src="/static/imgs/water_play.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-5" type="button" id="#자전거 타기 좋은">
+                                                <img class="drop-menu-icon" src="/static/imgs/bicycle.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-5" type="button" id="#수영장 있는">
+                                                <img class="drop-menu-icon" src="/static/imgs/pool.png">
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-cat-5" type="button" id="#익스트림">
+                                                <img class="drop-menu-icon" src="/static/imgs/extreme.png">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                    </div><br><br><br>
+
+                    <div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 col-xl-6 custom-search">
+                    <!--          <input type="text" class="custom-search-input" placeholder="태그 혹은 캠핑장 명을 입력하세요. ex) 친절한, 알고캠핑장">-->
+                        <input class="col-12" type="search" data-role="tagsinput" value="" style="display: none">
+                        <button class="col-0 custom-search-botton search-btn" type="button" style="">
+                            <i class="material-icons search" width="32" height="32">search</i>
+                        </button>
+                    </div>
+                    <div class="col text-end ">
+                        {% if param.name %}
+                        <a href="#" class="d-flex flex-wrap align-items-center justify-content-center link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons user " style="color: #1f284a;">account_circle</i>
+                            <p class="mx-2 py-1 username">{{ param.name }}님 안녕하세요</p>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" id="logout-menu">
+                            <li><a class="dropdown-item" id="mypage-btn" href="#">마이페이지</a></li>
+                            <li><a class="dropdown-item" id="logout-btn" href="#">로그아웃</a></li>
+                        </ul>
+                        {% else %}
+                        <a href="#" class="d-flex flex-wrap align-items-center justify-content-center link-dark text-decoration-none" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons user" style="color: #1f284a;">account_circle</i>
+                            <p class="mx-2 py-1 username">로그인</p>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" id="login-menu">
+                            <li><a class="dropdown-item" id="login-btn" href="/signin">로그인</a></li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="/static/js/tagsinput.js"></script>
+    <script src="/static/css/header.css"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        Kakao.init('30d72d58b0b7ddc0a4ebd7fba31f8052');
+    </script>
+  </body>
+</html>
