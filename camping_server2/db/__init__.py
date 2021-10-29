@@ -17,7 +17,7 @@ if __name__ == '__main__':
     fk = sql_create.Constraint()
 
     # create.create_camp_tb(sql.DB, cursor)
-    # create.create_algopoint_tb(sql.DB, cursor)
+    create.create_algopoint_tb(sql.DB, cursor)
     # fk.fk_algopoint_camp(sql.DB, cursor)
     # create.create_algotag_tb(sql.DB, cursor)
     # fk.fk_algotag_camp(sql.DB, cursor)
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # create.create_sns_info_tb(sql.DB, cursor)
     # create.create_user_action_tb(sql.DB, cursor)
     # create.create_visitor_past_tb(sql.DB, cursor)
-    create.create_visitor_future_tb(sql.DB, cursor)
+    # create.create_visitor_future_tb(sql.DB, cursor)
     # create.create_review_tb(sql.DB, cursor)
     # create.create_scenario_tb(sql.DB, cursor)
 
@@ -51,8 +51,8 @@ if __name__ == '__main__':
     # print(tourspot_df.columns)
     # sql.save_sql(engine, tourspot_df, 'tourspot', 'append')
 
-    # algopoint_df = content.make_algopoint_df()
-    # sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
+    algopoint_df = content.make_algopoint_df()
+    sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
     #
     # algotag_df = content.make_algotag_df()
     # sql.save_sql(engine, algotag_df, 'algotag', 'append')
@@ -61,9 +61,9 @@ if __name__ == '__main__':
     # print(visitor_past_df.columns)
     # sql.save_sql(engine, visitor_past_df, 'visitor_past', 'append')
 
-    visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20211010, period=90)
-    print(visitor_future_df.columns)
-    sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
+    # visitor_future_df = content.make_visitor_future_df(startYmd=20180101, endYmd=20211010, period=90)
+    # print(visitor_future_df.columns)
+    # sql.save_sql(engine, visitor_future_df, 'visitor_future', 'append')
 
     # review_df = content.make_review_df()
     # print(review_df.columns)
