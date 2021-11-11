@@ -14,7 +14,11 @@ class AlgoPoints(cp.Cat5Points):
     def __init__(self):
         super().__init__()
         self.path = config.Config.PATH
+<<<<<<< HEAD
         self.df = config.Config.ALGO_DF # cacm.ReviewCamp().review_camp_merge()
+=======
+        self.df = config.Config.ALGO_DF # cacm.ReviewCamp().review_camp_merge()  #config.Config.ALGO_DF
+>>>>>>> database
         self.df.dropna(subset=['contentId'], axis=0, inplace=True)
 
     def polar_points(self, camp_id):

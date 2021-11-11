@@ -53,7 +53,11 @@ if __name__ == '__main__':
 
     algopoint_df = content.make_algopoint_df()
     sql.save_sql(engine, algopoint_df, 'algopoint', 'append')
+<<<<<<< HEAD
 
+=======
+    #
+>>>>>>> database
     # algotag_df = content.make_algotag_df()
     # sql.save_sql(engine, algotag_df, 'algotag', 'append')
 

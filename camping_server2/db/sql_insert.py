@@ -131,6 +131,7 @@ class MakeDataframe:
         return self.SIGUNGU
 
     def make_algopoint_df(self):
+<<<<<<< HEAD
         # point_df, scaled_algo_df = algo.algo_log_scale()
         point_df = pd.read_csv("../../datas/algo_df_max.csv", encoding='utf-8-sig')
         point_df.drop('camp', axis=1, inplace=True)
@@ -143,6 +144,19 @@ class MakeDataframe:
         scaled_algo_df = pd.concat([point_df.iloc[:, :2], log_df2], 1)
 
         point_df['algostar'] = np.round(scaled_algo_df.sum(axis=1)/100, 1)
+=======
+        point_df = algo.make_algo_df()
+
+        scale = point_df.iloc[:, 2:]
+        log_df1 = np.log1p(scale)
+        dec_max = 100 / (log_df1.max().max())
+        log_df2 = np.log1p(scale) * dec_max
+        scaled_df = pd.concat([point_df.iloc[:, :2], log_df2], 1)
+
+        point_df.drop('camp', axis=1, inplace=True)
+        point_df.set_index('contentId', inplace=True)
+        point_df['algostar'] = np.round(scaled_df.sum(axis=1)/100, 1)
+>>>>>>> database
         point_df.reset_index(inplace=True)
         point_df.rename(columns={
             'contentId': 'content_id'
