@@ -24,8 +24,8 @@ gocamp = ga.GocampingApi()
 tourapi = ka.KoreaTourApi()
 sgg = sg.Sigungucode()
 algo = aap.AlgoPoints()
-tag = atp.TagPoints()
-rv_camp = cacm.ReviewCamp()
+# tag = atp.TagPoints()
+# rv_camp = cacm.ReviewCamp()
 pymysql.install_as_MySQLdb()
 
 
@@ -131,15 +131,24 @@ class MakeDataframe:
         return self.SIGUNGU
 
     def make_algopoint_df(self):
-        point_df = algo.algo_log_scale()
+        # point_df, scaled_algo_df = algo.algo_log_scale()
+        point_df = pd.read_csv("../../datas/algo_df_max.csv", encoding='utf-8-sig')
         point_df.drop('camp', axis=1, inplace=True)
         point_df.set_index('contentId', inplace=True)
-        point_df['algostar'] = np.round(point_df.sum(axis=1)/100, 1)
+
+        scale = point_df.iloc[:, 2:]
+        log_df1 = np.log1p(scale)
+        dec_max = 100 / (log_df1.max().max())
+        log_df2 = np.log1p(scale) * dec_max
+        scaled_algo_df = pd.concat([point_df.iloc[:, :2], log_df2], 1)
+
+        point_df['algostar'] = np.round(scaled_algo_df.sum(axis=1)/100, 1)
         point_df.reset_index(inplace=True)
         point_df.rename(columns={
             'contentId': 'content_id'
         }, inplace=True)
         print(point_df.columns)
+        point_df.to_csv("algopoint.csv", encoding='utf-8-sig')
         return point_df
 
     def make_algotag_df(self):
@@ -255,12 +264,12 @@ class MakeDataframe:
         return result_df
 
     def make_visitor_future_df(self, startYmd, endYmd, period=90):
-        # sql = Query()
-        # cursor, engine, db = sql.connect_sql()
-        # query = f"select * from {sql.DB}.visitor_past"
-        # cursor.execute(query)
-        # result = cursor.fetchall()
-        result_df = self.make_visitor_past_df(startYmd, endYmd)  # pd.DataFrame(result)
+        sql = Query()
+        cursor, engine, db = sql.connect_sql()
+        query = f"select * from {sql.DB}.visitor_past"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        result_df = pd.DataFrame(result)  # self.make_visitor_past_df(startYmd, endYmd)
         result_df['sigungu_code'] = result_df['sigungu_code'].replace({28170: 28177})
         print(result_df.tail())
         sgg_list = np.unique(result_df.sigungu_code.tolist())
@@ -480,9 +489,9 @@ class MakeDataframe:
 
 class Query:
     def __init__(self):
-        self.IP = ' '
-        self.DB = ' '
-        self.PW = ' '
+        self.IP = 'algo-camping-rds.cbnmrlyxxadn.ap-northeast-2.rds.amazonaws.com'
+        self.DB = 'camping'
+        self.PW = 'algocamping'
 
     # db cursor 생성
     def connect_sql(self):
